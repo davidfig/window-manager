@@ -87,8 +87,7 @@ module.exports = class WindowManager
                 'left': 0,
                 'width': '100%',
                 'height': '100%',
-                'overflow': 'hidden',
-                'opacity': 0
+                'overflow': 'hidden'
             }
         })
         this.overlay.addEventListener('mousemove', (e) => this._move(e))
