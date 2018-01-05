@@ -70,6 +70,16 @@ https://davidfig.github.io/window-manager/
      * @param {string} [options.colors.backgroundColorTitlebarInactive=#888888]
      * @param {string} [options.colors.foregroundColorButton=#ffffff]
      * @param {string} [options.colors.foregroundColorTitle=#ffffff]
+     * @fires open
+     * @fires focus
+     * @fires blur
+     * @fires close
+     * @fires move
+     * @fires move-start
+     * @fires move-end
+     * @fires resize
+     * @fires resize-start
+     * @fires resize-end
      */
     constructor(wm, options)
 
@@ -187,6 +197,69 @@ https://davidfig.github.io/window-manager/
      * @type {boolean}
      */
     get titlebar() { return this._titlebar }
+
+    /**
+     * Fires when window opens
+     * @event open
+     * @type {Window}
+     */
+
+
+    /**
+     * Fires when window gains focus
+     * @event focus
+     * @type {Window}
+     */
+    /**
+
+    /**
+     * Fires when window closes
+     * @event close
+     * @type {Window}
+     */
+
+
+    /**
+     * Fires when resize starts
+     * @event resize-start
+     * @type {Window}
+     */
+
+
+    /**
+     * Fires after resize completes
+     * @event resize-end
+     * @type {Window}
+     */
+
+
+    /**
+     * Fires during resizing
+     * @event resize
+     * @type {Window}
+     */
+
+
+    /**
+     * Fires when move starts
+     * @event move-start
+     * @type {Window}
+     */
+
+
+    /**
+     * Fires after move completes
+     * @event move-end
+     * @type {Window}
+     */
+
+
+    /**
+     * Fires during move
+     * @event move
+     * @type {Window}
+     */
+
 
 // 		/**
 // 		 * @return A function that restores this window
