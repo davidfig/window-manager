@@ -1,4 +1,4 @@
-# window-manager
+# simple-window-manager
 A javascript-only Window Manager based on Ventus.
 
 ## features
@@ -15,7 +15,7 @@ I used [Ventus](https://github.com/rlamana/Ventus) to build internal editors, bu
 
 ## installation
 
-    npm i window-manager
+    npm i simple-window-manager
 
 ## simple example
 
