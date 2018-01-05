@@ -33,6 +33,16 @@ module.exports = class Window extends Events
      * @param {string} [options.colors.backgroundColorTitlebarInactive=#888888]
      * @param {string} [options.colors.foregroundColorButton=#ffffff]
      * @param {string} [options.colors.foregroundColorTitle=#ffffff]
+     * @fires open
+     * @fires focus
+     * @fires blur
+     * @fires close
+     * @fires move
+     * @fires move-start
+     * @fires move-end
+     * @fires resize
+     * @fires resize-start
+     * @fires resize-end
      */
     constructor(wm, options)
     {
@@ -315,6 +325,64 @@ module.exports = class Window extends Events
         this._titlebar = value
     }
 
+    /**
+     * Fires when window opens
+     * @event open
+     * @type {Window}
+     */
+
+    /**
+     * Fires when window gains focus
+     * @event focus
+     * @type {Window}
+     */
+    /**
+     * Fires when window loses focus
+     * @event blur
+     * @type {Window}
+     */
+    /**
+     * Fires when window closes
+     * @event close
+     * @type {Window}
+     */
+
+    /**
+     * Fires when resize starts
+     * @event resize-start
+     * @type {Window}
+     */
+
+    /**
+     * Fires after resize completes
+     * @event resize-end
+     * @type {Window}
+     */
+
+    /**
+     * Fires during resizing
+     * @event resize
+     * @type {Window}
+     */
+
+    /**
+     * Fires when move starts
+     * @event move-start
+     * @type {Window}
+     */
+
+    /**
+     * Fires after move completes
+     * @event move-end
+     * @type {Window}
+     */
+
+    /**
+     * Fires during move
+     * @event move
+     * @type {Window}
+     */
+
     _createWindow(options)
     {
         this.win = html.create({
@@ -403,6 +471,7 @@ module.exports = class Window extends Events
                     x: event.pageX,
                     y: event.pageY
                 })
+                this.emit('move-start', this)
                 e.preventDefault();
             }
         }
@@ -481,7 +550,7 @@ module.exports = class Window extends Events
                     width: this.width - event.pageX,
                     height: this.height - event.pageY
                 }
-
+                this.emit('resize-start')
                 e.preventDefault()
             }
         }
@@ -510,6 +579,7 @@ module.exports = class Window extends Events
                     event.pageX - this._moving.x,
                     event.pageY - this._moving.y
                 )
+                this.emit('move', this)
             }
 
             if (this._resizing)
@@ -518,6 +588,7 @@ module.exports = class Window extends Events
                     event.pageX + this._resizing.width,
                     event.pageY + this._resizing.height
                 )
+                this.emit('resize', this)
             }
         }
         this.win.addEventListener('mousemove', move)
@@ -539,11 +610,13 @@ module.exports = class Window extends Events
     _stopMove()
     {
         this._moving = null
+        this.emit('move-end')
     }
 
     _stopResize()
     {
         this._restore = this._resizing = null
+        this.emit('resize-end')
     }
 
     _isTouchEvent(e)

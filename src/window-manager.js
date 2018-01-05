@@ -1,16 +1,13 @@
-const Events = require('eventemitter3')
-
 const html = require('./html')
 const Window = require('./window')
 
-module.exports = class WindowManager extends Events
+module.exports = class WindowManager
 {
     /**
      * constructor for WindowManager
      */
     constructor()
     {
-        super()
         this._createWindow()
         this.windows = []
         this.active = null
