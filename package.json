@@ -9,6 +9,14 @@
     "build-demo": "browserify docs/code.js -o docs/index.js",
     "prepublishOnly": "npm run build-demo && npm run docs"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidfig/window-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/davidfig/window-manager/issues"
+  },
+  "homepage": "https://github.com/davidfig/window-manager#readme",
   "author": "David Figatner (david@yopeyopey.com)",
   "license": "MIT",
   "dependencies": {
