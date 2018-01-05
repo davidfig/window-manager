@@ -19,8 +19,6 @@ module.exports = class Window extends Events
         this._createWindow()
         this._listeners()
 
-        this.z = 10000
-
         this.active = false
         this.maximized = false
         this.minimized = false
@@ -472,16 +470,6 @@ module.exports = class Window extends Events
             x: coord.x - this.x,
             y: coord.y - this.y
         }
-    }
-
-    set z(value)
-    {
-        this.win.style.zIndex = value
-    }
-
-    get z()
-    {
-        return parseInt(this.win.style.zIndex)
     }
 }
 

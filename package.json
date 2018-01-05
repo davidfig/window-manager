@@ -1,11 +1,11 @@
 {
   "name": "simple-window-manager",
-  "version": "0.1.1",
+  "version": "0.2.1",
   "description": "A Window Manager based on Ventus",
   "main": "index.js",
   "scripts": {
     "test": "budo docs/code.js:index.js --dir docs --live",
-    "docs": "markdown-api README.md src/window-manager.js src/window.js --header",
+    "docs": "markdown-api README.md src/window-options.js src/window-manager.js src/window.js --header",
     "build-demo": "browserify docs/code.js -o docs/index.js",
     "prepublishOnly": "npm run build-demo && npm run docs"
   },
