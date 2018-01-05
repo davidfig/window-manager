@@ -7,9 +7,8 @@ test.content.style.padding = '0.5em'
 test.content.innerHTML = 'This is a test window.'
 test.open()
 
-const test2 = wm.createWindow({ width: 300, height: 300, x: 100, y: 100 })
+const test2 = wm.createWindow({ width: 300, height: 300, x: 100, y: 100, backgroundColorWindow: 'rgb(255,200,255)' })
 test2.content.style.padding = '0.5em'
-test2.setColors({ backgroundColorWindow: 'rgb(255,200,255)' })
 test2.content.innerHTML = 'This is a pink test window.'
 test2.open()
 
