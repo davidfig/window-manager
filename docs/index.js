@@ -5320,11 +5320,11 @@ module.exports = class WindowManager
     createWindow(options)
     {
         options = options || {}
-        for (let key in WindowOptions)
+        for (let key in this.options)
         {
             if (!exists(options[key]))
             {
-                options[key] = WindowOptions[key]
+                options[key] = this.options[key]
             }
         }
         const win = new Window(this, options);
