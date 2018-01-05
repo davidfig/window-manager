@@ -4,7 +4,6 @@ const html = require('../src/html')
 // create a window manager and change some of the default styles
 const wm = new WM({
     minimizable: false,
-    maximizable: false,
     borderRadius: '10px'
 })
 

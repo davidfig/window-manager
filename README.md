@@ -83,6 +83,8 @@ const WindowOptions = {
      * @fires focus
      * @fires blur
      * @fires close
+     * @fires maximize
+     * @fires restore
      * @fires move
      * @fires move-start
      * @fires move-end
@@ -155,10 +157,29 @@ const WindowOptions = {
     move(x, y)
 
     /**
+     * maximize the window
+     */
+    maximize()
+
+    /**
      * change title
      * @type {string}
      */
     get title() { return this._title }
+
+    /**
+     * Fires when window is maximized
+     * @event maximize
+     * @type {Window}
+     */
+
+
+    /**
+     * Fires when window is restored to normal after being maximized
+     * @event restore
+     * @type {Window}
+     */
+
 
     /**
      * Fires when window opens

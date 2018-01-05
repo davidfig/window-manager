@@ -5,7 +5,6 @@ const html = require('../src/html')
 // create a window manager and change some of the default styles
 const wm = new WM({
     minimizable: false,
-    maximizable: false,
     borderRadius: '10px'
 })
 
@@ -5334,6 +5333,8 @@ module.exports = class WindowManager
      * @fires focus
      * @fires blur
      * @fires close
+     * @fires maximize
+     * @fires restore
      * @fires move
      * @fires move-start
      * @fires move-end
@@ -5698,6 +5699,40 @@ module.exports = class Window extends Events
     }
 
     /**
+     * maximize the window
+     */
+    maximize()
+    {
+        if (this.wm._checkModal(this) && this.options.maximizable && !this._transitioning)
+        {
+            this._transitioning = true
+            if (this.maximized)
+            {
+                Velocity(this.win, { left: this.maximized.x, top: this.maximized.y, width: this.maximized.width, height: this.maximized.height }, { duration: this.options.animateTime, ease: 'easeInOutSine' }).then(() =>
+                {
+                    this.options.x = this.maximized.x
+                    this.options.y = this.maximized.y
+                    this.options.width = this.maximized.width
+                    this.options.height = this.maximized.height
+                    this.maximized = null
+                    this._transitioning = false
+                })
+                this.emit('restore', this)
+            }
+            else
+            {
+                const x = this.x, y = this.y, width = this.width, height = this.height
+                Velocity(this.win, { left: 0, top: 0, width: this.wm.overlay.offsetWidth, height: this.wm.overlay.offsetHeight }, { duration: this.options.animateTime, ease: 'easeInOutSine' }).then(() =>
+                {
+                    this.maximized = { x, y, width, height }
+                    this._transitioning = false
+                })
+                this.emit('maximize', this)
+            }
+        }
+    }
+
+    /**
      * change title
      * @type {string}
      */
@@ -5706,6 +5741,19 @@ module.exports = class Window extends Events
     {
         this.winTitle.innerText = value
     }
+
+    /**
+     * Fires when window is maximized
+     * @event maximize
+     * @type {Window}
+     */
+
+    /**
+     * Fires when window is restored to normal after being maximized
+     * @event restore
+     * @type {Window}
+     */
+
     /**
      * Fires when window opens
      * @event open
@@ -5895,7 +5943,7 @@ module.exports = class Window extends Events
         {
             button.background = this.options.backgroundMaximizeButton
             this.buttons.maximize = html.create({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
-            clicked(this.buttons.maximize, () => console.log('maximize'))
+            clicked(this.buttons.maximize, () => this.maximize())
         }
         if (this.options.closable)
         {
@@ -5978,6 +6026,7 @@ module.exports = class Window extends Events
                     event.pageX + this._resizing.width,
                     event.pageY + this._resizing.height
                 )
+                this.maximized = null
                 this.emit('resize', this)
             }
         }
@@ -6086,16 +6135,6 @@ module.exports = class Window extends Events
 // 		},
 
 // 		restore: function(){},
-
-// 		maximize: function() {
-// 			this.el.addClass('maximazing');
-// 			this.el.onTransitionEnd(function(){
-// 				this.el.removeClass('maximazing');
-// 			}, this);
-
-// 			this.maximized = !this.maximized;
-// 			return this;
-// 		},
 
 // 		minimize: function() {
 // 			this.el.addClass('minimizing');
