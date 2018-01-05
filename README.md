@@ -77,6 +77,8 @@ const WindowOptions = {
      * @param {string} [options.title]
      * @param {number} [options.x] position
      * @param {number} [options.y] position
+     * @param {boolean} [options.modal]
+     * @param {Window} [options.center] center in the middle of an existing Window
      * @fires open
      * @fires focus
      * @fires blur

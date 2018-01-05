@@ -14,6 +14,7 @@ module.exports = class WindowManager
         this._createDom()
         this.windows = []
         this.active = null
+        this.modal = null
         this.options = {}
         for (let key in WindowOptions)
         {
@@ -34,6 +35,8 @@ module.exports = class WindowManager
      * @param {string} [options.title]
      * @param {number} [options.x] position
      * @param {number} [options.y] position
+     * @param {boolean} [options.modal]
+     * @param {Window} [options.center] center in the middle of an existing Window
      * @fires open
      * @fires focus
      * @fires blur
@@ -55,6 +58,11 @@ module.exports = class WindowManager
                 options[key] = this.options[key]
             }
         }
+        if (options.center)
+        {
+            options.x = options.center.x + options.center.width / 2 - options.width / 2
+            options.y = options.center.y + options.center.height / 2 - options.height / 2
+        }
         const win = new Window(this, options);
         win.on('open', this._open, this)
         win.on('focus', this._focus, this)
@@ -64,6 +72,10 @@ module.exports = class WindowManager
         win.win.addEventListener('touchmove', (e) => this._move(e))
         win.win.addEventListener('mouseup', (e) => this._up(e))
         win.win.addEventListener('touchend', (e) => this._up(e))
+        if (options.modal)
+        {
+            this.modal = win
+        }
         return win
     }
 
@@ -131,6 +143,10 @@ module.exports = class WindowManager
 
     _close(win)
     {
+        if (this.modal === win)
+        {
+            this.modal = null
+        }
         const index = this.windows.indexOf(win)
         if (index !== -1)
         {
@@ -156,5 +172,10 @@ module.exports = class WindowManager
         {
             this.windows[key]._up(e)
         }
+    }
+
+    _checkModal(win)
+    {
+        return !this.modal || this.modal === win
     }
 }

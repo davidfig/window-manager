@@ -1,23 +1,44 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 const WM = require('..')
+const html = require('../src/html')
 
-const wm = new WM()
+// create a window manager and change some of the default styles
+const wm = new WM({
+    minimizable: false,
+    maximizable: false,
+    borderRadius: '10px'
+})
 
+// create a test window
 const test = wm.createWindow( { x: 10, y: 10, title: 'Test Window' })
 test.content.style.padding = '0.5em'
 test.content.innerHTML = 'This is a test window.'
 test.open()
 
-const test2 = wm.createWindow({ width: 300, height: 300, x: 100, y: 100, backgroundColorWindow: 'rgb(255,200,255)' })
+// create a pink test window, changing the window's style
+const test2 = wm.createWindow({ width: 300, height: 300, x: 100, y: 100, backgroundColorWindow: 'rgb(255,200,255)', titlebarHeight: '15px', backgroundColorTitlebarActive: 'green', backgroundColorTitlebarInactive: 'purple' })
 test2.content.style.padding = '0.5em'
-test2.content.innerHTML = 'This is a pink test window.'
+test2.content.innerHTML = 'This is a pink test window.<br><br>Check out the fancy title bar for other style tests.'
 test2.open()
 
-const test3 = wm.createWindow({ x: 300, y: 200, title: 'Create a better demo!' })
+// create a test window with a button to create a modal window
+const test3 = wm.createWindow({ x: 300, y: 220, height: 150, title: 'Create a better demo!' })
 test3.content.style.padding = '0.5em'
-test3.content.innerHTML = 'I should probably make a better demo. And also get the minimize/maximize buttons working. One day.'
+html.create({ parent: test3.content, html: 'I should probably make a better demo. And also get the minimize/maximize buttons working. One day.' })
+const div = html.create({ parent: test3.content, styles: { textAlign: 'center', marginTop: '1em' } })
+const button = html.create({ parent: div, type: 'button', html: 'open modal window' })
+button.onclick = () =>
+{
+    // create a modal window
+    const modal = wm.createWindow({ modal: true, width: 200, height: 100, center: test3, title: 'modal window ' })
+    modal.content.innerHTML = '<div style="margin: 0.5em">This needs to be closed before using other windows.</div>'
+    modal.open()
+}
 test3.open()
-},{"..":2}],2:[function(require,module,exports){
+
+const wallpaper = html.create({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
+wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'
+},{"..":2,"../src/html":7}],2:[function(require,module,exports){
 module.exports = require('./src/window-manager')
 },{"./src/window-manager":8}],3:[function(require,module,exports){
 /**
@@ -5286,6 +5307,7 @@ module.exports = class WindowManager
         this._createDom()
         this.windows = []
         this.active = null
+        this.modal = null
         this.options = {}
         for (let key in WindowOptions)
         {
@@ -5306,6 +5328,8 @@ module.exports = class WindowManager
      * @param {string} [options.title]
      * @param {number} [options.x] position
      * @param {number} [options.y] position
+     * @param {boolean} [options.modal]
+     * @param {Window} [options.center] center in the middle of an existing Window
      * @fires open
      * @fires focus
      * @fires blur
@@ -5327,6 +5351,11 @@ module.exports = class WindowManager
                 options[key] = this.options[key]
             }
         }
+        if (options.center)
+        {
+            options.x = options.center.x + options.center.width / 2 - options.width / 2
+            options.y = options.center.y + options.center.height / 2 - options.height / 2
+        }
         const win = new Window(this, options);
         win.on('open', this._open, this)
         win.on('focus', this._focus, this)
@@ -5336,6 +5365,10 @@ module.exports = class WindowManager
         win.win.addEventListener('touchmove', (e) => this._move(e))
         win.win.addEventListener('mouseup', (e) => this._up(e))
         win.win.addEventListener('touchend', (e) => this._up(e))
+        if (options.modal)
+        {
+            this.modal = win
+        }
         return win
     }
 
@@ -5403,6 +5436,10 @@ module.exports = class WindowManager
 
     _close(win)
     {
+        if (this.modal === win)
+        {
+            this.modal = null
+        }
         const index = this.windows.indexOf(win)
         if (index !== -1)
         {
@@ -5428,6 +5465,11 @@ module.exports = class WindowManager
         {
             this.windows[key]._up(e)
         }
+    }
+
+    _checkModal(win)
+    {
+        return !this.modal || this.modal === win
     }
 }
 },{"./html":7,"./window":10,"./window-options":9,"exists":5}],9:[function(require,module,exports){
@@ -5552,9 +5594,12 @@ module.exports = class Window extends Events
      */
     focus()
     {
-        this.active = true
-        this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarActive
-        this.emit('focus', this)
+        if (this.wm._checkModal(this))
+        {
+            this.active = true
+            this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarActive
+            this.emit('focus', this)
+        }
     }
 
     /**
@@ -5562,9 +5607,12 @@ module.exports = class Window extends Events
      */
     blur()
     {
-        this.active = false
-        this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarInactive
-        this.emit('blur', this)
+        if (this.wm.modal !== this)
+        {
+            this.active = false
+            this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarInactive
+            this.emit('blur', this)
+        }
     }
 
     /**
@@ -5888,13 +5936,16 @@ module.exports = class Window extends Events
         })
         const down = (e) =>
         {
-            const event = this._convertMoveEvent(e)
-            this._resizing = {
-                width: this.width - event.pageX,
-                height: this.height - event.pageY
+            if (this.wm._checkModal(this))
+            {
+                const event = this._convertMoveEvent(e)
+                this._resizing = {
+                    width: this.width - event.pageX,
+                    height: this.height - event.pageY
+                }
+                this.emit('resize-start')
+                e.preventDefault()
             }
-            this.emit('resize-start')
-            e.preventDefault()
         }
         this.resizeEdge.addEventListener('mousedown', down)
         this.resizeEdge.addEventListener('touchstart', down)
@@ -5902,30 +5953,33 @@ module.exports = class Window extends Events
 
     _move(e)
     {
-        const event = this._convertMoveEvent(e)
-
-        if (!this._isTouchEvent(e) && e.which !== 1)
+        if (this.wm._checkModal(this))
         {
-            this._moving && this._stopMove()
-            this._resizing && this._stopResize()
-        }
+            const event = this._convertMoveEvent(e)
 
-        if (this._moving)
-        {
-            this.move(
-                event.pageX - this._moving.x,
-                event.pageY - this._moving.y
-            )
-            this.emit('move', this)
-        }
+            if (!this._isTouchEvent(e) && e.which !== 1)
+            {
+                this._moving && this._stopMove()
+                this._resizing && this._stopResize()
+            }
 
-        if (this._resizing)
-        {
-            this.resize(
-                event.pageX + this._resizing.width,
-                event.pageY + this._resizing.height
-            )
-            this.emit('resize', this)
+            if (this._moving)
+            {
+                this.move(
+                    event.pageX - this._moving.x,
+                    event.pageY - this._moving.y
+                )
+                this.emit('move', this)
+            }
+
+            if (this._resizing)
+            {
+                this.resize(
+                    event.pageX + this._resizing.width,
+                    event.pageY + this._resizing.height
+                )
+                this.emit('resize', this)
+            }
         }
     }
 

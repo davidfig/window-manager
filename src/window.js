@@ -53,9 +53,12 @@ module.exports = class Window extends Events
      */
     focus()
     {
-        this.active = true
-        this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarActive
-        this.emit('focus', this)
+        if (this.wm._checkModal(this))
+        {
+            this.active = true
+            this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarActive
+            this.emit('focus', this)
+        }
     }
 
     /**
@@ -63,9 +66,12 @@ module.exports = class Window extends Events
      */
     blur()
     {
-        this.active = false
-        this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarInactive
-        this.emit('blur', this)
+        if (this.wm.modal !== this)
+        {
+            this.active = false
+            this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarInactive
+            this.emit('blur', this)
+        }
     }
 
     /**
@@ -389,13 +395,16 @@ module.exports = class Window extends Events
         })
         const down = (e) =>
         {
-            const event = this._convertMoveEvent(e)
-            this._resizing = {
-                width: this.width - event.pageX,
-                height: this.height - event.pageY
+            if (this.wm._checkModal(this))
+            {
+                const event = this._convertMoveEvent(e)
+                this._resizing = {
+                    width: this.width - event.pageX,
+                    height: this.height - event.pageY
+                }
+                this.emit('resize-start')
+                e.preventDefault()
             }
-            this.emit('resize-start')
-            e.preventDefault()
         }
         this.resizeEdge.addEventListener('mousedown', down)
         this.resizeEdge.addEventListener('touchstart', down)
@@ -403,30 +412,33 @@ module.exports = class Window extends Events
 
     _move(e)
     {
-        const event = this._convertMoveEvent(e)
-
-        if (!this._isTouchEvent(e) && e.which !== 1)
+        if (this.wm._checkModal(this))
         {
-            this._moving && this._stopMove()
-            this._resizing && this._stopResize()
-        }
+            const event = this._convertMoveEvent(e)
 
-        if (this._moving)
-        {
-            this.move(
-                event.pageX - this._moving.x,
-                event.pageY - this._moving.y
-            )
-            this.emit('move', this)
-        }
+            if (!this._isTouchEvent(e) && e.which !== 1)
+            {
+                this._moving && this._stopMove()
+                this._resizing && this._stopResize()
+            }
 
-        if (this._resizing)
-        {
-            this.resize(
-                event.pageX + this._resizing.width,
-                event.pageY + this._resizing.height
-            )
-            this.emit('resize', this)
+            if (this._moving)
+            {
+                this.move(
+                    event.pageX - this._moving.x,
+                    event.pageY - this._moving.y
+                )
+                this.emit('move', this)
+            }
+
+            if (this._resizing)
+            {
+                this.resize(
+                    event.pageX + this._resizing.width,
+                    event.pageY + this._resizing.height
+                )
+                this.emit('resize', this)
+            }
         }
     }
 
