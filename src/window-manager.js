@@ -30,7 +30,7 @@ module.exports = class WindowManager
         }
         if (!defaultOptions.quiet)
         {
-            console.log('%c ☕ simple-window-manger initialized ☕', 'color: #ff00ff')
+            console.log('%c ☕ simple-window-manager initialized ☕', 'color: #ff00ff')
         }
     }
 
