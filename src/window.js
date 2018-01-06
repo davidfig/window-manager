@@ -1,6 +1,7 @@
 const Events = require('eventemitter3')
 const clicked = require('clicked')
 const Velocity = require('velocity-animate')
+const exists = require('exists')
 
 const html = require('./html')
 
@@ -12,9 +13,10 @@ module.exports = class Window extends Events
     {
         super()
         this.wm = wm
-        this.id = id++
 
         this.options = options
+
+        this.id = exists(this.options.id) ? this.options.id : id++
 
         this._createWindow()
         this._listeners()
@@ -260,6 +262,73 @@ module.exports = class Window extends Events
     sendToFront()
     {
         this.wm.sendToFront(this)
+    }
+
+    /**
+     * save the state of the window
+     * @return {object} data
+     */
+    save()
+    {
+        const data = {}
+        const maximized = this.maximized
+        if (maximized)
+        {
+            data.maximized = { x: maximized.x, y: maximized.y, width: maximized.width, height: maximized.height }
+        }
+        const minimized = this.minimized
+        if (minimized)
+        {
+            data.minimized = { x: this.minimized.x, y: this.minimized.y }
+        }
+        const lastMinimized = this._lastMinimized
+        if (lastMinimized)
+        {
+            data.lastMinimized = { x: lastMinimized.x, y: lastMinimized.y }
+        }
+        data.x = this.x
+        data.y = this.y
+        if (exists(this.options.width))
+        {
+            data.width = this.options.width
+        }
+        if (exists(this.options.height))
+        {
+            data.height = this.options.height
+        }
+        return data
+    }
+
+    /**
+     * return the state of the window
+     * @param {object} data from save()
+     */
+    load(data)
+    {
+        if (data.maximized)
+        {
+            this.maximize()
+            this.maximized = data.maximized
+        }
+        if (data.minimized)
+        {
+            this.minimize()
+            this.minimized = data.minimized
+        }
+        if (data.lastMinimized)
+        {
+            this._lastMinimized = data.lastMinimized
+        }
+        this.x = data.x
+        this.y = data.y
+        if (exists(data.width))
+        {
+            this.width = data.width
+        }
+        if (exists(data.height))
+        {
+            this.height = data.height
+        }
     }
 
     /**

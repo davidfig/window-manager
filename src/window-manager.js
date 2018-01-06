@@ -42,6 +42,7 @@ module.exports = class WindowManager
      * @param {number} [options.y] position
      * @param {boolean} [options.modal]
      * @param {Window} [options.center] center in the middle of an existing Window
+     * @param {string|number} [options.id] if not provide, id will be assigned in order of creation (0, 1, 2...)
      * @fires open
      * @fires focus
      * @fires blur
@@ -121,6 +122,32 @@ module.exports = class WindowManager
     }
 
     /**
+     * save the state of all the windows
+     * @returns {object} use this object in load() to restore the state of all windows
+     */
+    save()
+    {
+        const data = {}
+        for (let i = 0; i < this.windows.length; i++)
+        {
+            const entry = this.windows[i]
+            data[entry.id] = entry.save()
+            data[entry.id].order = i
+        }
+        return data
+    }
+
+    /**
+     * restores the state of all the windows
+     * NOTE: this requires that the windows have the same id as when save() was called
+     * @param {object} data created by save()
+     */
+    load(data)
+    {
+
+    }
+
+    /**
      * reorder windows
      * @private
      * @returns {number} available z-index for top window
@@ -189,8 +216,8 @@ module.exports = class WindowManager
         {
             this.windows.splice(index, 1)
             this.windows.push(win)
-            this._reorder()
         }
+        this._reorder()
 
         this.active = win
     }

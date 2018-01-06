@@ -59,5 +59,20 @@ test4.content.innerHTML = '<iframe width="560" height="315" src="https://www.you
 test4.open()
 test4.sendToBack()
 
+const test5 = wm.createWindow({ x: 20, y: 600, title: 'window save/load' })
+const buttons = html.create({ parent: test5.content, styles: { 'text-align': 'center' } })
+const save = html.create({ parent: buttons, html: 'save window state', type: 'button', styles: { margin: '1em', background: 'rgb(200,255,200)' } })
+const load = html.create({ parent: buttons, html: 'load window state', type: 'button', styles: { margin: '1em', background: 'rgb(255,200,200)' } })
+test5.open()
+save.onclick = () =>
+{
+
+}
+
+load.onclick = () =>
+{
+
+}
+
 const wallpaper = html.create({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
 wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'
