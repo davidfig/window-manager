@@ -5321,12 +5321,11 @@ const html = require('./html')
 const WindowOptions = require('./window-options')
 const Window = require('./window')
 
-const MAX_Z = 999999
-
 module.exports = class WindowManager
 {
     /**
      * @param {WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
+     * @param {boolean} [defaultOptions.quiet] suppress the simple-window-manager console message
      */
     constructor(defaultOptions)
     {
@@ -5345,6 +5344,10 @@ module.exports = class WindowManager
             {
                 this.options[key] = defaultOptions[key]
             }
+        }
+        if (!defaultOptions.quiet)
+        {
+            console.log('%c ☕ simple-window-manger initialized ☕', 'color: #ff00ff')
         }
     }
 

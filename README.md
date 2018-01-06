@@ -72,6 +72,7 @@ const WindowOptions = {
 ```js
     /**
      * @param {WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
+     * @param {boolean} [defaultOptions.quiet] suppress the simple-window-manager console message
      */
     constructor(defaultOptions)
 
