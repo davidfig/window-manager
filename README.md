@@ -137,13 +137,13 @@ const WindowOptions = {
      * width of window
      * @type {number}
      */
-    get width() { return this.options.width }
+    get width() { return this.options.width || this.win.offsetWidth }
 
     /**
      * height of window
      * @type {number}
      */
-    get height() { return this.options.height }
+    get height() { return this.options.height || this.win.offsetHeight }
 
     /**
      * resize the window

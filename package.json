@@ -1,6 +1,6 @@
 {
   "name": "simple-window-manager",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "A Window Manager based on Ventus",
   "main": "index.js",
   "scripts": {

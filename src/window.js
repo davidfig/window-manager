@@ -120,7 +120,7 @@ module.exports = class Window extends Events
      * width of window
      * @type {number}
      */
-    get width() { return this.options.width }
+    get width() { return this.options.width || this.win.offsetWidth }
     set width(value)
     {
         this.options.width = value
@@ -138,7 +138,7 @@ module.exports = class Window extends Events
      * height of window
      * @type {number}
      */
-    get height() { return this.options.height }
+    get height() { return this.options.height || this.win.offsetHeight }
     set height(value)
     {
         this.options.height = value
