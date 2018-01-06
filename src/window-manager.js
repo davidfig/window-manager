@@ -42,7 +42,9 @@ module.exports = class WindowManager
      * @fires blur
      * @fires close
      * @fires maximize
-     * @fires restore
+     * @fires maximize-restore
+     * @fires minimize
+     * @fires minimize-restore
      * @fires move
      * @fires move-start
      * @fires move-end

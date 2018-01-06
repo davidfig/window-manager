@@ -3,8 +3,8 @@
  * @type {object}
  * @property {number} [x=0]
  * @property {number} [y=0]
- * @property {number} [width=400]
- * @property {number} [height=200]
+ * @property {number} [width]
+ * @property {number} [height]
  * @property {boolean} [movable=true]
  * @property {boolean} [resizable=true]
  * @property {boolean} [maximizable=true]
@@ -15,6 +15,7 @@
  * @property {string} [minWidth=200px]
  * @property {string} [minHeight=60px]
  * @property {string} [borderRadius=4px]
+ * @property {number} [minimizeSize=50]
  * @property {string} [shadow='0 0 12px 1px rgba(0, 0, 0, 0.6)']
  * @property {number} [animateTime=250]
  * @property {string} [backgroundColorWindow=#fefefe]
@@ -31,13 +32,11 @@ const WindowOptions = {
     x: 0,
     y: 0,
 
-    width: 400,
-    height: 200,
-
     minWidth: '200px',
     minHeight: '60px',
 
     borderRadius: '4px',
+    minimizeSize: 50,
     shadow: '0 0 12px 1px rgba(0, 0, 0, 0.6)',
     movable: true,
     resizable: true,

@@ -55,6 +55,10 @@ module.exports = class Window extends Events
     {
         if (this.wm._checkModal(this))
         {
+            if (this.minimized)
+            {
+                this.minimize()
+            }
             this.active = true
             this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarActive
             this.emit('focus', this)
@@ -120,7 +124,14 @@ module.exports = class Window extends Events
     set width(value)
     {
         this.options.width = value
-        this.win.style.width = value + 'px'
+        if (value)
+        {
+            this.win.style.width = value + 'px'
+        }
+        else
+        {
+            this.win.style.width = 'auto'
+        }
     }
 
     /**
@@ -131,7 +142,14 @@ module.exports = class Window extends Events
     set height(value)
     {
         this.options.height = value
-        this.win.style.height = value + 'px'
+        if (value)
+        {
+            this.win.style.height = value + 'px'
+        }
+        else
+        {
+            this.win.style.height = 'auto'
+        }
     }
 
     /**
@@ -156,14 +174,42 @@ module.exports = class Window extends Events
         this.y = y
     }
 
+    minimize()
+    {
+        if (this.wm._checkModal(this) && this.options.minimizable && !this.transitioning)
+        {
+            this.transitioning = true
+            if (this.minimized)
+            {
+                Velocity(this.win, { scaleX: 1, scaleY: 1 }, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
+                {
+                    this.minimized = false
+                    this.emit('minimize-restore')
+                    this.transitioning = false
+                })
+            }
+            else
+            {
+                const x = this.x, y = this.y, width = this.win.offsetWidth, height = this.win.offsetHeight
+                const desired = this.options.minimizeSize
+                Velocity(this.win, { left: -width / 2 + desired / 2, top: this.wm.overlay.offsetHeight - height + desired, scaleX: (desired / this.win.offsetWidth), scaleY: (desired / this.win.offsetHeight) }, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
+                {
+                    this.minimized = { x, y }
+                    this.emit('minimize', this)
+                    this.transitioning = false
+                })
+            }
+        }
+    }
+
     /**
      * maximize the window
      */
     maximize()
     {
-        if (this.wm._checkModal(this) && this.options.maximizable && !this._transitioning)
+        if (this.wm._checkModal(this) && this.options.maximizable && !this.transitioning)
         {
-            this._transitioning = true
+            this.transitioning = true
             if (this.maximized)
             {
                 Velocity(this.win, { left: this.maximized.x, top: this.maximized.y, width: this.maximized.width, height: this.maximized.height }, { duration: this.options.animateTime, ease: 'easeInOutSine' }).then(() =>
@@ -173,7 +219,7 @@ module.exports = class Window extends Events
                     this.options.width = this.maximized.width
                     this.options.height = this.maximized.height
                     this.maximized = null
-                    this._transitioning = false
+                    this.transitioning = false
                 })
                 this.emit('restore', this)
             }
@@ -183,7 +229,7 @@ module.exports = class Window extends Events
                 Velocity(this.win, { left: 0, top: 0, width: this.wm.overlay.offsetWidth, height: this.wm.overlay.offsetHeight }, { duration: this.options.animateTime, ease: 'easeInOutSine' }).then(() =>
                 {
                     this.maximized = { x, y, width, height }
-                    this._transitioning = false
+                    this.transitioning = false
                 })
                 this.emit('maximize', this)
             }
@@ -208,7 +254,13 @@ module.exports = class Window extends Events
 
     /**
      * Fires when window is restored to normal after being maximized
-     * @event restore
+     * @event maximize-restore
+     * @type {Window}
+     */
+
+    /**
+     * Fires when window is restored to normal after being minimized
+     * @event minimize-restore
      * @type {Window}
      */
 
@@ -395,7 +447,7 @@ module.exports = class Window extends Events
         {
             button.background = this.options.backgroundMinimizeButton
             this.buttons.minimize = html.create({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
-            clicked(this.buttons.minimize, () => console.log('minimize'))
+            clicked(this.buttons.minimize, () => this.minimize())
         }
         if (this.options.maximizable)
         {
@@ -445,9 +497,11 @@ module.exports = class Window extends Events
             if (this.wm._checkModal(this))
             {
                 const event = this._convertMoveEvent(e)
+                const width = this.width || this.win.offsetWidth
+                const height = this.height || this.win.offsetHeight
                 this._resizing = {
-                    width: this.width - event.pageX,
-                    height: this.height - event.pageY
+                    width: width - event.pageX,
+                    height: height - event.pageY
                 }
                 this.emit('resize-start')
                 e.preventDefault()

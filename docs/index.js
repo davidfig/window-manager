@@ -4,13 +4,12 @@ const html = require('../src/html')
 
 // create a window manager and change some of the default styles
 const wm = new WM({
-    minimizable: false,
     borderRadius: '10px'
 })
 
 // create a test window
 const test = wm.createWindow( { x: 10, y: 10, title: 'Test Window' })
-test.content.style.padding = '0.5em'
+test.content.style.padding = '1em'
 test.content.innerHTML = 'This is a test window.'
 test.open()
 
@@ -21,8 +20,8 @@ test2.content.innerHTML = 'This is a pink test window.<br><br>Check out the fanc
 test2.open()
 
 // create a test window with a button to create a modal window
-const test3 = wm.createWindow({ x: 300, y: 220, height: 150, title: 'Create a better demo!' })
-test3.content.style.padding = '0.5em'
+const test3 = wm.createWindow({ x: 300, y: 220, width: 350, title: 'Create a better demo!' })
+test3.content.style.padding = '1em'
 html.create({ parent: test3.content, html: 'I should probably make a better demo. And also get the minimize/maximize buttons working. One day.' })
 const div = html.create({ parent: test3.content, styles: { textAlign: 'center', marginTop: '1em' } })
 const button = html.create({ parent: div, type: 'button', html: 'open modal window' })
@@ -5334,7 +5333,9 @@ module.exports = class WindowManager
      * @fires blur
      * @fires close
      * @fires maximize
-     * @fires restore
+     * @fires maximize-restore
+     * @fires minimize
+     * @fires minimize-restore
      * @fires move
      * @fires move-start
      * @fires move-end
@@ -5479,8 +5480,8 @@ module.exports = class WindowManager
  * @type {object}
  * @property {number} [x=0]
  * @property {number} [y=0]
- * @property {number} [width=400]
- * @property {number} [height=200]
+ * @property {number} [width]
+ * @property {number} [height]
  * @property {boolean} [movable=true]
  * @property {boolean} [resizable=true]
  * @property {boolean} [maximizable=true]
@@ -5491,6 +5492,7 @@ module.exports = class WindowManager
  * @property {string} [minWidth=200px]
  * @property {string} [minHeight=60px]
  * @property {string} [borderRadius=4px]
+ * @property {number} [minimizeSize=50]
  * @property {string} [shadow='0 0 12px 1px rgba(0, 0, 0, 0.6)']
  * @property {number} [animateTime=250]
  * @property {string} [backgroundColorWindow=#fefefe]
@@ -5507,13 +5509,11 @@ const WindowOptions = {
     x: 0,
     y: 0,
 
-    width: 400,
-    height: 200,
-
     minWidth: '200px',
     minHeight: '60px',
 
     borderRadius: '4px',
+    minimizeSize: 50,
     shadow: '0 0 12px 1px rgba(0, 0, 0, 0.6)',
     movable: true,
     resizable: true,
@@ -5597,6 +5597,10 @@ module.exports = class Window extends Events
     {
         if (this.wm._checkModal(this))
         {
+            if (this.minimized)
+            {
+                this.minimize()
+            }
             this.active = true
             this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarActive
             this.emit('focus', this)
@@ -5662,7 +5666,14 @@ module.exports = class Window extends Events
     set width(value)
     {
         this.options.width = value
-        this.win.style.width = value + 'px'
+        if (value)
+        {
+            this.win.style.width = value + 'px'
+        }
+        else
+        {
+            this.win.style.width = 'auto'
+        }
     }
 
     /**
@@ -5673,7 +5684,14 @@ module.exports = class Window extends Events
     set height(value)
     {
         this.options.height = value
-        this.win.style.height = value + 'px'
+        if (value)
+        {
+            this.win.style.height = value + 'px'
+        }
+        else
+        {
+            this.win.style.height = 'auto'
+        }
     }
 
     /**
@@ -5698,14 +5716,42 @@ module.exports = class Window extends Events
         this.y = y
     }
 
+    minimize()
+    {
+        if (this.wm._checkModal(this) && this.options.minimizable && !this.transitioning)
+        {
+            this.transitioning = true
+            if (this.minimized)
+            {
+                Velocity(this.win, { scaleX: 1, scaleY: 1 }, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
+                {
+                    this.minimized = false
+                    this.emit('minimize-restore')
+                    this.transitioning = false
+                })
+            }
+            else
+            {
+                const x = this.x, y = this.y, width = this.win.offsetWidth, height = this.win.offsetHeight
+                const desired = this.options.minimizeSize
+                Velocity(this.win, { left: -width / 2 + desired / 2, top: this.wm.overlay.offsetHeight - height + desired, scaleX: (desired / this.win.offsetWidth), scaleY: (desired / this.win.offsetHeight) }, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
+                {
+                    this.minimized = { x, y }
+                    this.emit('minimize', this)
+                    this.transitioning = false
+                })
+            }
+        }
+    }
+
     /**
      * maximize the window
      */
     maximize()
     {
-        if (this.wm._checkModal(this) && this.options.maximizable && !this._transitioning)
+        if (this.wm._checkModal(this) && this.options.maximizable && !this.transitioning)
         {
-            this._transitioning = true
+            this.transitioning = true
             if (this.maximized)
             {
                 Velocity(this.win, { left: this.maximized.x, top: this.maximized.y, width: this.maximized.width, height: this.maximized.height }, { duration: this.options.animateTime, ease: 'easeInOutSine' }).then(() =>
@@ -5715,7 +5761,7 @@ module.exports = class Window extends Events
                     this.options.width = this.maximized.width
                     this.options.height = this.maximized.height
                     this.maximized = null
-                    this._transitioning = false
+                    this.transitioning = false
                 })
                 this.emit('restore', this)
             }
@@ -5725,7 +5771,7 @@ module.exports = class Window extends Events
                 Velocity(this.win, { left: 0, top: 0, width: this.wm.overlay.offsetWidth, height: this.wm.overlay.offsetHeight }, { duration: this.options.animateTime, ease: 'easeInOutSine' }).then(() =>
                 {
                     this.maximized = { x, y, width, height }
-                    this._transitioning = false
+                    this.transitioning = false
                 })
                 this.emit('maximize', this)
             }
@@ -5750,7 +5796,13 @@ module.exports = class Window extends Events
 
     /**
      * Fires when window is restored to normal after being maximized
-     * @event restore
+     * @event maximize-restore
+     * @type {Window}
+     */
+
+    /**
+     * Fires when window is restored to normal after being minimized
+     * @event minimize-restore
      * @type {Window}
      */
 
@@ -5937,7 +5989,7 @@ module.exports = class Window extends Events
         {
             button.background = this.options.backgroundMinimizeButton
             this.buttons.minimize = html.create({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
-            clicked(this.buttons.minimize, () => console.log('minimize'))
+            clicked(this.buttons.minimize, () => this.minimize())
         }
         if (this.options.maximizable)
         {
@@ -5987,9 +6039,11 @@ module.exports = class Window extends Events
             if (this.wm._checkModal(this))
             {
                 const event = this._convertMoveEvent(e)
+                const width = this.width || this.win.offsetWidth
+                const height = this.height || this.win.offsetHeight
                 this._resizing = {
-                    width: this.width - event.pageX,
-                    height: this.height - event.pageY
+                    width: width - event.pageX,
+                    height: height - event.pageY
                 }
                 this.emit('resize-start')
                 e.preventDefault()

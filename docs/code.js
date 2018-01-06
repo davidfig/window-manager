@@ -3,13 +3,12 @@ const html = require('../src/html')
 
 // create a window manager and change some of the default styles
 const wm = new WM({
-    minimizable: false,
     borderRadius: '10px'
 })
 
 // create a test window
 const test = wm.createWindow( { x: 10, y: 10, title: 'Test Window' })
-test.content.style.padding = '0.5em'
+test.content.style.padding = '1em'
 test.content.innerHTML = 'This is a test window.'
 test.open()
 
@@ -20,8 +19,8 @@ test2.content.innerHTML = 'This is a pink test window.<br><br>Check out the fanc
 test2.open()
 
 // create a test window with a button to create a modal window
-const test3 = wm.createWindow({ x: 300, y: 220, height: 150, title: 'Create a better demo!' })
-test3.content.style.padding = '0.5em'
+const test3 = wm.createWindow({ x: 300, y: 220, width: 350, title: 'Create a better demo!' })
+test3.content.style.padding = '1em'
 html.create({ parent: test3.content, html: 'I should probably make a better demo. And also get the minimize/maximize buttons working. One day.' })
 const div = html.create({ parent: test3.content, styles: { textAlign: 'center', marginTop: '1em' } })
 const button = html.create({ parent: div, type: 'button', html: 'open modal window' })

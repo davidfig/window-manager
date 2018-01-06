@@ -37,8 +37,8 @@ https://davidfig.github.io/window-manager/
  * @type {object}
  * @property {number} [x=0]
  * @property {number} [y=0]
- * @property {number} [width=400]
- * @property {number} [height=200]
+ * @property {number} [width]
+ * @property {number} [height]
  * @property {boolean} [movable=true]
  * @property {boolean} [resizable=true]
  * @property {boolean} [maximizable=true]
@@ -49,6 +49,7 @@ https://davidfig.github.io/window-manager/
  * @property {string} [minWidth=200px]
  * @property {string} [minHeight=60px]
  * @property {string} [borderRadius=4px]
+ * @property {number} [minimizeSize=50]
  * @property {string} [shadow='0 0 12px 1px rgba(0, 0, 0, 0.6)']
  * @property {number} [animateTime=250]
  * @property {string} [backgroundColorWindow=#fefefe]
@@ -84,7 +85,9 @@ const WindowOptions = {
      * @fires blur
      * @fires close
      * @fires maximize
-     * @fires restore
+     * @fires maximize-restore
+     * @fires minimize
+     * @fires minimize-restore
      * @fires move
      * @fires move-start
      * @fires move-end
@@ -176,7 +179,14 @@ const WindowOptions = {
 
     /**
      * Fires when window is restored to normal after being maximized
-     * @event restore
+     * @event maximize-restore
+     * @type {Window}
+     */
+
+
+    /**
+     * Fires when window is restored to normal after being minimized
+     * @event minimize-restore
      * @type {Window}
      */
 
