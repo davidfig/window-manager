@@ -21,7 +21,7 @@ module.exports = class Window extends Events
 
         this.active = false
         this.maximized = false
-        this.minimized = false
+        this._minimized = false
 
         this._closed = true
         this._restore = null
@@ -55,7 +55,7 @@ module.exports = class Window extends Events
     {
         if (this.wm._checkModal(this))
         {
-            if (this.minimized)
+            if (this._minimized)
             {
                 this.minimize()
             }
@@ -179,24 +179,32 @@ module.exports = class Window extends Events
         if (this.wm._checkModal(this) && this.options.minimizable && !this.transitioning)
         {
             this.transitioning = true
-            if (this.minimized)
+            if (this._minimized)
             {
-                Velocity(this.win, { scaleX: 1, scaleY: 1 }, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
+                Velocity(this.win, { scaleX: 1, scaleY: 1, left: this._minimized.x, top: this._minimized.y }, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
                 {
-                    this.minimized = false
+                    this._minimized = false
                     this.emit('minimize-restore')
                     this.transitioning = false
+                    this.overlay.style.display = 'none'
                 })
             }
             else
             {
-                const x = this.x, y = this.y, width = this.win.offsetWidth, height = this.win.offsetHeight
+                const x = this.x, y = this.y
                 const desired = this.options.minimizeSize
-                Velocity(this.win, { left: -width / 2 + desired / 2, top: this.wm.overlay.offsetHeight - height + desired, scaleX: (desired / this.win.offsetWidth), scaleY: (desired / this.win.offsetHeight) }, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
+                const delta = { scaleX: (desired / this.win.offsetWidth), scaleY: (desired / this.win.offsetHeight) }
+                if (this._lastMinimized)
                 {
-                    this.minimized = { x, y }
+                    delta.left = this._lastMinimized.x
+                    delta.top = this._lastMinimized.y
+                }
+                Velocity(this.win, delta, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
+                {
+                    this._minimized = { x, y }
                     this.emit('minimize', this)
                     this.transitioning = false
+                    this.overlay.style.display = 'block'
                 })
             }
         }
@@ -367,6 +375,28 @@ module.exports = class Window extends Events
         {
             this._createResize()
         }
+
+        this.overlay = html.create({
+            parent: this.winBox, styles: {
+                'display': 'none',
+                'position': 'absolute',
+                'width': '100%',
+                'height': '100%'
+            }
+        })
+        this.overlay.addEventListener('mousedown', (e) => { this._downTitlebar(e); e.stopPropagation() })
+        this.overlay.addEventListener('touchstart', (e) => { this._downTitlebar(e); e.stopPropagation() })
+    }
+
+    _downTitlebar(e)
+    {
+        const event = this._convertMoveEvent(e)
+        this._moving = this._toLocal({
+            x: event.pageX,
+            y: event.pageY
+        })
+        this.emit('move-start', this)
+        this._moved = false
     }
 
     _createTitlebar()
@@ -405,18 +435,8 @@ module.exports = class Window extends Events
 
         if (this.options.movable)
         {
-            const down = (e) =>
-            {
-                const event = this._convertMoveEvent(e)
-                this._moving = this._toLocal({
-                    x: event.pageX,
-                    y: event.pageY
-                })
-                this.emit('move-start', this)
-                e.preventDefault();
-            }
-            this.winTitlebar.addEventListener('mousedown', down)
-            this.winTitlebar.addEventListener('touchdown', down)
+            this.winTitlebar.addEventListener('mousedown', (e) => this._downTitlebar(e))
+            this.winTitlebar.addEventListener('touchdown', (e) => this._downTitlebar(e))
         }
     }
 
@@ -529,6 +549,12 @@ module.exports = class Window extends Events
                     event.pageX - this._moving.x,
                     event.pageY - this._moving.y
                 )
+                if (this._minimized)
+                {
+                    e.preventDefault()
+                    this._lastMinimized = { x: this.win.offsetLeft, y: this.win.offsetTop }
+                    this._moved = true
+                }
                 this.emit('move', this)
             }
 
@@ -546,7 +572,18 @@ module.exports = class Window extends Events
 
     _up()
     {
-        this._moving && this._stopMove()
+        if (this._moving)
+        {
+            if (this._minimized)
+            {
+
+                if (!this._moved)
+                {
+                    this.minimize()
+                }
+            }
+            this._stopMove()
+        }
         this._resizing && this._stopResize()
     }
 
@@ -586,75 +623,3 @@ module.exports = class Window extends Events
         }
     }
 }
-
-// 		get maximized() {
-// 			return this.options.maximized;
-// 		},
-
-// 		set maximized(value) {
-// 			if(value) {
-// 				this._restoreMaximized = this.stamp();
-// 				this.signals.emit('maximize', this, this._restoreMaximized);
-// 			}
-// 			else {
-// 				this.signals.emit('restore', this, this._restoreMaximized);
-// 			}
-// 			this.options.maximized = value;
-// 		},
-
-
-// 		get minimized() {
-// 			return this.options.minimized;
-// 		},
-
-// 		set minimized(value) {
-// 			if(value) {
-// 				this._restoreMinimized = this.stamp();
-// 				this.signals.emit('minimize', this, this._restoreMinimized);
-// 			}
-// 			else {
-// 				this.signals.emit('restore', this, this._restoreMinimized);
-// 			}
-
-// 			this.options.minimized = value;
-// 		},
-
-
-// 		/**
-// 		 * @return A function that restores this window
-// 		 */
-// 		stamp: function() {
-// 			this.restore = (function() {
-// 				var size = {
-// 					width: this.width,
-// 					height: this.height
-// 				};
-
-// 				var pos = {
-// 					x: this.x,
-// 					y: this.y
-// 				};
-
-// 				return function() {
-// 					this.resize(size.width, size.height);
-// 					this.move(pos.x, pos.y);
-
-// 					return this;
-// 				};
-// 			}).apply(this);
-
-// 			return this.restore;
-// 		},
-
-// 		restore: function(){},
-
-// 		minimize: function() {
-// 			this.el.addClass('minimizing');
-// 			this.el.onTransitionEnd(function(){
-// 				this.el.removeClass('minimizing');
-// 			}, this);
-
-// 			this.minimized = !this.minimized;
-// 			return this;
-// 		}
-// 	};
