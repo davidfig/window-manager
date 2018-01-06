@@ -59,5 +59,5 @@ test4.content.innerHTML = '<iframe width="560" height="315" src="https://www.you
 test4.open()
 test4.sendToBack()
 
-const wallpaper = html.create({ parent: wm.wallpaper, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
+const wallpaper = html.create({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
 wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'

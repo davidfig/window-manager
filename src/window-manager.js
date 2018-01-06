@@ -146,17 +146,6 @@ module.exports = class WindowManager
                 'cursor': 'default'
             }
         })
-        this.wallpaper = html.create({
-            parent: this.win, styles: {
-                'user-select': 'none',
-                'position': 'absolute',
-                'top': 0,
-                'left': 0,
-                'width': '100%',
-                'height': '100%',
-                'overflow': 'hidden'
-            }
-        })
         this.overlay = html.create({
             parent: this.win, styles: {
                 'user-select': 'none',
