@@ -254,11 +254,6 @@ const WindowOptions = {
      */
 
 
-// 		/**
-// 		 * @return A function that restores this window
-// 		 */
-// 		stamp: function() {
-
 ```
 ## License  
 MIT License  

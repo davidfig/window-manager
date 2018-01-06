@@ -1,6 +1,6 @@
 {
   "name": "simple-window-manager",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "A Window Manager based on Ventus",
   "main": "index.js",
   "scripts": {
@@ -24,5 +24,8 @@
     "eventemitter3": "^3.0.0",
     "exists": "^1.0.1",
     "velocity-animate": "^1.5.0"
+  },
+  "devDependencies": {
+    "canvas": "^1.6.9"
   }
 }

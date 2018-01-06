@@ -13,7 +13,14 @@ test.content.innerHTML = 'This is a test window.'
 test.open()
 
 // create a pink test window, changing the window's style
-const test2 = wm.createWindow({ width: 300, height: 300, x: 100, y: 100, backgroundColorWindow: 'rgb(255,200,255)', titlebarHeight: '15px', backgroundColorTitlebarActive: 'green', backgroundColorTitlebarInactive: 'purple' })
+const test2 = wm.createWindow({
+    width: 300, height: 300,
+    x: 100, y: 100,
+    backgroundColorWindow: 'rgb(255,200,255)',
+    titlebarHeight: '22px',
+    backgroundColorTitlebarActive: 'green',
+    backgroundColorTitlebarInactive: 'purple'
+})
 test2.content.style.padding = '0.5em'
 test2.content.innerHTML = 'This is a pink test window.<br><br>Check out the fancy title bar for other style tests.'
 test2.open()
@@ -35,3 +42,7 @@ test3.open()
 
 const wallpaper = html.create({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
 wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'
+
+const i = new Image()
+i.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAAhElEQVQ4jbWUSwrAIAxEpScQBG+oN3bR07wuaqHY+kmIATcy84agjHM7BvBABoLCG6rXvy8z9xQgCmCxegBSm1Ik0AZWPtv9CLrQZe2KUBI8NYhhI6Ma1oGe9ehgDfQBPeAh7FAlacZ0ZdNHMf02ph9bkj7VYl0ObKgvDyT0BZt4F6zlXMgpEz867WPDAAAAAElFTkSuQmCC'
+document.body.appendChild(i)

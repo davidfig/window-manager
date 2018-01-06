@@ -229,16 +229,18 @@ module.exports = class Window extends Events
                     this.maximized = null
                     this.transitioning = false
                 })
+                this.buttons.maximize.style.backgroundImage = this.options.backgroundMaximizeButton
                 this.emit('restore', this)
             }
             else
             {
-                const x = this.x, y = this.y, width = this.width, height = this.height
+                const x = this.x, y = this.y, width = this.win.offsetWidth, height = this.win.offsetHeight
                 Velocity(this.win, { left: 0, top: 0, width: this.wm.overlay.offsetWidth, height: this.wm.overlay.offsetHeight }, { duration: this.options.animateTime, ease: 'easeInOutSine' }).then(() =>
                 {
                     this.maximized = { x, y, width, height }
                     this.transitioning = false
                 })
+                this.buttons.maximize.style.backgroundImage = this.options.backgroundRestoreButton
                 this.emit('maximize', this)
             }
         }
@@ -390,13 +392,16 @@ module.exports = class Window extends Events
 
     _downTitlebar(e)
     {
-        const event = this._convertMoveEvent(e)
-        this._moving = this._toLocal({
-            x: event.pageX,
-            y: event.pageY
-        })
-        this.emit('move-start', this)
-        this._moved = false
+        if (!this.transitioning)
+        {
+            const event = this._convertMoveEvent(e)
+            this._moving = this._toLocal({
+                x: event.pageX,
+                y: event.pageY
+            })
+            this.emit('move-start', this)
+            this._moved = false
+        }
     }
 
     _createTitlebar()
@@ -453,31 +458,34 @@ module.exports = class Window extends Events
         const button = {
             'display': 'inline-block',
             'border': 0,
-            'background-repeat': 'no-repeat',
             'margin': 0,
-            'margin-left': '3px',
+            'margin-left': '5px',
             'padding': 0,
-            'width': '15px',
-            'height': '15px',
+            'width': '12px',
+            'height': '12px',
+            'background-color': 'transparent',
+            'background-size': 'cover',
+            'background-repeat': 'no-repeat',
             'opacity': .7,
-            'color': this.options.foregroundColorButton
+            'color': this.options.foregroundColorButton,
+            'outline': 0
         }
         this.buttons = {}
         if (this.options.minimizable)
         {
-            button.background = this.options.backgroundMinimizeButton
+            button.backgroundImage = this.options.backgroundMinimizeButton
             this.buttons.minimize = html.create({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
             clicked(this.buttons.minimize, () => this.minimize())
         }
         if (this.options.maximizable)
         {
-            button.background = this.options.backgroundMaximizeButton
+            button.backgroundImage = this.options.backgroundMaximizeButton
             this.buttons.maximize = html.create({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
             clicked(this.buttons.maximize, () => this.maximize())
         }
         if (this.options.closable)
         {
-            button.background = this.options.backgroundCloseButton
+            button.backgroundImage = this.options.backgroundCloseButton
             this.buttons.close = html.create({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
             clicked(this.buttons.close, () => this.close())
         }
