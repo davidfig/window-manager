@@ -4,6 +4,8 @@ const html = require('./html')
 const WindowOptions = require('./window-options')
 const Window = require('./window')
 
+const MAX_Z = 999999
+
 module.exports = class WindowManager
 {
     /**
@@ -85,6 +87,49 @@ module.exports = class WindowManager
         return win
     }
 
+    /**
+     * send window to front
+     * @param {Window} win
+     */
+    sendToFront(win)
+    {
+        const index = this.windows.indexOf(win)
+        if (index !== this.windows.length - 1)
+        {
+            this.windows.splice(index, 1)
+            this.windows.push(win)
+            this._reorder()
+        }
+    }
+
+    /**
+     * send window to back
+     * @param {Window} win
+     */
+    sendToBack(win)
+    {
+        const index = this.windows.indexOf(win)
+        if (index !== 0)
+        {
+            this.windows.splice(index, 1)
+            this.windows.unshift(win)
+            this._reorder()
+        }
+    }
+
+    /**
+     * reorder windows
+     * @private
+     * @returns {number} available z-index for top window
+     */
+    _reorder()
+    {
+        for (let i = 0; i < this.windows.length; i++)
+        {
+            this.windows[i].z = i
+        }
+    }
+
     _createDom()
     {
         this.win = html.create({
@@ -135,7 +180,14 @@ module.exports = class WindowManager
             this.active.blur()
         }
 
-        this.win.appendChild(win.win)
+        const index = this.windows.indexOf(win)
+        if (index !== this.windows.length - 1)
+        {
+            this.windows.splice(index, 1)
+            this.windows.push(win)
+            this._reorder()
+        }
+
         this.active = win
     }
 

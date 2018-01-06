@@ -12,7 +12,7 @@ A javascript-only Window Manager based on Ventus.
 
 ## rationale
 
-I used [Ventus](https://github.com/rlamana/Ventus) to build internal editors, but decided I needed a more configurable solution that didn't rely on CSS for configuration so it's easier to use with npm. 
+I used [Ventus](https://github.com/rlamana/Ventus) to build internal editors, but decided I needed a more configurable solution that didn't rely on CSS for configuration so it's easier to use with npm.
 
 ## live example
 https://davidfig.github.io/window-manager/
@@ -100,6 +100,18 @@ const WindowOptions = {
      */
     createWindow(options)
 
+    /**
+     * send window to front
+     * @param {Window} win
+     */
+    sendToFront(win)
+
+    /**
+     * send window to back
+     * @param {Window} win
+     */
+    sendToBack(win)
+
 ```
 ### src/window.js
 ```js
@@ -166,6 +178,16 @@ const WindowOptions = {
      * maximize the window
      */
     maximize()
+
+    /**
+     * sends window to back of window-manager
+     */
+    sendToBack()
+
+    /**
+     * send window to front of window-manager
+     */
+    sendToFront()
 
     /**
      * change title

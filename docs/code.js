@@ -26,7 +26,7 @@ test2.content.innerHTML = 'This is a pink test window.<br><br>Check out the fanc
 test2.open()
 
 // create a test window with a button to create a modal window
-const test3 = wm.createWindow({ x: 300, y: 220, width: 350, title: 'Create a better demo!' })
+const test3 = wm.createWindow({ x: 300, y: 400, width: 350, title: 'Create a better demo!' })
 test3.content.style.padding = '1em'
 html.create({ parent: test3.content, html: 'I should probably make a better demo. And also get the minimize/maximize buttons working. One day.' })
 const div = html.create({ parent: test3.content, styles: { textAlign: 'center', marginTop: '1em' } })
@@ -53,6 +53,11 @@ button.onclick = () =>
     modal.open()
 }
 test3.open()
+
+const test4 = wm.createWindow({ x: 300, y: 20, title: 'My wife\'s art gallery!' })
+test4.content.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/-slAp_gVa70" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>'
+test4.open()
+test4.sendToBack()
 
 const wallpaper = html.create({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
 wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'

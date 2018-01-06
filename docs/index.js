@@ -27,7 +27,7 @@ test2.content.innerHTML = 'This is a pink test window.<br><br>Check out the fanc
 test2.open()
 
 // create a test window with a button to create a modal window
-const test3 = wm.createWindow({ x: 300, y: 220, width: 350, title: 'Create a better demo!' })
+const test3 = wm.createWindow({ x: 300, y: 400, width: 350, title: 'Create a better demo!' })
 test3.content.style.padding = '1em'
 html.create({ parent: test3.content, html: 'I should probably make a better demo. And also get the minimize/maximize buttons working. One day.' })
 const div = html.create({ parent: test3.content, styles: { textAlign: 'center', marginTop: '1em' } })
@@ -54,6 +54,11 @@ button.onclick = () =>
     modal.open()
 }
 test3.open()
+
+const test4 = wm.createWindow({ x: 300, y: 20, title: 'My wife\'s art gallery!' })
+test4.content.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/-slAp_gVa70" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>'
+test4.open()
+test4.sendToBack()
 
 const wallpaper = html.create({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
 wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'
@@ -5321,6 +5326,8 @@ const html = require('./html')
 const WindowOptions = require('./window-options')
 const Window = require('./window')
 
+const MAX_Z = 999999
+
 module.exports = class WindowManager
 {
     /**
@@ -5402,6 +5409,49 @@ module.exports = class WindowManager
         return win
     }
 
+    /**
+     * send window to front
+     * @param {Window} win
+     */
+    sendToFront(win)
+    {
+        const index = this.windows.indexOf(win)
+        if (index !== this.windows.length - 1)
+        {
+            this.windows.splice(index, 1)
+            this.windows.push(win)
+            this._reorder()
+        }
+    }
+
+    /**
+     * send window to back
+     * @param {Window} win
+     */
+    sendToBack(win)
+    {
+        const index = this.windows.indexOf(win)
+        if (index !== 0)
+        {
+            this.windows.splice(index, 1)
+            this.windows.unshift(win)
+            this._reorder()
+        }
+    }
+
+    /**
+     * reorder windows
+     * @private
+     * @returns {number} available z-index for top window
+     */
+    _reorder()
+    {
+        for (let i = 0; i < this.windows.length; i++)
+        {
+            this.windows[i].z = i
+        }
+    }
+
     _createDom()
     {
         this.win = html.create({
@@ -5452,7 +5502,14 @@ module.exports = class WindowManager
             this.active.blur()
         }
 
-        this.win.appendChild(win.win)
+        const index = this.windows.indexOf(win)
+        if (index !== this.windows.length - 1)
+        {
+            this.windows.splice(index, 1)
+            this.windows.push(win)
+            this._reorder()
+        }
+
         this.active = win
     }
 
@@ -5819,6 +5876,22 @@ module.exports = class Window extends Events
                 this.emit('maximize', this)
             }
         }
+    }
+
+    /**
+     * sends window to back of window-manager
+     */
+    sendToBack()
+    {
+        this.wm.sendToBack(this)
+    }
+
+    /**
+     * send window to front of window-manager
+     */
+    sendToFront()
+    {
+        this.wm.sendToFront(this)
     }
 
     /**
@@ -6205,5 +6278,8 @@ module.exports = class Window extends Events
             y: coord.y - this.y
         }
     }
+
+    get z() { return parseInt(this.win.style.zIndex) }
+    set z(value) { this.win.style.zIndex = value }
 }
 },{"./html":7,"clicked":3,"eventemitter3":4,"velocity-animate":6}]},{},[1]);

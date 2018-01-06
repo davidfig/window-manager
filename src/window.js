@@ -247,6 +247,22 @@ module.exports = class Window extends Events
     }
 
     /**
+     * sends window to back of window-manager
+     */
+    sendToBack()
+    {
+        this.wm.sendToBack(this)
+    }
+
+    /**
+     * send window to front of window-manager
+     */
+    sendToFront()
+    {
+        this.wm.sendToFront(this)
+    }
+
+    /**
      * change title
      * @type {string}
      */
@@ -630,4 +646,7 @@ module.exports = class Window extends Events
             y: coord.y - this.y
         }
     }
+
+    get z() { return parseInt(this.win.style.zIndex) }
+    set z(value) { this.win.style.zIndex = value }
 }
