@@ -62,11 +62,6 @@ module.exports = class WindowManager
                 options[key] = this.options[key]
             }
         }
-        if (options.center)
-        {
-            options.x = options.center.x + options.center.width / 2 - options.width / 2
-            options.y = options.center.y + options.center.height / 2 - options.height / 2
-        }
         const win = new Window(this, options);
         win.on('open', this._open, this)
         win.on('focus', this._focus, this)
@@ -76,6 +71,13 @@ module.exports = class WindowManager
         win.win.addEventListener('touchmove', (e) => this._move(e))
         win.win.addEventListener('mouseup', (e) => this._up(e))
         win.win.addEventListener('touchend', (e) => this._up(e))
+        if (options.center)
+        {
+            win.move(
+                options.center.x + options.center.width / 2 - (options.width ? options.width / 2 : 0),
+                options.center.y + options.center.height / 2 - (options.height ? options.height / 2 : 0)
+            )
+        }
         if (options.modal)
         {
             this.modal = win

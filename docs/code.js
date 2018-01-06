@@ -34,8 +34,22 @@ const button = html.create({ parent: div, type: 'button', html: 'open modal wind
 button.onclick = () =>
 {
     // create a modal window
-    const modal = wm.createWindow({ modal: true, width: 200, height: 100, center: test3, title: 'modal window ' })
-    modal.content.innerHTML = '<div style="margin: 0.5em">This needs to be closed before using other windows.</div>'
+    const modal = wm.createWindow({
+        modal: true,
+        width: 200,
+        center: test3, // center window in test3
+        title: 'modal window',
+        minimizable: false,
+        maximizable: false
+    })
+    const div = html.create({ parent: modal.content, styles: { 'margin': '0.5em' }})
+    html.create({ parent: div, html: 'This needs to be closed before using other windows.' })
+    const buttonDiv = html.create({ parent: div, styles: { 'text-align': 'center', margin: '1em' } })
+    const button = html.create({ parent: buttonDiv, type: 'button', html: 'close modal' })
+    button.onclick = () =>
+    {
+        modal.close()
+    }
     modal.open()
 }
 test3.open()
