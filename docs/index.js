@@ -35,8 +35,22 @@ const button = html.create({ parent: div, type: 'button', html: 'open modal wind
 button.onclick = () =>
 {
     // create a modal window
-    const modal = wm.createWindow({ modal: true, width: 200, height: 100, center: test3, title: 'modal window ' })
-    modal.content.innerHTML = '<div style="margin: 0.5em">This needs to be closed before using other windows.</div>'
+    const modal = wm.createWindow({
+        modal: true,
+        width: 200,
+        center: test3, // center window in test3
+        title: 'modal window',
+        minimizable: false,
+        maximizable: false
+    })
+    const div = html.create({ parent: modal.content, styles: { 'margin': '0.5em' }})
+    html.create({ parent: div, html: 'This needs to be closed before using other windows.' })
+    const buttonDiv = html.create({ parent: div, styles: { 'text-align': 'center', margin: '1em' } })
+    const button = html.create({ parent: buttonDiv, type: 'button', html: 'close modal' })
+    button.onclick = () =>
+    {
+        modal.close()
+    }
     modal.open()
 }
 test3.open()
@@ -5365,11 +5379,6 @@ module.exports = class WindowManager
                 options[key] = this.options[key]
             }
         }
-        if (options.center)
-        {
-            options.x = options.center.x + options.center.width / 2 - options.width / 2
-            options.y = options.center.y + options.center.height / 2 - options.height / 2
-        }
         const win = new Window(this, options);
         win.on('open', this._open, this)
         win.on('focus', this._focus, this)
@@ -5379,6 +5388,13 @@ module.exports = class WindowManager
         win.win.addEventListener('touchmove', (e) => this._move(e))
         win.win.addEventListener('mouseup', (e) => this._up(e))
         win.win.addEventListener('touchend', (e) => this._up(e))
+        if (options.center)
+        {
+            win.move(
+                options.center.x + options.center.width / 2 - (options.width ? options.width / 2 : 0),
+                options.center.y + options.center.height / 2 - (options.height ? options.height / 2 : 0)
+            )
+        }
         if (options.modal)
         {
             this.modal = win

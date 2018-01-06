@@ -2,16 +2,20 @@
 A javascript-only Window Manager based on Ventus.
 
 ## features
-* basic windowing experience for building tools (works great with electron!)
+* basic windowing experience (works great with electron!)
+* create normal and modal windows
+* takes advantage of the DOM to allow an undefined width and/or height to automatically adjust size of window based on content
+* windows may be resized, maximized, and minimized
+* minimize works by minimizing to a small square that can be moved independently. Clicking it restores to its original size and location. Minimizing again moves the small square back to the last minimized location.
 * emits events (using eventemitter3)
-
-## TODO
-* better API documentation
-* more configurable options
+* uses javascript animations instead of CSS
 
 ## rationale
 
-I used [Ventus](https://github.com/rlamana/Ventus) to build internal editors, but decided I needed a more configurable solution that didn't rely on CSS (I dislike having to manage css files). While window-manager currently has fewer features than Ventus, it's easier to configure and provides a more robust event model (e.g., resize and move events).
+I used [Ventus](https://github.com/rlamana/Ventus) to build internal editors, but decided I needed a more configurable solution that didn't rely on CSS for configuration so it's easier to use with npm. 
+
+## live example
+https://davidfig.github.io/window-manager/
 
 ## installation
 
@@ -21,13 +25,12 @@ I used [Ventus](https://github.com/rlamana/Ventus) to build internal editors, bu
 
     const WM = require('window-manager)
 
-    const wm = new WM()
+    const wm = new WM({ backgroundColorWindow: 'green' })
 
     const window = wm.createWindow({ width: 500, height: 500, title: 'Test Window' })
+    window.content.style.margin = '10px'
+    window.content.innerHTML = 'This is a nifty window.'
     window.open()
-
-## live example
-https://davidfig.github.io/window-manager/
 
 ## API
 ### src/window-options.js
