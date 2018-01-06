@@ -144,7 +144,15 @@ module.exports = class WindowManager
      */
     load(data)
     {
-
+        for (let i = 0; i < this.windows.length; i++)
+        {
+            const entry = this.windows[i]
+            if (data[entry.id])
+            {
+                entry.load(data[entry.id])
+            }
+        }
+        // reorder windows
     }
 
     /**

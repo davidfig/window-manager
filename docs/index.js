@@ -15,7 +15,7 @@ test.open()
 
 // create a pink test window, changing the window's style
 const test2 = wm.createWindow({
-    width: 300, height: 300,
+    width: 300, height: 150,
     x: 100, y: 100,
     backgroundColorWindow: 'rgb(255,200,255)',
     titlebarHeight: '22px',
@@ -23,13 +23,13 @@ const test2 = wm.createWindow({
     backgroundColorTitlebarInactive: 'purple'
 })
 test2.content.style.padding = '0.5em'
-test2.content.innerHTML = 'This is a pink test window.<br><br>Check out the fancy title bar for other style tests.'
+test2.content.innerHTML = 'This is a pink test window.<br><br>Check out the fancy title bar for other style tests.<br><br><br>And scrolling!!!'
 test2.open()
 
 // create a test window with a button to create a modal window
-const test3 = wm.createWindow({ x: 300, y: 400, width: 350, title: 'Create a better demo!' })
+const test3 = wm.createWindow({ x: 300, y: 400, width: 350, title: 'This is one fancy demo!' })
 test3.content.style.padding = '1em'
-html.create({ parent: test3.content, html: 'I should probably make a better demo. And also get the minimize/maximize buttons working. One day.' })
+html.create({ parent: test3.content, html: 'OK. It isn\'t that fancy, but it shows off some of the functionality of this library.' })
 const div = html.create({ parent: test3.content, styles: { textAlign: 'center', marginTop: '1em' } })
 const button = html.create({ parent: div, type: 'button', html: 'open modal window' })
 button.onclick = () =>
@@ -59,6 +59,26 @@ const test4 = wm.createWindow({ x: 300, y: 20, title: 'My wife\'s art gallery!' 
 test4.content.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/-slAp_gVa70" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>'
 test4.open()
 test4.sendToBack()
+
+const test5 = wm.createWindow({ x: 20, y: 600, title: 'window save/load' })
+html.create({ parent: test5.content, html: 'Save the windows, and then move windows around and load them.', styles: { margin: '0.5em' }})
+const buttons = html.create({ parent: test5.content, styles: { 'text-align': 'center' } })
+const save = html.create({ parent: buttons, html: 'save window state', type: 'button', styles: { margin: '1em', background: 'rgb(200,255,200)' } })
+const load = html.create({ parent: buttons, html: 'load window state', type: 'button', styles: { margin: '1em', background: 'rgb(255,200,200)' } })
+test5.open()
+let data
+save.onclick = () =>
+{
+    data = wm.save()
+}
+
+load.onclick = () =>
+{
+    if (data)
+    {
+        wm.load(data)
+    }
+}
 
 const wallpaper = html.create({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
 wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'
@@ -5359,6 +5379,7 @@ module.exports = class WindowManager
      * @param {number} [options.y] position
      * @param {boolean} [options.modal]
      * @param {Window} [options.center] center in the middle of an existing Window
+     * @param {string|number} [options.id] if not provide, id will be assigned in order of creation (0, 1, 2...)
      * @fires open
      * @fires focus
      * @fires blur
@@ -5438,6 +5459,40 @@ module.exports = class WindowManager
     }
 
     /**
+     * save the state of all the windows
+     * @returns {object} use this object in load() to restore the state of all windows
+     */
+    save()
+    {
+        const data = {}
+        for (let i = 0; i < this.windows.length; i++)
+        {
+            const entry = this.windows[i]
+            data[entry.id] = entry.save()
+            data[entry.id].order = i
+        }
+        return data
+    }
+
+    /**
+     * restores the state of all the windows
+     * NOTE: this requires that the windows have the same id as when save() was called
+     * @param {object} data created by save()
+     */
+    load(data)
+    {
+        for (let i = 0; i < this.windows.length; i++)
+        {
+            const entry = this.windows[i]
+            if (data[entry.id])
+            {
+                entry.load(data[entry.id])
+            }
+        }
+        // reorder windows
+    }
+
+    /**
      * reorder windows
      * @private
      * @returns {number} available z-index for top window
@@ -5506,8 +5561,8 @@ module.exports = class WindowManager
         {
             this.windows.splice(index, 1)
             this.windows.push(win)
-            this._reorder()
         }
+        this._reorder()
 
         this.active = win
     }
@@ -5632,6 +5687,7 @@ module.exports = WindowOptions
 const Events = require('eventemitter3')
 const clicked = require('clicked')
 const Velocity = require('velocity-animate')
+const exists = require('exists')
 
 const html = require('./html')
 
@@ -5643,16 +5699,17 @@ module.exports = class Window extends Events
     {
         super()
         this.wm = wm
-        this.id = id++
 
         this.options = options
+
+        this.id = exists(this.options.id) ? this.options.id : id++
 
         this._createWindow()
         this._listeners()
 
         this.active = false
         this.maximized = false
-        this._minimized = false
+        this.minimized = false
 
         this._closed = true
         this._restore = null
@@ -5686,7 +5743,7 @@ module.exports = class Window extends Events
     {
         if (this.wm._checkModal(this))
         {
-            if (this._minimized)
+            if (this.minimized)
             {
                 this.minimize()
             }
@@ -5810,11 +5867,11 @@ module.exports = class Window extends Events
         if (this.wm._checkModal(this) && this.options.minimizable && !this.transitioning)
         {
             this.transitioning = true
-            if (this._minimized)
+            if (this.minimized)
             {
-                Velocity(this.win, { scaleX: 1, scaleY: 1, left: this._minimized.x, top: this._minimized.y }, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
+                Velocity(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y }, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
                 {
-                    this._minimized = false
+                    this.minimized = false
                     this.emit('minimize-restore')
                     this.transitioning = false
                     this.overlay.style.display = 'none'
@@ -5832,7 +5889,7 @@ module.exports = class Window extends Events
                 }
                 Velocity(this.win, delta, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
                 {
-                    this._minimized = { x, y }
+                    this.minimized = { x, y }
                     this.emit('minimize', this)
                     this.transitioning = false
                     this.overlay.style.display = 'block'
@@ -5891,6 +5948,79 @@ module.exports = class Window extends Events
     sendToFront()
     {
         this.wm.sendToFront(this)
+    }
+
+    /**
+     * save the state of the window
+     * @return {object} data
+     */
+    save()
+    {
+        const data = {}
+        const maximized = this.maximized
+        if (maximized)
+        {
+            data.maximized = { x: maximized.x, y: maximized.y, width: maximized.width, height: maximized.height }
+        }
+        const minimized = this.minimized
+        if (minimized)
+        {
+            data.minimized = { x: this.minimized.x, y: this.minimized.y }
+        }
+        const lastMinimized = this._lastMinimized
+        if (lastMinimized)
+        {
+            data.lastMinimized = { x: lastMinimized.x, y: lastMinimized.y }
+        }
+        data.x = this.x
+        data.y = this.y
+        if (exists(this.options.width))
+        {
+            data.width = this.options.width
+        }
+        if (exists(this.options.height))
+        {
+            data.height = this.options.height
+        }
+        return data
+    }
+
+    /**
+     * return the state of the window
+     * @param {object} data from save()
+     */
+    load(data)
+    {
+        if (data.maximized)
+        {
+            if (!this.maximized)
+            {
+                this.maximize()
+            }
+            this.maximized = data.maximized
+        }
+        if (data.minimized)
+        {
+            if (!this.minimized)
+            {
+                this.minimize()
+            }
+            this.minimized = data.minimized
+        }
+        if (data.lastMinimized)
+        {
+            this._lastMinimized = data.lastMinimized
+        }
+        this.x = data.x
+        this.y = data.y
+        if (exists(data.width))
+        {
+            this.width = data.width
+        }
+        if (exists(data.height))
+        {
+            this.height = data.height
+        }
     }
 
     /**
@@ -6205,7 +6335,7 @@ module.exports = class Window extends Events
                     event.pageX - this._moving.x,
                     event.pageY - this._moving.y
                 )
-                if (this._minimized)
+                if (this.minimized)
                 {
                     e.preventDefault()
                     this._lastMinimized = { x: this.win.offsetLeft, y: this.win.offsetTop }
@@ -6232,7 +6362,7 @@ module.exports = class Window extends Events
     {
         if (this._moving)
         {
-            if (this._minimized)
+            if (this.minimized)
             {
                 if (!this._moved)
                 {
@@ -6283,4 +6413,4 @@ module.exports = class Window extends Events
     get z() { return parseInt(this.win.style.zIndex) }
     set z(value) { this.win.style.zIndex = value }
 }
-},{"./html":7,"clicked":3,"eventemitter3":4,"velocity-animate":6}]},{},[1]);
+},{"./html":7,"clicked":3,"eventemitter3":4,"exists":5,"velocity-animate":6}]},{},[1]);

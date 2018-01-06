@@ -23,7 +23,7 @@ module.exports = class Window extends Events
 
         this.active = false
         this.maximized = false
-        this._minimized = false
+        this.minimized = false
 
         this._closed = true
         this._restore = null
@@ -57,7 +57,7 @@ module.exports = class Window extends Events
     {
         if (this.wm._checkModal(this))
         {
-            if (this._minimized)
+            if (this.minimized)
             {
                 this.minimize()
             }
@@ -181,11 +181,11 @@ module.exports = class Window extends Events
         if (this.wm._checkModal(this) && this.options.minimizable && !this.transitioning)
         {
             this.transitioning = true
-            if (this._minimized)
+            if (this.minimized)
             {
-                Velocity(this.win, { scaleX: 1, scaleY: 1, left: this._minimized.x, top: this._minimized.y }, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
+                Velocity(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y }, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
                 {
-                    this._minimized = false
+                    this.minimized = false
                     this.emit('minimize-restore')
                     this.transitioning = false
                     this.overlay.style.display = 'none'
@@ -203,7 +203,7 @@ module.exports = class Window extends Events
                 }
                 Velocity(this.win, delta, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
                 {
-                    this._minimized = { x, y }
+                    this.minimized = { x, y }
                     this.emit('minimize', this)
                     this.transitioning = false
                     this.overlay.style.display = 'block'
@@ -307,12 +307,18 @@ module.exports = class Window extends Events
     {
         if (data.maximized)
         {
-            this.maximize()
+            if (!this.maximized)
+            {
+                this.maximize()
+            }
             this.maximized = data.maximized
         }
         if (data.minimized)
         {
-            this.minimize()
+            if (!this.minimized)
+            {
+                this.minimize()
+            }
             this.minimized = data.minimized
         }
         if (data.lastMinimized)
@@ -643,7 +649,7 @@ module.exports = class Window extends Events
                     event.pageX - this._moving.x,
                     event.pageY - this._moving.y
                 )
-                if (this._minimized)
+                if (this.minimized)
                 {
                     e.preventDefault()
                     this._lastMinimized = { x: this.win.offsetLeft, y: this.win.offsetTop }
@@ -670,7 +676,7 @@ module.exports = class Window extends Events
     {
         if (this._moving)
         {
-            if (this._minimized)
+            if (this.minimized)
             {
                 if (!this._moved)
                 {

@@ -84,6 +84,7 @@ const WindowOptions = {
      * @param {number} [options.y] position
      * @param {boolean} [options.modal]
      * @param {Window} [options.center] center in the middle of an existing Window
+     * @param {string|number} [options.id] if not provide, id will be assigned in order of creation (0, 1, 2...)
      * @fires open
      * @fires focus
      * @fires blur
@@ -112,6 +113,19 @@ const WindowOptions = {
      * @param {Window} win
      */
     sendToBack(win)
+
+    /**
+     * save the state of all the windows
+     * @returns {object} use this object in load() to restore the state of all windows
+     */
+    save()
+
+    /**
+     * restores the state of all the windows
+     * NOTE: this requires that the windows have the same id as when save() was called
+     * @param {object} data created by save()
+     */
+    load(data)
 
 ```
 ### src/window.js
@@ -189,6 +203,18 @@ const WindowOptions = {
      * send window to front of window-manager
      */
     sendToFront()
+
+    /**
+     * save the state of the window
+     * @return {object} data
+     */
+    save()
+
+    /**
+     * return the state of the window
+     * @param {object} data from save()
+     */
+    load(data)
 
     /**
      * change title
