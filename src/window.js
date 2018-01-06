@@ -398,6 +398,8 @@ module.exports = class Window extends Events
             parent: this.win, styles: {
                 'display': 'none',
                 'position': 'absolute',
+                'left': 0,
+                'top': 0,
                 'width': '100%',
                 'height': '100%'
             }
@@ -601,7 +603,6 @@ module.exports = class Window extends Events
         {
             if (this._minimized)
             {
-
                 if (!this._moved)
                 {
                     this.minimize()
