@@ -408,7 +408,6 @@ module.exports = class Window extends Events
 
     _downTitlebar(e)
     {
-console.log('now down')
         if (!this.transitioning)
         {
             const event = this._convertMoveEvent(e)
