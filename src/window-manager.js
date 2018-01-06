@@ -124,7 +124,8 @@ module.exports = class WindowManager
      */
     _reorder()
     {
-        for (let i = 0; i < this.windows.length; i++)
+        let i = 0
+        for (; i < this.windows.length; i++)
         {
             this.windows[i].z = i
         }
@@ -140,6 +141,17 @@ module.exports = class WindowManager
                 'overflow': 'hidden',
                 'z-index': -1,
                 'cursor': 'default'
+            }
+        })
+        this.wallpaper = html.create({
+            parent: this.win, styles: {
+                'user-select': 'none',
+                'position': 'absolute',
+                'top': 0,
+                'left': 0,
+                'width': '100%',
+                'height': '100%',
+                'overflow': 'hidden'
             }
         })
         this.overlay = html.create({

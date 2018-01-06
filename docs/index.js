@@ -60,13 +60,8 @@ test4.content.innerHTML = '<iframe width="560" height="315" src="https://www.you
 test4.open()
 test4.sendToBack()
 
-const wallpaper = html.create({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
+const wallpaper = html.create({ parent: wm.wallpaper, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
 wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'
-
-const i = new Image()
-i.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAAhElEQVQ4jbWUSwrAIAxEpScQBG+oN3bR07wuaqHY+kmIATcy84agjHM7BvBABoLCG6rXvy8z9xQgCmCxegBSm1Ik0AZWPtv9CLrQZe2KUBI8NYhhI6Ma1oGe9ehgDfQBPeAh7FAlacZ0ZdNHMf02ph9bkj7VYl0ObKgvDyT0BZt4F6zlXMgpEz867WPDAAAAAElFTkSuQmCC'
-document.body.appendChild(i)
-
 },{"..":2,"../src/html":7}],2:[function(require,module,exports){
 module.exports = require('./src/window-manager')
 },{"./src/window-manager":8}],3:[function(require,module,exports){
@@ -5446,7 +5441,8 @@ module.exports = class WindowManager
      */
     _reorder()
     {
-        for (let i = 0; i < this.windows.length; i++)
+        let i = 0
+        for (; i < this.windows.length; i++)
         {
             this.windows[i].z = i
         }
@@ -5462,6 +5458,17 @@ module.exports = class WindowManager
                 'overflow': 'hidden',
                 'z-index': -1,
                 'cursor': 'default'
+            }
+        })
+        this.wallpaper = html.create({
+            parent: this.win, styles: {
+                'user-select': 'none',
+                'position': 'absolute',
+                'top': 0,
+                'left': 0,
+                'width': '100%',
+                'height': '100%',
+                'overflow': 'hidden'
             }
         })
         this.overlay = html.create({
@@ -6027,7 +6034,7 @@ module.exports = class Window extends Events
         }
 
         this.overlay = html.create({
-            parent: this.winBox, styles: {
+            parent: this.win, styles: {
                 'display': 'none',
                 'position': 'absolute',
                 'width': '100%',
@@ -6040,6 +6047,7 @@ module.exports = class Window extends Events
 
     _downTitlebar(e)
     {
+console.log('now down')
         if (!this.transitioning)
         {
             const event = this._convertMoveEvent(e)
@@ -6089,7 +6097,7 @@ module.exports = class Window extends Events
         if (this.options.movable)
         {
             this.winTitlebar.addEventListener('mousedown', (e) => this._downTitlebar(e))
-            this.winTitlebar.addEventListener('touchdown', (e) => this._downTitlebar(e))
+            this.winTitlebar.addEventListener('touchstart', (e) => this._downTitlebar(e))
         }
     }
 
@@ -6198,7 +6206,6 @@ module.exports = class Window extends Events
                 this._moving && this._stopMove()
                 this._resizing && this._stopResize()
             }
-
             if (this._moving)
             {
                 this.move(
@@ -6212,6 +6219,7 @@ module.exports = class Window extends Events
                     this._moved = true
                 }
                 this.emit('move', this)
+                e.preventDefault()
             }
 
             if (this._resizing)
@@ -6222,6 +6230,7 @@ module.exports = class Window extends Events
                 )
                 this.maximized = null
                 this.emit('resize', this)
+                e.preventDefault()
             }
         }
     }

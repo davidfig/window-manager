@@ -59,9 +59,5 @@ test4.content.innerHTML = '<iframe width="560" height="315" src="https://www.you
 test4.open()
 test4.sendToBack()
 
-const wallpaper = html.create({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
+const wallpaper = html.create({ parent: wm.wallpaper, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
 wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'
-
-const i = new Image()
-i.src = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAAhElEQVQ4jbWUSwrAIAxEpScQBG+oN3bR07wuaqHY+kmIATcy84agjHM7BvBABoLCG6rXvy8z9xQgCmCxegBSm1Ik0AZWPtv9CLrQZe2KUBI8NYhhI6Ma1oGe9ehgDfQBPeAh7FAlacZ0ZdNHMf02ph9bkj7VYl0ObKgvDyT0BZt4F6zlXMgpEz867WPDAAAAAElFTkSuQmCC'
-document.body.appendChild(i)

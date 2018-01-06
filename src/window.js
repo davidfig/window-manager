@@ -395,7 +395,7 @@ module.exports = class Window extends Events
         }
 
         this.overlay = html.create({
-            parent: this.winBox, styles: {
+            parent: this.win, styles: {
                 'display': 'none',
                 'position': 'absolute',
                 'width': '100%',
@@ -408,6 +408,7 @@ module.exports = class Window extends Events
 
     _downTitlebar(e)
     {
+console.log('now down')
         if (!this.transitioning)
         {
             const event = this._convertMoveEvent(e)
@@ -457,7 +458,7 @@ module.exports = class Window extends Events
         if (this.options.movable)
         {
             this.winTitlebar.addEventListener('mousedown', (e) => this._downTitlebar(e))
-            this.winTitlebar.addEventListener('touchdown', (e) => this._downTitlebar(e))
+            this.winTitlebar.addEventListener('touchstart', (e) => this._downTitlebar(e))
         }
     }
 
@@ -566,7 +567,6 @@ module.exports = class Window extends Events
                 this._moving && this._stopMove()
                 this._resizing && this._stopResize()
             }
-
             if (this._moving)
             {
                 this.move(
@@ -580,6 +580,7 @@ module.exports = class Window extends Events
                     this._moved = true
                 }
                 this.emit('move', this)
+                e.preventDefault()
             }
 
             if (this._resizing)
@@ -590,6 +591,7 @@ module.exports = class Window extends Events
                 )
                 this.maximized = null
                 this.emit('resize', this)
+                e.preventDefault()
             }
         }
     }
