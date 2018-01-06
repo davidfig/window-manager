@@ -190,6 +190,12 @@ const WindowOptions = {
     move(x, y)
 
     /**
+     * minimize window
+     * @param {boolean} noAnimate
+     */
+    minimize(noAnimate)
+
+    /**
      * maximize the window
      */
     maximize()

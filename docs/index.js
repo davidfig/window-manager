@@ -5862,20 +5862,35 @@ module.exports = class Window extends Events
         this.y = y
     }
 
-    minimize()
+    /**
+     * minimize window
+     * @param {boolean} noAnimate
+     */
+    minimize(noAnimate)
     {
         if (this.wm._checkModal(this) && this.options.minimizable && !this.transitioning)
         {
             this.transitioning = true
             if (this.minimized)
             {
-                Velocity(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y }, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
+                if (noAnimate)
                 {
+                    this.win.style.transform = 'scale(1) scaleX(1) scaleY(1)'
                     this.minimized = false
                     this.emit('minimize-restore')
                     this.transitioning = false
                     this.overlay.style.display = 'none'
-                })
+                }
+                else
+                {
+                    Velocity(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y }, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
+                    {
+                        this.minimized = false
+                        this.emit('minimize-restore')
+                        this.transitioning = false
+                        this.overlay.style.display = 'none'
+                    })
+                }
             }
             else
             {
@@ -5887,13 +5902,26 @@ module.exports = class Window extends Events
                     delta.left = this._lastMinimized.x
                     delta.top = this._lastMinimized.y
                 }
-                Velocity(this.win, delta, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
+                if (noAnimate)
                 {
+                    this.win.style.transform = 'scale(' + (desired / this.win.offsetWidth) + ',' + (desired / this.win.offsetHeight) + ')'
+                    this.win.style.left = delta.left + 'px'
+                    this.win.style.top = delta.top + 'px'
                     this.minimized = { x, y }
                     this.emit('minimize', this)
                     this.transitioning = false
                     this.overlay.style.display = 'block'
-                })
+                }
+                else
+                {
+                    Velocity(this.win, delta, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
+                    {
+                        this.minimized = { x, y }
+                        this.emit('minimize', this)
+                        this.transitioning = false
+                        this.overlay.style.display = 'block'
+                    })
+                }
             }
         }
     }
@@ -5995,7 +6023,7 @@ module.exports = class Window extends Events
         {
             if (!this.maximized)
             {
-                this.maximize()
+                this.maximize(true)
             }
             this.maximized = data.maximized
         }
@@ -6003,7 +6031,7 @@ module.exports = class Window extends Events
         {
             if (!this.minimized)
             {
-                this.minimize()
+                this.minimize(true)
             }
             this.minimized = data.minimized
         }
@@ -6017,9 +6045,17 @@ module.exports = class Window extends Events
         {
             this.width = data.width
         }
+        else
+        {
+            this.win.style.width = 'auto'
+        }
         if (exists(data.height))
         {
             this.height = data.height
+        }
+        else
+        {
+            this.win.style.height = 'auto'
         }
     }
 
