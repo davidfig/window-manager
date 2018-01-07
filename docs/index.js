@@ -72,6 +72,11 @@ save.onclick = () =>
     data = wm.save()
 }
 
+const test6 = wm.createWindow({ x: 800, y: 350, width: 250, height: 350, title: 'One of my early games' })
+test6.content.innerHTML = '<iframe width="100%", height="100%" src="https://yopeyopey.com/games/gotpaws/">'
+test6.content.style.overflow = 'hidden'
+test6.open()
+
 load.onclick = () =>
 {
     if (data)
