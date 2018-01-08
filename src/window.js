@@ -1,6 +1,6 @@
 const Events = require('eventemitter3')
 const clicked = require('clicked')
-const Velocity = require('velocity-animate')
+const Ease = require('../../dom-ease')
 const exists = require('exists')
 
 const html = require('./html')
@@ -29,19 +29,26 @@ module.exports = class Window extends Events
         this._restore = null
         this._moving = null
         this._resizing = null
+
+        this.ease = new Ease({ duration: this.options.animateTime, ease: this.options.ease })
     }
 
     /**
      * open the window
      * @param {boolean} [noFocus] do not focus window when opened
+     * @param {boolean} [noAnimate] do not animate window when opened
      */
-    open(noFocus)
+    open(noFocus, noAnimate)
     {
         if (this._closed)
         {
             this.emit('open', this)
             this.win.style.display = 'block'
-            Velocity(this.win, { scale: [1, 'easeInOutSine', 0] }, { duration: this.options.animateTime })
+            if (!noAnimate)
+            {
+                this.win.style.transform = 'scale(0)'
+                this.ease.add(this.win, { scale: 1 })
+            }
             this._closed = false
             if (!noFocus)
             {
@@ -88,7 +95,8 @@ module.exports = class Window extends Events
         if (!this._closed)
         {
             this._closed = true
-            Velocity(this.win, { scale: [0, 'easeInOutSine'] }, { duration: this.options.animateTime }).then(() =>
+            const ease = this.ease.add(this.win, { scale: 0 })
+            ease.on('complete-scale', () =>
             {
                 this.win.style.display = 'none'
                 this.emit('close', this);
@@ -184,23 +192,23 @@ module.exports = class Window extends Events
     {
         if (this.wm._checkModal(this) && this.options.minimizable && !this.transitioning)
         {
-            this.transitioning = true
             if (this.minimized)
             {
                 if (noAnimate)
                 {
-                    this.win.style.transform = 'scale(1) scaleX(1) scaleY(1)'
+                    this.win.style.transform = 'scaleX(1) scaleY(1)'
                     this.minimized = false
                     this.emit('minimize-restore')
-                    this.transitioning = false
                     this.overlay.style.display = 'none'
                 }
                 else
                 {
-                    Velocity(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y }, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
+                    this.transitioning = true
+                    const add = this.ease.add(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y })
+                    add.on('complete-top', () =>
                     {
                         this.minimized = false
-                        this.emit('minimize-restore')
+                        this.emit('minimize-restore', this)
                         this.transitioning = false
                         this.overlay.style.display = 'none'
                     })
@@ -210,25 +218,29 @@ module.exports = class Window extends Events
             {
                 const x = this.x, y = this.y
                 const desired = this.options.minimizeSize
-                const delta = { scaleX: (desired / this.win.offsetWidth), scaleY: (desired / this.win.offsetHeight) }
+                let delta
                 if (this._lastMinimized)
                 {
-                    delta.left = this._lastMinimized.x
-                    delta.top = this._lastMinimized.y
+                    delta = { left: this._lastMinimized.x, top: this._lastMinimized.y }
+                }
+                else
+                {
+                    delta = { scaleX: (desired / this.win.offsetWidth), scaleY: (desired / this.win.offsetHeight) }
                 }
                 if (noAnimate)
                 {
-                    this.win.style.transform = 'scale(' + (desired / this.win.offsetWidth) + ',' + (desired / this.win.offsetHeight) + ')'
+                    this.win.style.transform = 'scale(1) scale(' + (desired / this.win.offsetWidth) + ',' + (desired / this.win.offsetHeight) + ')'
                     this.win.style.left = delta.left + 'px'
                     this.win.style.top = delta.top + 'px'
                     this.minimized = { x, y }
                     this.emit('minimize', this)
-                    this.transitioning = false
                     this.overlay.style.display = 'block'
                 }
                 else
                 {
-                    Velocity(this.win, delta, { duration: this.options.animationTime, ease: 'easeInOutSine' }).then(() =>
+                    this.transitioning = true
+                    const ease = this.ease.add(this.win, delta)
+                    ease.on('complete-scaleY', () =>
                     {
                         this.minimized = { x, y }
                         this.emit('minimize', this)
@@ -250,7 +262,8 @@ module.exports = class Window extends Events
             this.transitioning = true
             if (this.maximized)
             {
-                Velocity(this.win, { left: this.maximized.x, top: this.maximized.y, width: this.maximized.width, height: this.maximized.height }, { duration: this.options.animateTime, ease: 'easeInOutSine' }).then(() =>
+                const ease = this.ease.add(this.win, { left: this.maximized.x, top: this.maximized.y, width: this.maximized.width, height: this.maximized.height })
+                ease.on('complete-height', () =>
                 {
                     this.options.x = this.maximized.x
                     this.options.y = this.maximized.y
@@ -265,7 +278,8 @@ module.exports = class Window extends Events
             else
             {
                 const x = this.x, y = this.y, width = this.win.offsetWidth, height = this.win.offsetHeight
-                Velocity(this.win, { left: 0, top: 0, width: this.wm.overlay.offsetWidth, height: this.wm.overlay.offsetHeight }, { duration: this.options.animateTime, ease: 'easeInOutSine' }).then(() =>
+                const ease = this.ease.add(this.win, { left: 0, top: 0, width: this.wm.overlay.offsetWidth, height: this.wm.overlay.offsetHeight })
+                ease.on('complete-height', () =>
                 {
                     this.maximized = { x, y, width, height }
                     this.transitioning = false

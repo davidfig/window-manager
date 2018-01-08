@@ -66,23 +66,18 @@ const save = html.create({ parent: buttons, html: 'save window state', type: 'bu
 const load = html.create({ parent: buttons, html: 'load window state', type: 'button', styles: { margin: '1em', background: 'rgb(255,200,200)' } })
 test5.open()
 let data
-save.onclick = () =>
-{
-    data = wm.save()
-}
+save.onclick = () => data = wm.save()
+load.onclick = () => { if (data) wm.load(data) }
 
 const test6 = wm.createWindow({ x: 800, y: 350, width: 250, height: 350, title: 'One of my early games' })
-test6.content.innerHTML = '<iframe width="100%", height="100%" src="https://yopeyopey.com/games/gotpaws/">'
-test6.content.style.overflow = 'hidden'
-test6.open()
-
-load.onclick = () =>
+const game = html.create({ parent: test6.content, type: 'button', html: 'play game', styles: { 'margin-top': '50%', 'margin-left': '50%', transform: 'translate(-50%, 0)' } })
+game.onclick = () =>
 {
-    if (data)
-    {
-        wm.load(data)
-    }
+    test6.content.style.overflow = 'hidden'
+    test6.content.innerHTML = ''
+    test6.content.innerHTML = '<iframe width="100%", height="100%" src="https://yopeyopey.com/games/gotpaws/">'
 }
+test6.open()
 
 const wallpaper = html.create({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
 wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'
