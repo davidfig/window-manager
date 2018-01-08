@@ -2868,7 +2868,7 @@ test2.open()
 // create a test window with a button to create a modal window
 const test3 = wm.createWindow({ x: 300, y: 400, width: 350, title: 'This is one fancy demo!' })
 test3.content.style.padding = '1em'
-html.create({ parent: test3.content, html: 'OK. It isn\'t that fancy, but it shows off some of the functionality of this library.' })
+html.create({ parent: test3.content, html: 'OK. It isn\'t that fancy, but it shows off some of the functionality of this library.<br><br>Please excuse the mess. I do NOT keep my desktop this messy, but I thought it made for a good demo.' })
 const div = html.create({ parent: test3.content, styles: { textAlign: 'center', marginTop: '1em' } })
 const button = html.create({ parent: div, type: 'button', html: 'open modal window' })
 button.onclick = () =>
@@ -2915,12 +2915,12 @@ game.onclick = () =>
 {
     test6.content.style.overflow = 'hidden'
     test6.content.innerHTML = ''
-    test6.content.innerHTML = '<iframe width="100%", height="100%" src="https://yopeyopey.com/games/gotpaws/">'
+    test6.content.innerHTML = '<iframe width="100%", height="100%" src="https://yopeyopey.com/games/gotpaws/"></iframe>'
 }
 test6.open()
 
-const test7 = wm.createWindow({ x: 700, y: 40, title: 'simple-window-manager documentation' })
-test7.innerHTML = '<iframe width="100%" height="100%" src="https://davidfig.github.io/window-manager/jsdoc/">'
+const test7 = wm.createWindow({ x: 700, y: 40, width: 400, height: 300, title: 'API documentation' })
+test7.content.innerHTML = '<iframe width="100%" height="100%" src="https://davidfig.github.io/window-manager/jsdoc/"></iframe>'
 test7.open()
 
 const wallpaper = html.create({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
