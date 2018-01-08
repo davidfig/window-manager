@@ -1,4 +1,4 @@
-const WM = require('..')
+const WM = require('../dist/window-manager')
 const html = require('../src/html')
 
 // create a window manager and change some of the default styles
@@ -6,13 +6,11 @@ const wm = new WM({
     borderRadius: '10px'
 })
 
-// create a test window
 const test = wm.createWindow( { x: 10, y: 10, title: 'Test Window' })
 test.content.style.padding = '1em'
 test.content.innerHTML = 'This is a test window.'
 test.open()
 
-// create a pink test window, changing the window's style
 const test2 = wm.createWindow({
     width: 300, height: 150,
     x: 100, y: 100,
@@ -78,6 +76,10 @@ game.onclick = () =>
     test6.content.innerHTML = '<iframe width="100%", height="100%" src="https://yopeyopey.com/games/gotpaws/">'
 }
 test6.open()
+
+// const test7 = wm.createWindow({ x: 700, y: 40, title: 'simple-window-manager documentation' })
+// test7.innerHTML = '<iframe width="100%" height="100%" src="https://davidfig.github.io/window-manager/jsdoc/">'
+// test7.open()
 
 const wallpaper = html.create({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
 wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'

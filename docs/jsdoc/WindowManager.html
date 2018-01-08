@@ -1,0 +1,2724 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>simple-window-manager API Documentation</title>
+    
+    <meta name="description" content="Documentation for simple-window-manager library" />
+    
+        <meta name="keywords" content="docs, documentation, html5, javascript, jsdoc, window manager" />
+        <meta name="keyword" content="docs, documentation, html5, javascript, jsdoc, window manager" />
+    
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Libre+Franklin:400,700" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/main.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true},"applicationName":"simple-window-manager","footer":"by YOPEY YOPEY LLC (yopeyopey.com)","copyright":"Copyright © 2018 YOPEY YOPEY LLC.","meta":{"title":"simple-window-manager API Documentation","description":"Documentation for simple-window-manager library","keyword":"docs, documentation, html5, javascript, jsdoc, window manager"}};
+    </script>
+    
+
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName"><a href="index.html">simple-window-manager</a></h3>
+    <button id="menuToggle" class="btn btn-link btn-lg menu-toggle">
+        <span class="glyphicon glyphicon-menu-hamburger"></span>
+    </button>
+    <div class="search">
+        <input id="search" type="text" class="form-control input-md" placeholder="Search...">
+    </div>
+    <ul class="list">
+    
+        <li class="item" data-name="Window">
+            <span class="title  ">
+                
+                <a href="Window.html">Window</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="Window#height"><a href="Window.html#height">height</a></li>
+            
+                <li class="parent " data-name="Window#title"><a href="Window.html#title">title</a></li>
+            
+                <li class="parent " data-name="Window#width"><a href="Window.html#width">width</a></li>
+            
+                <li class="parent " data-name="Window#x"><a href="Window.html#x">x</a></li>
+            
+                <li class="parent " data-name="Window#y"><a href="Window.html#y">y</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="Window~WindowOptions"><a href="Window.html#~WindowOptions">WindowOptions</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="Window#blur"><a href="Window.html#blur">blur</a></li>
+            
+                <li class="parent  " data-name="Window#close"><a href="Window.html#close">close</a></li>
+            
+                <li class="  " data-name="Window#emit"><a href="Window.html#emit">emit</a></li>
+            
+                <li class="  " data-name="Window#eventNames"><a href="Window.html#eventNames">eventNames</a></li>
+            
+                <li class="parent  " data-name="Window#focus"><a href="Window.html#focus">focus</a></li>
+            
+                <li class="  " data-name="Window#listenerCount"><a href="Window.html#listenerCount">listenerCount</a></li>
+            
+                <li class="  " data-name="Window#listeners"><a href="Window.html#listeners">listeners</a></li>
+            
+                <li class="parent  " data-name="Window#load"><a href="Window.html#load">load</a></li>
+            
+                <li class="parent  " data-name="Window#maximize"><a href="Window.html#maximize">maximize</a></li>
+            
+                <li class="parent  " data-name="Window#minimize"><a href="Window.html#minimize">minimize</a></li>
+            
+                <li class="parent  " data-name="Window#move"><a href="Window.html#move">move</a></li>
+            
+                <li class="  " data-name="Window#on"><a href="Window.html#on">on</a></li>
+            
+                <li class="  " data-name="Window#once"><a href="Window.html#once">once</a></li>
+            
+                <li class="parent  " data-name="Window#open"><a href="Window.html#open">open</a></li>
+            
+                <li class="  " data-name="Window#removeAllListeners"><a href="Window.html#removeAllListeners">removeAllListeners</a></li>
+            
+                <li class="  " data-name="Window#removeListener"><a href="Window.html#removeListener">removeListener</a></li>
+            
+                <li class="parent  " data-name="Window#resize"><a href="Window.html#resize">resize</a></li>
+            
+                <li class="parent  " data-name="Window#save"><a href="Window.html#save">save</a></li>
+            
+                <li class="parent  " data-name="Window#sendToBack"><a href="Window.html#sendToBack">sendToBack</a></li>
+            
+                <li class="parent  " data-name="Window#sendToFront"><a href="Window.html#sendToFront">sendToFront</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            <span class="subtitle">Events</span>
+            
+                <li class="parent" data-name="Window#event:blur"><a href="Window.html#event:blur">blur</a></li>
+            
+                <li class="parent" data-name="Window#event:close"><a href="Window.html#event:close">close</a></li>
+            
+                <li class="parent" data-name="Window#event:focus"><a href="Window.html#event:focus">focus</a></li>
+            
+                <li class="parent" data-name="Window#event:maximize"><a href="Window.html#event:maximize">maximize</a></li>
+            
+                <li class="parent" data-name="Window#event:maximize-restore"><a href="Window.html#event:maximize-restore">maximize-restore</a></li>
+            
+                <li class="parent" data-name="Window#event:minimize-restore"><a href="Window.html#event:minimize-restore">minimize-restore</a></li>
+            
+                <li class="parent" data-name="Window#event:move"><a href="Window.html#event:move">move</a></li>
+            
+                <li class="parent" data-name="Window#event:move-end"><a href="Window.html#event:move-end">move-end</a></li>
+            
+                <li class="parent" data-name="Window#event:move-start"><a href="Window.html#event:move-start">move-start</a></li>
+            
+                <li class="parent" data-name="Window#event:open"><a href="Window.html#event:open">open</a></li>
+            
+                <li class="parent" data-name="Window#event:resize"><a href="Window.html#event:resize">resize</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-end"><a href="Window.html#event:resize-end">resize-end</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-start"><a href="Window.html#event:resize-start">resize-start</a></li>
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="WindowManager">
+            <span class="title  ">
+                
+                <a href="WindowManager.html">WindowManager</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="WindowManager#createWindow"><a href="WindowManager.html#createWindow">createWindow</a></li>
+            
+                <li class="  " data-name="WindowManager#emit"><a href="WindowManager.html#emit">emit</a></li>
+            
+                <li class="  " data-name="WindowManager#eventNames"><a href="WindowManager.html#eventNames">eventNames</a></li>
+            
+                <li class="  " data-name="WindowManager#listenerCount"><a href="WindowManager.html#listenerCount">listenerCount</a></li>
+            
+                <li class="  " data-name="WindowManager#listeners"><a href="WindowManager.html#listeners">listeners</a></li>
+            
+                <li class="parent  " data-name="WindowManager#load"><a href="WindowManager.html#load">load</a></li>
+            
+                <li class="  " data-name="WindowManager#on"><a href="WindowManager.html#on">on</a></li>
+            
+                <li class="  " data-name="WindowManager#once"><a href="WindowManager.html#once">once</a></li>
+            
+                <li class="  " data-name="WindowManager#removeAllListeners"><a href="WindowManager.html#removeAllListeners">removeAllListeners</a></li>
+            
+                <li class="  " data-name="WindowManager#removeListener"><a href="WindowManager.html#removeListener">removeListener</a></li>
+            
+                <li class="parent  " data-name="WindowManager#save"><a href="WindowManager.html#save">save</a></li>
+            
+                <li class="parent  " data-name="WindowManager#sendToBack"><a href="WindowManager.html#sendToBack">sendToBack</a></li>
+            
+                <li class="parent  " data-name="WindowManager#sendToFront"><a href="WindowManager.html#sendToFront">sendToFront</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+    </ul>
+</div>
+    <div class="main">
+        <h1 class="page-title" data-filename="WindowManager.html">Class: WindowManager</h1>
+        
+
+
+
+<section>
+    
+<header>
+    <div class="header content-size">
+        <h2>WindowManager
+        </h2>
+        
+            <div class="class-description">Creates a windowing system to create and manage windows</div>
+        
+    </div>
+</header>  
+
+<article class="content-size">
+    <div class="container-overview">
+    
+    
+    
+        
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="WindowManager">
+            <a class="share-icon" href="#WindowManager"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                new WindowManager
+            </span>
+            <span class="signature">(<span class="optional">defaultOptions</span>)</span>
+            
+            
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_window-manager.js.html#line17">window-manager.js:17</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>defaultOptions</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Window.html#~WindowOptions">Window~WindowOptions</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                default WindowOptions used when createWindow is called
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>quiet</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                suppress the simple-window-manager console message</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+        <h5>Example</h5>
+        
+
+    
+    <pre class="prettyprint"><code>var wm = new WindowManager();wm.createWindow({ x: 20, y: 20, width: 200 });wm.content.innerHTML = 'Hello there!';</code></pre>
+    
+
+    
+</dd>
+
+    
+    </div>
+    
+    
+        <h3 class="subsection-title">Extends</h3>
+        
+        <ul>
+            <li><a href="EventEmitter.html">EventEmitter</a></li>
+        </ul>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        <h3 class="subsection-title">Methods</h3>
+        
+        <dl class="list-methods">
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="createWindow">
+            <a class="share-icon" href="#createWindow"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                createWindow
+            </span>
+            <span class="signature">(<span class="optional">options</span>)</span>
+            
+            
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_window-manager.js.html#line71">window-manager.js:71</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Create a window
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Window.html#~WindowOptions">Window~WindowOptions</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>title</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                position</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>y</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                position</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>modal</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>center</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Window.html">Window</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                center in the middle of an existing Window</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+|
+
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                if not provide, id will be assigned in order of creation (0, 1, 2...)</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    <h5>Fires:</h5>
+    <ul>
+        <li>event:open</li>
+    
+        <li>event:focus</li>
+    
+        <li>event:blur</li>
+    
+        <li>event:close</li>
+    
+        <li>event:maximize</li>
+    
+        <li>event:maximize-restore</li>
+    
+        <li>event:minimize</li>
+    
+        <li>event:minimize-restore</li>
+    
+        <li>event:move</li>
+    
+        <li>event:move-start</li>
+    
+        <li>event:move-end</li>
+    
+        <li>event:resize</li>
+    
+        <li>event:resize-start</li>
+    
+        <li>event:resize-end</li>
+    </ul>
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="emit">
+            <a class="share-icon" href="#emit"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                emit
+            </span>
+            <span class="signature">(event)</span><span class="type-signature">Boolean</span>
+            
+            
+            
+                <span class="access-signature inherited"><a href="EventEmitter.html#emit">inherited</a></span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="node_modules_eventemitter3_index.js.html#line167">index.js:167</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Calls each of the listeners registered for a given event.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Symbol</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The event name.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Boolean
+                        
+                    
+            </td>
+            <td class="description last">`true` if the event had listeners, else `false`.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="eventNames">
+            <a class="share-icon" href="#eventNames"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                eventNames
+            </span>
+            <span class="signature">()</span><span class="type-signature">Array</span>
+            
+            
+            
+                <span class="access-signature inherited"><a href="EventEmitter.html#eventNames">inherited</a></span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="node_modules_eventemitter3_index.js.html#line105">index.js:105</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Return an array listing the events for which the emitter has registered
+listeners.
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Array
+                        
+                    
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="listenerCount">
+            <a class="share-icon" href="#listenerCount"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                listenerCount
+            </span>
+            <span class="signature">(event)</span><span class="type-signature">Number</span>
+            
+            
+            
+                <span class="access-signature inherited"><a href="EventEmitter.html#listenerCount">inherited</a></span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="node_modules_eventemitter3_index.js.html#line151">index.js:151</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Return the number of listeners listening to a given event.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Symbol</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The event name.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Number
+                        
+                    
+            </td>
+            <td class="description last">The number of listeners.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="listeners">
+            <a class="share-icon" href="#listeners"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                listeners
+            </span>
+            <span class="signature">(event)</span><span class="type-signature">Array</span>
+            
+            
+            
+                <span class="access-signature inherited"><a href="EventEmitter.html#listeners">inherited</a></span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="node_modules_eventemitter3_index.js.html#line130">index.js:130</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Return the listeners registered for a given event.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Symbol</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The event name.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        Array
+                        
+                    
+            </td>
+            <td class="description last">The registered listeners.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="load">
+            <a class="share-icon" href="#load"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                load
+            </span>
+            <span class="signature">(data)</span>
+            
+            
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_window-manager.js.html#line155">window-manager.js:155</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        restores the state of all the windowsNOTE: this requires that the windows have the same id as when save() was called
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                created by save()</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="on">
+            <a class="share-icon" href="#on"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                on
+            </span>
+            <span class="signature">(event, fn, <span class="optional">context</span>)</span><span class="type-signature"><a href="EventEmitter.html">EventEmitter</a></span>
+            
+            
+            
+                <span class="access-signature inherited"><a href="EventEmitter.html#on">inherited</a></span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="node_modules_eventemitter3_index.js.html#line228">index.js:228</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Add a listener for a given event.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Symbol</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                The event name.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>fn</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                The listener function.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    this
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The context to invoke the listener with.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="EventEmitter.html">EventEmitter</a>
+                        
+                    
+            </td>
+            <td class="description last">`this`.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="once">
+            <a class="share-icon" href="#once"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                once
+            </span>
+            <span class="signature">(event, fn, <span class="optional">context</span>)</span><span class="type-signature"><a href="EventEmitter.html">EventEmitter</a></span>
+            
+            
+            
+                <span class="access-signature inherited"><a href="EventEmitter.html#once">inherited</a></span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="node_modules_eventemitter3_index.js.html#line241">index.js:241</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Add a one-time listener for a given event.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Symbol</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                The event name.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>fn</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                    
+                        
+                    
+                
+                The listener function.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    this
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The context to invoke the listener with.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="EventEmitter.html">EventEmitter</a>
+                        
+                    
+            </td>
+            <td class="description last">`this`.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="removeAllListeners">
+            <a class="share-icon" href="#removeAllListeners"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                removeAllListeners
+            </span>
+            <span class="signature">(<span class="optional">event</span>)</span><span class="type-signature"><a href="EventEmitter.html">EventEmitter</a></span>
+            
+            
+            
+                <span class="access-signature inherited"><a href="EventEmitter.html#removeAllListeners">inherited</a></span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="node_modules_eventemitter3_index.js.html#line302">index.js:302</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Remove all listeners, or those of the specified event.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Symbol</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                The event name.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="EventEmitter.html">EventEmitter</a>
+                        
+                    
+            </td>
+            <td class="description last">`this`.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="removeListener">
+            <a class="share-icon" href="#removeListener"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                removeListener
+            </span>
+            <span class="signature">(event, fn, context, once)</span><span class="type-signature"><a href="EventEmitter.html">EventEmitter</a></span>
+            
+            
+            
+                <span class="access-signature inherited"><a href="EventEmitter.html#removeListener">inherited</a></span>
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="node_modules_eventemitter3_index.js.html#line255">index.js:255</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Remove the listeners of a given event.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Symbol</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                The event name.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>fn</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                Only remove the listeners that match this function.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                Only remove the listeners that have this context.</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>once</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                Only remove one-time listeners.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        <a href="EventEmitter.html">EventEmitter</a>
+                        
+                    
+            </td>
+            <td class="description last">`this`.</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="save">
+            <a class="share-icon" href="#save"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                save
+            </span>
+            <span class="signature">()</span><span class="type-signature">object</span>
+            
+            
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_window-manager.js.html#line138">window-manager.js:138</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        save the state of all the windows
+    </div>
+    
+
+    
+    
+    
+    
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        object
+                        
+                    
+            </td>
+            <td class="description last">use this object in load() to restore the state of all windows</td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="sendToBack">
+            <a class="share-icon" href="#sendToBack"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                sendToBack
+            </span>
+            <span class="signature">(win)</span>
+            
+            
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_window-manager.js.html#line123">window-manager.js:123</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        send window to back
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>win</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Window.html">Window</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="sendToFront">
+            <a class="share-icon" href="#sendToFront"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                sendToFront
+            </span>
+            <span class="signature">(win)</span>
+            
+            
+            
+            
+        </h4>
+    
+        
+        <div class="tag-source">
+            <a href="src_window-manager.js.html#line108">window-manager.js:108</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        send window to front
+    </div>
+    
+
+    
+    
+    
+    
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>win</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Window.html">Window</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+
+    
+
+    
+    
+    
+    
+    
+    
+    
+</dd>
+
+        </dl>
+    
+    
+    
+    
+    
+
+    
+</article>
+
+</section>  
+
+
+
+
+
+        
+
+        <footer class="content-size">
+            <div class="footer">
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jan 08 2018 14:16:27 GMT+0800 (DST)
+            </div>
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>

@@ -1,13 +1,23 @@
 const exists = require('exists')
 
 const html = require('./html')
-const WindowOptions = require('./window-options')
 const Window = require('./window')
+const WindowOptions = require('./window-options')
 
-module.exports = class WindowManager
+/**
+ * Creates a windowing system to create and manage windows
+ *
+ * @extends EventEmitter
+ * @example
+ * var wm = new WindowManager();
+ *
+ * wm.createWindow({ x: 20, y: 20, width: 200 });
+ * wm.content.innerHTML = 'Hello there!';
+ */
+class WindowManager
 {
     /**
-     * @param {WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
+     * @param {Window~WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
      * @param {boolean} [defaultOptions.quiet] suppress the simple-window-manager console message
      */
     constructor(defaultOptions)
@@ -36,7 +46,7 @@ module.exports = class WindowManager
 
     /**
      * Create a window
-     * @param {WindowOptions} [options]
+     * @param {Window~WindowOptions} [options]
      * @param {string} [options.title]
      * @param {number} [options.x] position
      * @param {number} [options.y] position
@@ -276,3 +286,5 @@ module.exports = class WindowManager
         return !this.modal || this.modal === win
     }
 }
+
+module.exports = WindowManager

@@ -1,6 +1,5 @@
 /**
- * @typedef WindowOptions
- * @type {object}
+ * @typedef {object} Window~WindowOptions
  * @property {number} [x=0]
  * @property {number} [y=0]
  * @property {number} [width]
@@ -18,7 +17,7 @@
  * @property {number} [minimizeSize=50]
  * @property {string} [shadow='0 0 12px 1px rgba(0, 0, 0, 0.6)']
  * @property {number} [animateTime=250]
- * @property {(string|function)} [ease] easing name (see https://www.npmjs.com/package/penner) for list or function
+ * @property {(string|function)} [ease] easing name (see {@link https://www.npmjs.com/package/penner} for list or function)
  * @property {string} [backgroundColorWindow=#fefefe]
  * @property {string} [backgroundColorTitlebarActive=#365d98]
  * @property {string} [backgroundColorTitlebarInactive=#888888]

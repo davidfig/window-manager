@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>simple-window-manager API Documentation</title>
+    
+    <meta name="description" content="Documentation for simple-window-manager library" />
+    
+        <meta name="keywords" content="docs, documentation, html5, javascript, jsdoc, window manager" />
+        <meta name="keyword" content="docs, documentation, html5, javascript, jsdoc, window manager" />
+    
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Libre+Franklin:400,700" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/main.css">
+    
+    
+    <script>
+    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true},"applicationName":"simple-window-manager","footer":"by YOPEY YOPEY LLC (yopeyopey.com)","copyright":"Copyright © 2018 YOPEY YOPEY LLC.","meta":{"title":"simple-window-manager API Documentation","description":"Documentation for simple-window-manager library","keyword":"docs, documentation, html5, javascript, jsdoc, window manager"}};
+    </script>
+    
+
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName"><a href="index.html">simple-window-manager</a></h3>
+    <button id="menuToggle" class="btn btn-link btn-lg menu-toggle">
+        <span class="glyphicon glyphicon-menu-hamburger"></span>
+    </button>
+    <div class="search">
+        <input id="search" type="text" class="form-control input-md" placeholder="Search...">
+    </div>
+    <ul class="list">
+    
+        <li class="item" data-name="Window">
+            <span class="title  ">
+                
+                <a href="Window.html">Window</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="Window#height"><a href="Window.html#height">height</a></li>
+            
+                <li class="parent " data-name="Window#title"><a href="Window.html#title">title</a></li>
+            
+                <li class="parent " data-name="Window#width"><a href="Window.html#width">width</a></li>
+            
+                <li class="parent " data-name="Window#x"><a href="Window.html#x">x</a></li>
+            
+                <li class="parent " data-name="Window#y"><a href="Window.html#y">y</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="Window~WindowOptions"><a href="Window.html#~WindowOptions">WindowOptions</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="Window#blur"><a href="Window.html#blur">blur</a></li>
+            
+                <li class="parent  " data-name="Window#close"><a href="Window.html#close">close</a></li>
+            
+                <li class="  " data-name="Window#emit"><a href="Window.html#emit">emit</a></li>
+            
+                <li class="  " data-name="Window#eventNames"><a href="Window.html#eventNames">eventNames</a></li>
+            
+                <li class="parent  " data-name="Window#focus"><a href="Window.html#focus">focus</a></li>
+            
+                <li class="  " data-name="Window#listenerCount"><a href="Window.html#listenerCount">listenerCount</a></li>
+            
+                <li class="  " data-name="Window#listeners"><a href="Window.html#listeners">listeners</a></li>
+            
+                <li class="parent  " data-name="Window#load"><a href="Window.html#load">load</a></li>
+            
+                <li class="parent  " data-name="Window#maximize"><a href="Window.html#maximize">maximize</a></li>
+            
+                <li class="parent  " data-name="Window#minimize"><a href="Window.html#minimize">minimize</a></li>
+            
+                <li class="parent  " data-name="Window#move"><a href="Window.html#move">move</a></li>
+            
+                <li class="  " data-name="Window#on"><a href="Window.html#on">on</a></li>
+            
+                <li class="  " data-name="Window#once"><a href="Window.html#once">once</a></li>
+            
+                <li class="parent  " data-name="Window#open"><a href="Window.html#open">open</a></li>
+            
+                <li class="  " data-name="Window#removeAllListeners"><a href="Window.html#removeAllListeners">removeAllListeners</a></li>
+            
+                <li class="  " data-name="Window#removeListener"><a href="Window.html#removeListener">removeListener</a></li>
+            
+                <li class="parent  " data-name="Window#resize"><a href="Window.html#resize">resize</a></li>
+            
+                <li class="parent  " data-name="Window#save"><a href="Window.html#save">save</a></li>
+            
+                <li class="parent  " data-name="Window#sendToBack"><a href="Window.html#sendToBack">sendToBack</a></li>
+            
+                <li class="parent  " data-name="Window#sendToFront"><a href="Window.html#sendToFront">sendToFront</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            <span class="subtitle">Events</span>
+            
+                <li class="parent" data-name="Window#event:blur"><a href="Window.html#event:blur">blur</a></li>
+            
+                <li class="parent" data-name="Window#event:close"><a href="Window.html#event:close">close</a></li>
+            
+                <li class="parent" data-name="Window#event:focus"><a href="Window.html#event:focus">focus</a></li>
+            
+                <li class="parent" data-name="Window#event:maximize"><a href="Window.html#event:maximize">maximize</a></li>
+            
+                <li class="parent" data-name="Window#event:maximize-restore"><a href="Window.html#event:maximize-restore">maximize-restore</a></li>
+            
+                <li class="parent" data-name="Window#event:minimize-restore"><a href="Window.html#event:minimize-restore">minimize-restore</a></li>
+            
+                <li class="parent" data-name="Window#event:move"><a href="Window.html#event:move">move</a></li>
+            
+                <li class="parent" data-name="Window#event:move-end"><a href="Window.html#event:move-end">move-end</a></li>
+            
+                <li class="parent" data-name="Window#event:move-start"><a href="Window.html#event:move-start">move-start</a></li>
+            
+                <li class="parent" data-name="Window#event:open"><a href="Window.html#event:open">open</a></li>
+            
+                <li class="parent" data-name="Window#event:resize"><a href="Window.html#event:resize">resize</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-end"><a href="Window.html#event:resize-end">resize-end</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-start"><a href="Window.html#event:resize-start">resize-start</a></li>
+            
+            </ul>
+        </li>
+    
+        <li class="item" data-name="WindowManager">
+            <span class="title  ">
+                
+                <a href="WindowManager.html">WindowManager</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="WindowManager#createWindow"><a href="WindowManager.html#createWindow">createWindow</a></li>
+            
+                <li class="  " data-name="WindowManager#emit"><a href="WindowManager.html#emit">emit</a></li>
+            
+                <li class="  " data-name="WindowManager#eventNames"><a href="WindowManager.html#eventNames">eventNames</a></li>
+            
+                <li class="  " data-name="WindowManager#listenerCount"><a href="WindowManager.html#listenerCount">listenerCount</a></li>
+            
+                <li class="  " data-name="WindowManager#listeners"><a href="WindowManager.html#listeners">listeners</a></li>
+            
+                <li class="parent  " data-name="WindowManager#load"><a href="WindowManager.html#load">load</a></li>
+            
+                <li class="  " data-name="WindowManager#on"><a href="WindowManager.html#on">on</a></li>
+            
+                <li class="  " data-name="WindowManager#once"><a href="WindowManager.html#once">once</a></li>
+            
+                <li class="  " data-name="WindowManager#removeAllListeners"><a href="WindowManager.html#removeAllListeners">removeAllListeners</a></li>
+            
+                <li class="  " data-name="WindowManager#removeListener"><a href="WindowManager.html#removeListener">removeListener</a></li>
+            
+                <li class="parent  " data-name="WindowManager#save"><a href="WindowManager.html#save">save</a></li>
+            
+                <li class="parent  " data-name="WindowManager#sendToBack"><a href="WindowManager.html#sendToBack">sendToBack</a></li>
+            
+                <li class="parent  " data-name="WindowManager#sendToFront"><a href="WindowManager.html#sendToFront">sendToFront</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+    </ul>
+</div>
+    <div class="main">
+        <h1 class="page-title" data-filename="src_window-manager.js.html">Source: src/window-manager.js</h1>
+        
+
+
+    
+    <section>
+        <header>
+            <div class="header content-size">
+                <h2>src/window-manager.js</h2>
+            </div>
+        </header>
+        <article>
+            <pre id="source-code" class="prettyprint source "><code>const exists = require('exists')
+
+const html = require('./html')
+const Window = require('./window')
+const WindowOptions = require('./window-options')
+
+/**
+ * Creates a windowing system to create and manage windows
+ *
+ * @extends EventEmitter
+ * @example
+ * var wm = new WindowManager();
+ *
+ * wm.createWindow({ x: 20, y: 20, width: 200 });
+ * wm.content.innerHTML = 'Hello there!';
+ */
+class WindowManager
+{
+    /**
+     * @param {Window~WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
+     * @param {boolean} [defaultOptions.quiet] suppress the simple-window-manager console message
+     */
+    constructor(defaultOptions)
+    {
+        this._createDom()
+        this.windows = []
+        this.active = null
+        this.modal = null
+        this.options = {}
+        for (let key in WindowOptions)
+        {
+            this.options[key] = WindowOptions[key]
+        }
+        if (defaultOptions)
+        {
+            for (let key in defaultOptions)
+            {
+                this.options[key] = defaultOptions[key]
+            }
+        }
+        if (!defaultOptions.quiet)
+        {
+            console.log('%c ☕ simple-window-manager initialized ☕', 'color: #ff00ff')
+        }
+    }
+
+    /**
+     * Create a window
+     * @param {Window~WindowOptions} [options]
+     * @param {string} [options.title]
+     * @param {number} [options.x] position
+     * @param {number} [options.y] position
+     * @param {boolean} [options.modal]
+     * @param {Window} [options.center] center in the middle of an existing Window
+     * @param {string|number} [options.id] if not provide, id will be assigned in order of creation (0, 1, 2...)
+     * @fires open
+     * @fires focus
+     * @fires blur
+     * @fires close
+     * @fires maximize
+     * @fires maximize-restore
+     * @fires minimize
+     * @fires minimize-restore
+     * @fires move
+     * @fires move-start
+     * @fires move-end
+     * @fires resize
+     * @fires resize-start
+     * @fires resize-end
+     */
+    createWindow(options)
+    {
+        options = options || {}
+        for (let key in this.options)
+        {
+            if (!exists(options[key]))
+            {
+                options[key] = this.options[key]
+            }
+        }
+        const win = new Window(this, options);
+        win.on('open', this._open, this)
+        win.on('focus', this._focus, this)
+        win.on('blur', this._blur, this)
+        win.on('close', this._close, this)
+        win.win.addEventListener('mousemove', (e) => this._move(e))
+        win.win.addEventListener('touchmove', (e) => this._move(e))
+        win.win.addEventListener('mouseup', (e) => this._up(e))
+        win.win.addEventListener('touchend', (e) => this._up(e))
+        if (options.center)
+        {
+            win.move(
+                options.center.x + options.center.width / 2 - (options.width ? options.width / 2 : 0),
+                options.center.y + options.center.height / 2 - (options.height ? options.height / 2 : 0)
+            )
+        }
+        if (options.modal)
+        {
+            this.modal = win
+        }
+        return win
+    }
+
+    /**
+     * send window to front
+     * @param {Window} win
+     */
+    sendToFront(win)
+    {
+        const index = this.windows.indexOf(win)
+        if (index !== this.windows.length - 1)
+        {
+            this.windows.splice(index, 1)
+            this.windows.push(win)
+            this._reorder()
+        }
+    }
+
+    /**
+     * send window to back
+     * @param {Window} win
+     */
+    sendToBack(win)
+    {
+        const index = this.windows.indexOf(win)
+        if (index !== 0)
+        {
+            this.windows.splice(index, 1)
+            this.windows.unshift(win)
+            this._reorder()
+        }
+    }
+
+    /**
+     * save the state of all the windows
+     * @returns {object} use this object in load() to restore the state of all windows
+     */
+    save()
+    {
+        const data = {}
+        for (let i = 0; i &lt; this.windows.length; i++)
+        {
+            const entry = this.windows[i]
+            data[entry.id] = entry.save()
+            data[entry.id].order = i
+        }
+        return data
+    }
+
+    /**
+     * restores the state of all the windows
+     * NOTE: this requires that the windows have the same id as when save() was called
+     * @param {object} data created by save()
+     */
+    load(data)
+    {
+        for (let i = 0; i &lt; this.windows.length; i++)
+        {
+            const entry = this.windows[i]
+            if (data[entry.id])
+            {
+                entry.load(data[entry.id])
+            }
+        }
+        // reorder windows
+    }
+
+    /**
+     * reorder windows
+     * @private
+     * @returns {number} available z-index for top window
+     */
+    _reorder()
+    {
+        let i = 0
+        for (; i &lt; this.windows.length; i++)
+        {
+            this.windows[i].z = i
+        }
+    }
+
+    _createDom()
+    {
+        this.win = html.create({
+            parent: document.body, styles: {
+                'user-select': 'none',
+                'width': '100%',
+                'height': '100%',
+                'overflow': 'hidden',
+                'z-index': -1,
+                'cursor': 'default'
+            }
+        })
+        this.overlay = html.create({
+            parent: this.win, styles: {
+                'user-select': 'none',
+                'position': 'absolute',
+                'top': 0,
+                'left': 0,
+                'width': '100%',
+                'height': '100%',
+                'overflow': 'hidden'
+            }
+        })
+        this.overlay.addEventListener('mousemove', (e) => this._move(e))
+        this.overlay.addEventListener('touchmove', (e) => this._move(e))
+        this.overlay.addEventListener('mouseup', (e) => this._up(e))
+        this.overlay.addEventListener('touchend', (e) => this._up(e))
+    }
+
+    _open(win)
+    {
+        const index = this.windows.indexOf(win)
+        if (index === -1)
+        {
+            this.windows.push(win)
+        }
+    }
+
+    _focus(win)
+    {
+        if (this.active === win)
+        {
+            return
+        }
+
+        if (this.active)
+        {
+            this.active.blur()
+        }
+
+        const index = this.windows.indexOf(win)
+        if (index !== this.windows.length - 1)
+        {
+            this.windows.splice(index, 1)
+            this.windows.push(win)
+        }
+        this._reorder()
+
+        this.active = win
+    }
+
+    _blur(win)
+    {
+        if (this.active === win)
+        {
+            this.active = null
+        }
+    }
+
+    _close(win)
+    {
+        if (this.modal === win)
+        {
+            this.modal = null
+        }
+        const index = this.windows.indexOf(win)
+        if (index !== -1)
+        {
+            this.windows.splice(index, 1)
+        }
+        if (this.active === win)
+        {
+            this._blur(win)
+        }
+    }
+
+    _move(e)
+    {
+        for (let key in this.windows)
+        {
+            this.windows[key]._move(e)
+        }
+    }
+
+    _up(e)
+    {
+        for (let key in this.windows)
+        {
+            this.windows[key]._up(e)
+        }
+    }
+
+    _checkModal(win)
+    {
+        return !this.modal || this.modal === win
+    }
+}
+
+module.exports = WindowManager</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+
+        
+
+        <footer class="content-size">
+            <div class="footer">
+                Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jan 08 2018 14:16:26 GMT+0800 (DST)
+            </div>
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>

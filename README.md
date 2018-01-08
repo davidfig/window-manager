@@ -15,7 +15,7 @@ A javascript-only Window Manager based on Ventus.
 I used [Ventus](https://github.com/rlamana/Ventus) to build internal editors, but decided I needed a more configurable solution that didn't rely on CSS for configuration so it's easier to use with npm.
 
 ## live example
-https://davidfig.github.io/window-manager/
+[https://davidfig.github.io/window-manager/](https://davidfig.github.io/window-manager/)
 
 ## installation
 
@@ -55,6 +55,7 @@ https://davidfig.github.io/window-manager/
  * @property {number} [minimizeSize=50]
  * @property {string} [shadow='0 0 12px 1px rgba(0, 0, 0, 0.6)']
  * @property {number} [animateTime=250]
+ * @property {(string|function)} [ease] easing name (see https://www.npmjs.com/package/penner) for list or function
  * @property {string} [backgroundColorWindow=#fefefe]
  * @property {string} [backgroundColorTitlebarActive=#365d98]
  * @property {string} [backgroundColorTitlebarInactive=#888888]
@@ -133,8 +134,9 @@ const WindowOptions = {
     /**
      * open the window
      * @param {boolean} [noFocus] do not focus window when opened
+     * @param {boolean} [noAnimate] do not animate window when opened
      */
-    open(noFocus)
+    open(noFocus, noAnimate)
 
     /**
      * focus the window
