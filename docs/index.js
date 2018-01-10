@@ -1686,7 +1686,7 @@ var WindowManager = function () {
                 this.options[_key] = defaultOptions[_key];
             }
         }
-        if (!defaultOptions.quiet) {
+        if (!defaultOptions || !defaultOptions.quiet) {
             console.log('%c ☕ simple-window-manager initialized ☕', 'color: #ff00ff');
         }
     }
