@@ -13,6 +13,11 @@ let id = 0
  */
 class Window extends Events
 {
+    /**
+     * @private
+     * @param {WindowManager} wm
+     * @param {object} options
+     */
     constructor(wm, options)
     {
         super()
