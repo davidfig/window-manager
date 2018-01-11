@@ -2050,6 +2050,11 @@ var id = 0;
 var Window = function (_Events) {
     _inherits(Window, _Events);
 
+    /**
+     * @private
+     * @param {WindowManager} wm
+     * @param {object} options
+     */
     function Window(wm, options) {
         _classCallCheck(this, Window);
 
@@ -2823,6 +2828,34 @@ var Window = function (_Events) {
         },
         set: function set(value) {
             this.winTitle.innerText = value;
+        }
+
+        /**
+         * right coordinate of window
+         * @type {number}
+         */
+
+    }, {
+        key: 'right',
+        get: function get() {
+            return this.x + this.width;
+        },
+        set: function set(value) {
+            this.x = value - this.width;
+        }
+
+        /**
+         * bottom coordinate of window
+         * @type {number}
+         */
+
+    }, {
+        key: 'bottom',
+        get: function get() {
+            return this.y + this.height;
+        },
+        set: function set(value) {
+            this.y = value - this.height;
         }
     }, {
         key: 'z',
