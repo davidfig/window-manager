@@ -142,14 +142,15 @@ class Window extends Events
     get width() { return this.options.width || this.win.offsetWidth }
     set width(value)
     {
-        this.options.width = value
         if (value)
         {
             this.win.style.width = value + 'px'
+            this.options.width = this.win.offsetWidth
         }
         else
         {
             this.win.style.width = 'auto'
+            this.options.width = ''
         }
     }
 
@@ -160,14 +161,15 @@ class Window extends Events
     get height() { return this.options.height || this.win.offsetHeight }
     set height(value)
     {
-        this.options.height = value
         if (value)
         {
             this.win.style.height = value + 'px'
+            this.options.height = this.win.offsetHeight
         }
         else
         {
             this.win.style.height = 'auto'
+            this.options.height = ''
         }
     }
 
