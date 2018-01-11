@@ -1,7 +1,7 @@
 /**
  * @typedef {object} Window~WindowOptions
- * @property {number} [x]
- * @property {number} [y]
+ * @property {number} [x=0]
+ * @property {number} [y=0]
  * @property {number} [width]
  * @property {number} [height]
  * @property {boolean} [movable=true]
@@ -29,6 +29,9 @@
  * @property {string} [backgroundResize=...]
  */
 const WindowOptions = {
+    x: 0,
+    y: 0,
+
     minWidth: '200px',
     minHeight: '60px',
 

@@ -406,6 +406,27 @@ class Window extends Events
         this.winTitle.innerText = value
     }
 
+
+    /**
+     * right coordinate of window
+     * @type {number}
+     */
+    get right() { return this.x + this.width }
+    set right(value)
+    {
+        this.x = value - this.width
+    }
+
+    /**
+     * bottom coordinate of window
+     * @type {number}
+     */
+    get bottom() { return this.y + this.height }
+    set bottom(value)
+    {
+        this.y = value - this.height
+    }
+
     /**
      * Fires when window is maximized
      * @event Window#maximize
