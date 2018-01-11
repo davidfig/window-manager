@@ -1,4 +1,4 @@
-const WM = require('../dist/window-manager')
+const WM = require('../src/window-manager')
 const html = require('../src/html')
 
 // create a window manager and change some of the default styles
@@ -6,7 +6,7 @@ const wm = new WM({
     borderRadius: '10px'
 })
 
-const test = wm.createWindow( { x: 10, y: 10, title: 'Test Window' })
+const test = wm.createWindow( { x: 10, y: 10, title: 'Test Window', resizable: false })
 test.content.style.padding = '1em'
 test.content.innerHTML = 'This is a test window.'
 test.open()
