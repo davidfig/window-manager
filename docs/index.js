@@ -1618,1262 +1618,7 @@ function allExist (/* vals */) {
 }).call(this);
 
 },{}],16:[function(require,module,exports){
-'use strict';
-
-function create(options) {
-    options = options || {};
-    var object = document.createElement(options.type || 'div');
-    if (options.parent) {
-        options.parent.appendChild(object);
-    }
-    if (options.styles) {
-        for (var style in options.styles) {
-            object.style[style] = options.styles[style];
-        }
-    }
-    if (options.html) {
-        object.innerHTML = options.html;
-    }
-    return object;
-}
-
-module.exports = {
-    create: create
-};
-
-},{}],17:[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var exists = require('exists');
-
-var html = require('./html');
-var Window = require('./window');
-var WindowOptions = require('./window-options');
-
-/**
- * Creates a windowing system to create and manage windows
- *
- * @extends EventEmitter
- * @example
- * var wm = new WindowManager();
- *
- * wm.createWindow({ x: 20, y: 20, width: 200 });
- * wm.content.innerHTML = 'Hello there!';
- */
-
-var WindowManager = function () {
-    /**
-     * @param {Window~WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
-     * @param {boolean} [defaultOptions.quiet] suppress the simple-window-manager console message
-     */
-    function WindowManager(defaultOptions) {
-        _classCallCheck(this, WindowManager);
-
-        this._createDom();
-        this.windows = [];
-        this.active = null;
-        this.modal = null;
-        this.options = {};
-        for (var key in WindowOptions) {
-            this.options[key] = WindowOptions[key];
-        }
-        if (defaultOptions) {
-            for (var _key in defaultOptions) {
-                this.options[_key] = defaultOptions[_key];
-            }
-        }
-        if (!defaultOptions || !defaultOptions.quiet) {
-            console.log('%c ☕ simple-window-manager initialized ☕', 'color: #ff00ff');
-        }
-    }
-
-    /**
-     * Create a window
-     * @param {Window~WindowOptions} [options]
-     * @param {string} [options.title]
-     * @param {number} [options.x] position
-     * @param {number} [options.y] position
-     * @param {boolean} [options.modal]
-     * @param {Window} [options.center] center in the middle of an existing Window
-     * @param {string|number} [options.id] if not provide, id will be assigned in order of creation (0, 1, 2...)
-     * @fires open
-     * @fires focus
-     * @fires blur
-     * @fires close
-     * @fires maximize
-     * @fires maximize-restore
-     * @fires minimize
-     * @fires minimize-restore
-     * @fires move
-     * @fires move-start
-     * @fires move-end
-     * @fires resize
-     * @fires resize-start
-     * @fires resize-end
-     */
-
-
-    _createClass(WindowManager, [{
-        key: 'createWindow',
-        value: function createWindow(options) {
-            var _this = this;
-
-            options = options || {};
-            for (var key in this.options) {
-                if (!exists(options[key])) {
-                    options[key] = this.options[key];
-                }
-            }
-            var win = new Window(this, options);
-            win.on('open', this._open, this);
-            win.on('focus', this._focus, this);
-            win.on('blur', this._blur, this);
-            win.on('close', this._close, this);
-            win.win.addEventListener('mousemove', function (e) {
-                return _this._move(e);
-            });
-            win.win.addEventListener('touchmove', function (e) {
-                return _this._move(e);
-            });
-            win.win.addEventListener('mouseup', function (e) {
-                return _this._up(e);
-            });
-            win.win.addEventListener('touchend', function (e) {
-                return _this._up(e);
-            });
-            if (options.center) {
-                win.move(options.center.x + options.center.width / 2 - (options.width ? options.width / 2 : 0), options.center.y + options.center.height / 2 - (options.height ? options.height / 2 : 0));
-            }
-            if (options.modal) {
-                this.modal = win;
-            }
-            return win;
-        }
-
-        /**
-         * send window to front
-         * @param {Window} win
-         */
-
-    }, {
-        key: 'sendToFront',
-        value: function sendToFront(win) {
-            var index = this.windows.indexOf(win);
-            if (index !== this.windows.length - 1) {
-                this.windows.splice(index, 1);
-                this.windows.push(win);
-                this._reorder();
-            }
-        }
-
-        /**
-         * send window to back
-         * @param {Window} win
-         */
-
-    }, {
-        key: 'sendToBack',
-        value: function sendToBack(win) {
-            var index = this.windows.indexOf(win);
-            if (index !== 0) {
-                this.windows.splice(index, 1);
-                this.windows.unshift(win);
-                this._reorder();
-            }
-        }
-
-        /**
-         * save the state of all the windows
-         * @returns {object} use this object in load() to restore the state of all windows
-         */
-
-    }, {
-        key: 'save',
-        value: function save() {
-            var data = {};
-            for (var i = 0; i < this.windows.length; i++) {
-                var entry = this.windows[i];
-                data[entry.id] = entry.save();
-                data[entry.id].order = i;
-            }
-            return data;
-        }
-
-        /**
-         * restores the state of all the windows
-         * NOTE: this requires that the windows have the same id as when save() was called
-         * @param {object} data created by save()
-         */
-
-    }, {
-        key: 'load',
-        value: function load(data) {
-            for (var i = 0; i < this.windows.length; i++) {
-                var entry = this.windows[i];
-                if (data[entry.id]) {
-                    entry.load(data[entry.id]);
-                }
-            }
-            // reorder windows
-        }
-
-        /**
-         * reorder windows
-         * @private
-         * @returns {number} available z-index for top window
-         */
-
-    }, {
-        key: '_reorder',
-        value: function _reorder() {
-            var i = 0;
-            for (; i < this.windows.length; i++) {
-                this.windows[i].z = i;
-            }
-        }
-    }, {
-        key: '_createDom',
-        value: function _createDom() {
-            var _this2 = this;
-
-            this.win = html.create({
-                parent: document.body, styles: {
-                    'user-select': 'none',
-                    'width': '100%',
-                    'height': '100%',
-                    'overflow': 'hidden',
-                    'z-index': -1,
-                    'cursor': 'default'
-                }
-            });
-            this.overlay = html.create({
-                parent: this.win, styles: {
-                    'user-select': 'none',
-                    'position': 'absolute',
-                    'top': 0,
-                    'left': 0,
-                    'width': '100%',
-                    'height': '100%',
-                    'overflow': 'hidden'
-                }
-            });
-            this.overlay.addEventListener('mousemove', function (e) {
-                return _this2._move(e);
-            });
-            this.overlay.addEventListener('touchmove', function (e) {
-                return _this2._move(e);
-            });
-            this.overlay.addEventListener('mouseup', function (e) {
-                return _this2._up(e);
-            });
-            this.overlay.addEventListener('touchend', function (e) {
-                return _this2._up(e);
-            });
-        }
-    }, {
-        key: '_open',
-        value: function _open(win) {
-            var index = this.windows.indexOf(win);
-            if (index === -1) {
-                this.windows.push(win);
-            }
-        }
-    }, {
-        key: '_focus',
-        value: function _focus(win) {
-            if (this.active === win) {
-                return;
-            }
-
-            if (this.active) {
-                this.active.blur();
-            }
-
-            var index = this.windows.indexOf(win);
-            if (index !== this.windows.length - 1) {
-                this.windows.splice(index, 1);
-                this.windows.push(win);
-            }
-            this._reorder();
-
-            this.active = win;
-        }
-    }, {
-        key: '_blur',
-        value: function _blur(win) {
-            if (this.active === win) {
-                this.active = null;
-            }
-        }
-    }, {
-        key: '_close',
-        value: function _close(win) {
-            if (this.modal === win) {
-                this.modal = null;
-            }
-            var index = this.windows.indexOf(win);
-            if (index !== -1) {
-                this.windows.splice(index, 1);
-            }
-            if (this.active === win) {
-                this._blur(win);
-            }
-        }
-    }, {
-        key: '_move',
-        value: function _move(e) {
-            for (var key in this.windows) {
-                this.windows[key]._move(e);
-            }
-        }
-    }, {
-        key: '_up',
-        value: function _up(e) {
-            for (var key in this.windows) {
-                this.windows[key]._up(e);
-            }
-        }
-    }, {
-        key: '_checkModal',
-        value: function _checkModal(win) {
-            return !this.modal || this.modal === win;
-        }
-    }]);
-
-    return WindowManager;
-}();
-
-module.exports = WindowManager;
-
-},{"./html":16,"./window":19,"./window-options":18,"exists":23}],18:[function(require,module,exports){
-'use strict';
-
-/**
- * @typedef {object} Window~WindowOptions
- * @property {number} [x=0]
- * @property {number} [y=0]
- * @property {number} [width]
- * @property {number} [height]
- * @property {boolean} [movable=true]
- * @property {boolean} [resizable=true]
- * @property {boolean} [maximizable=true]
- * @property {boolean} [minimizable=true]
- * @property {boolean} [closable=true]
- * @property {boolean} [titlebar=true]
- * @property {string} [titlebarHeight=36px]
- * @property {string} [minWidth=200px]
- * @property {string} [minHeight=60px]
- * @property {string} [borderRadius=4px]
- * @property {number} [minimizeSize=50]
- * @property {string} [shadow='0 0 12px 1px rgba(0, 0, 0, 0.6)']
- * @property {number} [animateTime=250]
- * @property {(string|function)} [ease] easing name (see {@link https://www.npmjs.com/package/penner} for list or function)
- * @property {string} [backgroundColorWindow=#fefefe]
- * @property {string} [backgroundColorTitlebarActive=#365d98]
- * @property {string} [backgroundColorTitlebarInactive=#888888]
- * @property {string} [foregroundColorButton=#ffffff]
- * @property {string} [foregroundColorTitle=#ffffff]
- * @property {string} [backgroundMinimizeButton=...]
- * @property {string} [backgroundMaximizeButton=...]
- * @property {string} [backgroundCloseButton=...]
- * @property {string} [backgroundResize=...]
- */
-var WindowOptions = {
-    x: 0,
-    y: 0,
-
-    minWidth: '200px',
-    minHeight: '60px',
-
-    borderRadius: '4px',
-    minimizeSize: 50,
-    shadow: '0 0 12px 1px rgba(0, 0, 0, 0.6)',
-    movable: true,
-    resizable: true,
-    maximizable: true,
-    minimizable: true,
-    closable: true,
-
-    titlebar: true,
-    titlebarHeight: '36px',
-
-    animateTime: 250,
-    ease: 'easeInOutSine',
-
-    backgroundColorWindow: '#fefefe',
-    backgroundColorTitlebarActive: '#365d98',
-    backgroundColorTitlebarInactive: '#888888',
-    foregroundColorButton: '#ffffff',
-    foregroundColorTitle: '#ffffff',
-
-    backgroundCloseButton: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAAfElEQVQ4jdXUwQ2AIBBEUULLVkET2N228b1gVFxkIWuik3gbHhCQEH4TYAEESEA09GPpCrBoBeFIfkILlk990UqJa1RUwQCSZdYbaumY0WGsg67lG8M66BxWofWq9tU2sbFZZuO6ZddDaWBz18YyYAjlhV/P/XHwfb4+mw0FvmLroLRViAAAAABJRU5ErkJggg==)',
-    backgroundMaximizeButton: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAAVklEQVQ4jWNgoAX4////1v+Ug60MDAwMjFAD/1PDYYyMjIxM1DAIGVDdQBY0vgmZ5pxB4cFClUzDUPQP/jAcNXDUwMFgIEpepkYxBnPhNkoNopIZmAAAdghhoHiIrEcAAAAASUVORK5CYII=)',
-    backgroundMinimizeButton: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAAOElEQVQ4jWNgGAWjYBSMgiEJGGGM////p1FkECPjLHQD/1NoICMDAwMDEyWGYAMsSOxz1DacKgAAbrQI132oX0IAAAAASUVORK5CYII=)',
-    backgroundRestoreButton: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAA2klEQVQ4ja2UzQ3CMAyFnyuuSD0wBjvAKGUDRmAERugO5U6G6ABw51CJAR6XBIX8OCHquyR27U9pnltgZYnbkNwB2Ff2zSLyUitITqzXlON03n5beTq1dhPETwBjATZoD0PgQ0QuWgPJ4z9AvzFnUp8AxyaRNCSNFzeZ1CGvJpOyr2yVMmmw6xjEVcDIJHd3Lh+aFAJ7ryB1+S6/5E7gA98ADgDuQU0YA8CtBnjC75hc7XpO9M1FoJ0j42KSi82bqEuRNjZNKrncJ0yJaqCY9FXrlyIKcN0fbqs+F7nRockDNMcAAAAASUVORK5CYII=)',
-
-    backgroundResize: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAYAAACprHcmAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QzREODAwQzcyRjZDMTFFMjg5NkREMENBNjJERUE4Q0IiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QzREODAwQzgyRjZDMTFFMjg5NkREMENBNjJERUE4Q0IiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpDNEQ4MDBDNTJGNkMxMUUyODk2REQwQ0E2MkRFQThDQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpDNEQ4MDBDNjJGNkMxMUUyODk2REQwQ0E2MkRFQThDQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuQy0VQAAACLSURBVHjaYpw9ezYDEUARiO8zEaHQHohPArEcCxEK1wGxPxA/wmeyDZLCIyABJjwKNwJxEFShIi7FyAoPArEZEB8DYi0mHFaHIikEaUwE4mtMWBRGAPE+NIU7kJ0BUxiNQyFInpMJKgFTuBuLQj8gXg3yJCicHyFZDQJfgDgOqhEE3gGxD8jNAAEGADlXJQUd3J75AAAAAElFTkSuQmCC) no-repeat'
-};
-
-module.exports = WindowOptions;
-
-},{}],19:[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Events = require('eventemitter3');
-var clicked = require('clicked');
-var Ease = require('../../dom-ease');
-var exists = require('exists');
-
-var html = require('./html');
-
-var id = 0;
-
-/**
- * Window class returned by WindowManager.createWindow()
- * @extends EventEmitter
- * @hideconstructor
- */
-
-var Window = function (_Events) {
-    _inherits(Window, _Events);
-
-    /**
-     * @param {WindowManager} wm
-     * @param {object} options
-     */
-    function Window(wm, options) {
-        _classCallCheck(this, Window);
-
-        var _this = _possibleConstructorReturn(this, (Window.__proto__ || Object.getPrototypeOf(Window)).call(this));
-
-        _this.wm = wm;
-
-        _this.options = options;
-
-        _this.id = exists(_this.options.id) ? _this.options.id : id++;
-
-        _this._createWindow();
-        _this._listeners();
-
-        _this.active = false;
-        _this.maximized = false;
-        _this.minimized = false;
-
-        _this._closed = true;
-        _this._restore = null;
-        _this._moving = null;
-        _this._resizing = null;
-
-        _this.ease = new Ease({ duration: _this.options.animateTime, ease: _this.options.ease });
-        return _this;
-    }
-
-    /**
-     * open the window
-     * @param {boolean} [noFocus] do not focus window when opened
-     * @param {boolean} [noAnimate] do not animate window when opened
-     */
-
-
-    _createClass(Window, [{
-        key: 'open',
-        value: function open(noFocus, noAnimate) {
-            if (this._closed) {
-                this.emit('open', this);
-                this.win.style.display = 'block';
-                if (!noAnimate) {
-                    this.win.style.transform = 'scale(0)';
-                    this.ease.add(this.win, { scale: 1 });
-                }
-                this._closed = false;
-                if (!noFocus) {
-                    this.focus();
-                }
-            }
-        }
-
-        /**
-         * focus the window
-         */
-
-    }, {
-        key: 'focus',
-        value: function focus() {
-            if (this.wm._checkModal(this)) {
-                if (this.minimized) {
-                    this.minimize();
-                }
-                this.active = true;
-                this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarActive;
-                this.emit('focus', this);
-            }
-        }
-
-        /**
-         * blur the window
-         */
-
-    }, {
-        key: 'blur',
-        value: function blur() {
-            if (this.wm.modal !== this) {
-                this.active = false;
-                this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarInactive;
-                this.emit('blur', this);
-            }
-        }
-
-        /**
-         * closes the window (can be reopened with open) if a reference is saved
-         */
-
-    }, {
-        key: 'close',
-        value: function close() {
-            var _this2 = this;
-
-            if (!this._closed) {
-                this._closed = true;
-                var ease = this.ease.add(this.win, { scale: 0 });
-                ease.on('complete-scale', function () {
-                    _this2.win.style.display = 'none';
-                    _this2.emit('close', _this2);
-                });
-            }
-        }
-
-        /**
-         * left coordinate
-         * @type {number}
-         */
-
-    }, {
-        key: 'resize',
-
-
-        /**
-         * resize the window
-         * @param {number} width
-         * @param {number} height
-         */
-        value: function resize(width, height) {
-            this.width = width;
-            this.height = height;
-        }
-
-        /**
-         * move window
-         * @param {number} x
-         * @param {number} y
-         */
-
-    }, {
-        key: 'move',
-        value: function move(x, y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        /**
-         * minimize window
-         * @param {boolean} noAnimate
-         */
-
-    }, {
-        key: 'minimize',
-        value: function minimize(noAnimate) {
-            var _this3 = this;
-
-            if (this.wm._checkModal(this) && this.options.minimizable && !this.transitioning) {
-                if (this.minimized) {
-                    if (noAnimate) {
-                        this.win.style.transform = 'scaleX(1) scaleY(1)';
-                        this.minimized = false;
-                        this.emit('minimize-restore');
-                        this.overlay.style.display = 'none';
-                    } else {
-                        this.transitioning = true;
-                        var add = this.ease.add(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y });
-                        add.on('complete-top', function () {
-                            _this3.minimized = false;
-                            _this3.emit('minimize-restore', _this3);
-                            _this3.transitioning = false;
-                            _this3.overlay.style.display = 'none';
-                        });
-                    }
-                } else {
-                    var x = this.x,
-                        y = this.y;
-                    var desired = this.options.minimizeSize;
-                    var delta = void 0;
-                    if (this._lastMinimized) {
-                        delta = { left: this._lastMinimized.x, top: this._lastMinimized.y };
-                    } else {
-                        delta = { scaleX: desired / this.win.offsetWidth, scaleY: desired / this.win.offsetHeight };
-                    }
-                    if (noAnimate) {
-                        this.win.style.transform = 'scale(1) scale(' + desired / this.win.offsetWidth + ',' + desired / this.win.offsetHeight + ')';
-                        this.win.style.left = delta.left + 'px';
-                        this.win.style.top = delta.top + 'px';
-                        this.minimized = { x: x, y: y };
-                        this.emit('minimize', this);
-                        this.overlay.style.display = 'block';
-                    } else {
-                        this.transitioning = true;
-                        var ease = this.ease.add(this.win, delta);
-                        ease.on('complete-scaleY', function () {
-                            _this3.minimized = { x: x, y: y };
-                            _this3.emit('minimize', _this3);
-                            _this3.transitioning = false;
-                            _this3.overlay.style.display = 'block';
-                        });
-                    }
-                }
-            }
-        }
-
-        /**
-         * maximize the window
-         */
-
-    }, {
-        key: 'maximize',
-        value: function maximize() {
-            var _this4 = this;
-
-            if (this.wm._checkModal(this) && this.options.maximizable && !this.transitioning) {
-                this.transitioning = true;
-                if (this.maximized) {
-                    var ease = this.ease.add(this.win, { left: this.maximized.x, top: this.maximized.y, width: this.maximized.width, height: this.maximized.height });
-                    ease.on('complete-height', function () {
-                        _this4.options.x = _this4.maximized.x;
-                        _this4.options.y = _this4.maximized.y;
-                        _this4.options.width = _this4.maximized.width;
-                        _this4.options.height = _this4.maximized.height;
-                        _this4.maximized = null;
-                        _this4.transitioning = false;
-                    });
-                    this.buttons.maximize.style.backgroundImage = this.options.backgroundMaximizeButton;
-                    this.emit('restore', this);
-                } else {
-                    var x = this.x,
-                        y = this.y,
-                        width = this.win.offsetWidth,
-                        height = this.win.offsetHeight;
-                    var _ease = this.ease.add(this.win, { left: 0, top: 0, width: this.wm.overlay.offsetWidth, height: this.wm.overlay.offsetHeight });
-                    _ease.on('complete-height', function () {
-                        _this4.maximized = { x: x, y: y, width: width, height: height };
-                        _this4.transitioning = false;
-                    });
-                    this.buttons.maximize.style.backgroundImage = this.options.backgroundRestoreButton;
-                    this.emit('maximize', this);
-                }
-            }
-        }
-
-        /**
-         * sends window to back of window-manager
-         */
-
-    }, {
-        key: 'sendToBack',
-        value: function sendToBack() {
-            this.wm.sendToBack(this);
-        }
-
-        /**
-         * send window to front of window-manager
-         */
-
-    }, {
-        key: 'sendToFront',
-        value: function sendToFront() {
-            this.wm.sendToFront(this);
-        }
-
-        /**
-         * save the state of the window
-         * @return {object} data
-         */
-
-    }, {
-        key: 'save',
-        value: function save() {
-            var data = {};
-            var maximized = this.maximized;
-            if (maximized) {
-                data.maximized = { x: maximized.x, y: maximized.y, width: maximized.width, height: maximized.height };
-            }
-            var minimized = this.minimized;
-            if (minimized) {
-                data.minimized = { x: this.minimized.x, y: this.minimized.y };
-            }
-            var lastMinimized = this._lastMinimized;
-            if (lastMinimized) {
-                data.lastMinimized = { x: lastMinimized.x, y: lastMinimized.y };
-            }
-            data.x = this.x;
-            data.y = this.y;
-            if (exists(this.options.width)) {
-                data.width = this.options.width;
-            }
-            if (exists(this.options.height)) {
-                data.height = this.options.height;
-            }
-            return data;
-        }
-
-        /**
-         * return the state of the window
-         * @param {object} data from save()
-         */
-
-    }, {
-        key: 'load',
-        value: function load(data) {
-            if (data.maximized) {
-                if (!this.maximized) {
-                    this.maximize(true);
-                }
-                this.maximized = data.maximized;
-            }
-            if (data.minimized) {
-                if (!this.minimized) {
-                    this.minimize(true);
-                }
-                this.minimized = data.minimized;
-            }
-            if (data.lastMinimized) {
-                this._lastMinimized = data.lastMinimized;
-            }
-            this.x = data.x;
-            this.y = data.y;
-            if (exists(data.width)) {
-                this.width = data.width;
-            } else {
-                this.win.style.width = 'auto';
-            }
-            if (exists(data.height)) {
-                this.height = data.height;
-            } else {
-                this.win.style.height = 'auto';
-            }
-        }
-
-        /**
-         * change title
-         * @type {string}
-         */
-
-    }, {
-        key: '_createWindow',
-
-
-        /**
-         * Fires when window is maximized
-         * @event Window#maximize
-         * @type {Window}
-         */
-
-        /**
-         * Fires when window is restored to normal after being maximized
-         * @event Window#maximize-restore
-         * @type {Window}
-         */
-
-        /**
-         * Fires when window is restored to normal after being minimized
-         * @event Window#minimize-restore
-         * @type {Window}
-         */
-
-        /**
-         * Fires when window opens
-         * @event Window#open
-         * @type {Window}
-         */
-
-        /**
-         * Fires when window gains focus
-         * @event Window#focus
-         * @type {Window}
-         */
-        /**
-         * Fires when window loses focus
-         * @event Window#blur
-         * @type {Window}
-         */
-        /**
-         * Fires when window closes
-         * @event Window#close
-         * @type {Window}
-         */
-
-        /**
-         * Fires when resize starts
-         * @event Window#resize-start
-         * @type {Window}
-         */
-
-        /**
-         * Fires after resize completes
-         * @event Window#resize-end
-         * @type {Window}
-         */
-
-        /**
-         * Fires during resizing
-         * @event Window#resize
-         * @type {Window}
-         */
-
-        /**
-         * Fires when move starts
-         * @event Window#move-start
-         * @type {Window}
-         */
-
-        /**
-         * Fires after move completes
-         * @event Window#move-end
-         * @type {Window}
-         */
-
-        /**
-         * Fires during move
-         * @event Window#move
-         * @type {Window}
-         */
-
-        value: function _createWindow() {
-            var _this5 = this;
-
-            this.win = html.create({
-                parent: this.wm.win, styles: {
-                    'display': 'none',
-                    'border-radius': this.options.borderRadius,
-                    'user-select': 'none',
-                    'overflow': 'hidden',
-                    'position': 'absolute',
-                    'min-width': this.options.minWidth,
-                    'min-height': this.options.minHeight,
-                    'box-shadow': this.options.shadow,
-                    'background-color': this.options.backgroundColorWindow,
-                    'left': this.options.x,
-                    'top': this.options.y,
-                    'width': isNaN(this.options.width) ? this.options.width : this.options.width + 'px',
-                    'height': isNaN(this.options.height) ? this.options.height : this.options.height + 'px'
-                }
-            });
-
-            this.winBox = html.create({
-                parent: this.win, styles: {
-                    'display': 'flex',
-                    'flex-direction': 'column',
-                    'width': '100%',
-                    'height': '100%',
-                    'min-height': this.options.minHeight
-                }
-            });
-            this._createTitlebar();
-
-            this.content = html.create({
-                parent: this.winBox, type: 'section', styles: {
-                    'display': 'block',
-                    'flex': 1,
-                    'min-height': this.minHeight,
-                    'overflow-x': 'hidden',
-                    'overflow-y': 'auto'
-                }
-            });
-
-            if (this.options.resizable) {
-                this._createResize();
-            }
-
-            this.overlay = html.create({
-                parent: this.win, styles: {
-                    'display': 'none',
-                    'position': 'absolute',
-                    'left': 0,
-                    'top': 0,
-                    'width': '100%',
-                    'height': '100%'
-                }
-            });
-            this.overlay.addEventListener('mousedown', function (e) {
-                _this5._downTitlebar(e);e.stopPropagation();
-            });
-            this.overlay.addEventListener('touchstart', function (e) {
-                _this5._downTitlebar(e);e.stopPropagation();
-            });
-        }
-    }, {
-        key: '_downTitlebar',
-        value: function _downTitlebar(e) {
-            if (!this.transitioning) {
-                var event = this._convertMoveEvent(e);
-                this._moving = this._toLocal({
-                    x: event.pageX,
-                    y: event.pageY
-                });
-                this.emit('move-start', this);
-                this._moved = false;
-            }
-        }
-    }, {
-        key: '_createTitlebar',
-        value: function _createTitlebar() {
-            var _styles,
-                _this6 = this;
-
-            this.winTitlebar = html.create({
-                parent: this.winBox, type: 'header', styles: {
-                    'user-select': 'none',
-                    'display': 'flex',
-                    'flex-direction': 'row',
-                    'align-items': 'center',
-                    'height': this.options.titlebarHeight,
-                    'min-height': this.options.titlebarHeight,
-                    'border': 0,
-                    'padding': '0 8px',
-                    'overflow': 'hidden'
-                }
-            });
-            this.winTitle = html.create({
-                parent: this.winTitlebar, type: 'span', html: this.options.title, styles: (_styles = {
-                    'user-select': 'none',
-                    'flex': 1,
-                    'display': 'flex',
-                    'flex-direction': 'row',
-                    'align-items': 'center'
-                }, _defineProperty(_styles, 'user-select', 'none'), _defineProperty(_styles, 'cursor', 'default'), _defineProperty(_styles, 'padding', 0), _defineProperty(_styles, 'padding-left', '8px'), _defineProperty(_styles, 'margin', 0), _defineProperty(_styles, 'font-size', '16px'), _defineProperty(_styles, 'font-weight', 400), _defineProperty(_styles, 'color', this.options.foregroundColorTitle), _styles)
-            });
-            this._createButtons();
-
-            if (this.options.movable) {
-                this.winTitlebar.addEventListener('mousedown', function (e) {
-                    return _this6._downTitlebar(e);
-                });
-                this.winTitlebar.addEventListener('touchstart', function (e) {
-                    return _this6._downTitlebar(e);
-                });
-            }
-        }
-    }, {
-        key: '_createButtons',
-        value: function _createButtons() {
-            var _this7 = this;
-
-            this.winButtonGroup = html.create({
-                parent: this.winTitlebar, styles: {
-                    'display': 'flex',
-                    'flex-direction': 'row',
-                    'align-items': 'center',
-                    'padding-left': '2px'
-                }
-            });
-            var button = {
-                'display': 'inline-block',
-                'border': 0,
-                'margin': 0,
-                'margin-left': '5px',
-                'padding': 0,
-                'width': '12px',
-                'height': '12px',
-                'background-color': 'transparent',
-                'background-size': 'cover',
-                'background-repeat': 'no-repeat',
-                'opacity': .7,
-                'color': this.options.foregroundColorButton,
-                'outline': 0
-            };
-            this.buttons = {};
-            if (this.options.minimizable) {
-                button.backgroundImage = this.options.backgroundMinimizeButton;
-                this.buttons.minimize = html.create({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button });
-                clicked(this.buttons.minimize, function () {
-                    return _this7.minimize();
-                });
-            }
-            if (this.options.maximizable) {
-                button.backgroundImage = this.options.backgroundMaximizeButton;
-                this.buttons.maximize = html.create({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button });
-                clicked(this.buttons.maximize, function () {
-                    return _this7.maximize();
-                });
-            }
-            if (this.options.closable) {
-                button.backgroundImage = this.options.backgroundCloseButton;
-                this.buttons.close = html.create({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button });
-                clicked(this.buttons.close, function () {
-                    return _this7.close();
-                });
-            }
-
-            var _loop = function _loop(key) {
-                var button = _this7.buttons[key];
-                button.addEventListener('mousemove', function () {
-                    button.style.opacity = 1;
-                });
-                button.addEventListener('mouseout', function () {
-                    button.style.opacity = 0.7;
-                });
-            };
-
-            for (var key in this.buttons) {
-                _loop(key);
-            }
-        }
-    }, {
-        key: '_createResize',
-        value: function _createResize() {
-            var _this8 = this;
-
-            this.resizeEdge = html.create({
-                parent: this.winBox, type: 'button', html: '&nbsp', styles: {
-                    'position': 'absolute',
-                    'bottom': 0,
-                    'right': '4px',
-                    'border': 0,
-                    'margin': 0,
-                    'padding': 0,
-                    'cursor': 'se-resize',
-                    'user-select': 'none',
-                    'background': this.options.backgroundResize,
-                    'height': '15px',
-                    'width': '10px'
-                }
-            });
-            var down = function down(e) {
-                if (_this8.wm._checkModal(_this8)) {
-                    var event = _this8._convertMoveEvent(e);
-                    var width = _this8.width || _this8.win.offsetWidth;
-                    var height = _this8.height || _this8.win.offsetHeight;
-                    _this8._resizing = {
-                        width: width - event.pageX,
-                        height: height - event.pageY
-                    };
-                    _this8.emit('resize-start');
-                    e.preventDefault();
-                }
-            };
-            this.resizeEdge.addEventListener('mousedown', down);
-            this.resizeEdge.addEventListener('touchstart', down);
-        }
-    }, {
-        key: '_move',
-        value: function _move(e) {
-            if (this.wm._checkModal(this)) {
-                var event = this._convertMoveEvent(e);
-
-                if (!this._isTouchEvent(e) && e.which !== 1) {
-                    this._moving && this._stopMove();
-                    this._resizing && this._stopResize();
-                }
-                if (this._moving) {
-                    this.move(event.pageX - this._moving.x, event.pageY - this._moving.y);
-                    if (this.minimized) {
-                        e.preventDefault();
-                        this._lastMinimized = { x: this.win.offsetLeft, y: this.win.offsetTop };
-                        this._moved = true;
-                    }
-                    this.emit('move', this);
-                    e.preventDefault();
-                }
-
-                if (this._resizing) {
-                    this.resize(event.pageX + this._resizing.width, event.pageY + this._resizing.height);
-                    this.maximized = null;
-                    this.emit('resize', this);
-                    e.preventDefault();
-                }
-            }
-        }
-    }, {
-        key: '_up',
-        value: function _up() {
-            if (this._moving) {
-                if (this.minimized) {
-                    if (!this._moved) {
-                        this.minimize();
-                    }
-                }
-                this._stopMove();
-            }
-            this._resizing && this._stopResize();
-        }
-    }, {
-        key: '_listeners',
-        value: function _listeners() {
-            var _this9 = this;
-
-            this.win.addEventListener('mousedown', function () {
-                return _this9.focus();
-            });
-            this.win.addEventListener('touchstart', function () {
-                return _this9.focus();
-            });
-        }
-    }, {
-        key: '_stopMove',
-        value: function _stopMove() {
-            this._moving = null;
-            this.emit('move-end');
-        }
-    }, {
-        key: '_stopResize',
-        value: function _stopResize() {
-            this._restore = this._resizing = null;
-            this.emit('resize-end');
-        }
-    }, {
-        key: '_isTouchEvent',
-        value: function _isTouchEvent(e) {
-            return !!window.TouchEvent && e instanceof window.TouchEvent;
-        }
-    }, {
-        key: '_convertMoveEvent',
-        value: function _convertMoveEvent(e) {
-            return this._isTouchEvent(e) ? e.changedTouches[0] : e;
-        }
-    }, {
-        key: '_toLocal',
-        value: function _toLocal(coord) {
-            return {
-                x: coord.x - this.x,
-                y: coord.y - this.y
-            };
-        }
-    }, {
-        key: 'x',
-        get: function get() {
-            return this.options.x;
-        },
-        set: function set(value) {
-            this.options.x = value;
-            this.win.style.left = value + 'px';
-        }
-
-        /**
-         * top coordinate
-         * @type {number}
-         */
-
-    }, {
-        key: 'y',
-        get: function get() {
-            return this.options.y;
-        },
-        set: function set(value) {
-            this.options.y = value;
-            this.win.style.top = value + 'px';
-        }
-
-        /**
-         * width of window
-         * @type {number}
-         */
-
-    }, {
-        key: 'width',
-        get: function get() {
-            return this.options.width || this.win.offsetWidth;
-        },
-        set: function set(value) {
-            this.options.width = value;
-            if (value) {
-                this.win.style.width = value + 'px';
-            } else {
-                this.win.style.width = 'auto';
-            }
-        }
-
-        /**
-         * height of window
-         * @type {number}
-         */
-
-    }, {
-        key: 'height',
-        get: function get() {
-            return this.options.height || this.win.offsetHeight;
-        },
-        set: function set(value) {
-            this.options.height = value;
-            if (value) {
-                this.win.style.height = value + 'px';
-            } else {
-                this.win.style.height = 'auto';
-            }
-        }
-    }, {
-        key: 'title',
-        get: function get() {
-            return this._title;
-        },
-        set: function set(value) {
-            this.winTitle.innerText = value;
-        }
-
-        /**
-         * right coordinate of window
-         * @type {number}
-         */
-
-    }, {
-        key: 'right',
-        get: function get() {
-            return this.x + this.width;
-        },
-        set: function set(value) {
-            this.x = value - this.width;
-        }
-
-        /**
-         * bottom coordinate of window
-         * @type {number}
-         */
-
-    }, {
-        key: 'bottom',
-        get: function get() {
-            return this.y + this.height;
-        },
-        set: function set(value) {
-            this.y = value - this.height;
-        }
-    }, {
-        key: 'z',
-        get: function get() {
-            return parseInt(this.win.style.zIndex);
-        },
-        set: function set(value) {
-            this.win.style.zIndex = value;
-        }
-    }]);
-
-    return Window;
-}(Events);
-
-module.exports = Window;
-
-},{"../../dom-ease":3,"./html":16,"clicked":21,"eventemitter3":22,"exists":23}],20:[function(require,module,exports){
-const WM = require('../dist/window-manager')
+const WM = require('../src/window-manager')
 const html = require('../src/html')
 
 // create a window manager and change some of the default styles
@@ -2881,7 +1626,7 @@ const wm = new WM({
     borderRadius: '10px'
 })
 
-const test = wm.createWindow( { x: 10, y: 10, title: 'Test Window' })
+const test = wm.createWindow( { x: 10, y: 10, title: 'Test Window', resizable: false })
 test.content.style.padding = '1em'
 test.content.innerHTML = 'This is a test window.'
 test.open()
@@ -2958,7 +1703,7 @@ test7.open()
 
 const wallpaper = html.create({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
 wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'
-},{"../dist/window-manager":17,"../src/html":24}],21:[function(require,module,exports){
+},{"../src/html":20,"../src/window-manager":21}],17:[function(require,module,exports){
 /**
  * Javascript: create click event for both mouse and touch
  * @example
@@ -3061,11 +1806,11 @@ function clicked(element, callback, options)
 }
 
 module.exports = clicked;
-},{}],22:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 arguments[4][13][0].apply(exports,arguments)
-},{"dup":13}],23:[function(require,module,exports){
+},{"dup":13}],19:[function(require,module,exports){
 arguments[4][14][0].apply(exports,arguments)
-},{"dup":14}],24:[function(require,module,exports){
+},{"dup":14}],20:[function(require,module,exports){
 function create(options)
 {
     options = options || {}
@@ -3091,4 +1836,1175 @@ function create(options)
 module.exports = {
     create
 }
-},{}]},{},[20]);
+},{}],21:[function(require,module,exports){
+const exists = require('exists')
+
+const html = require('./html')
+const Window = require('./window')
+const WindowOptions = require('./window-options')
+
+/**
+ * Creates a windowing system to create and manage windows
+ *
+ * @extends EventEmitter
+ * @example
+ * var wm = new WindowManager();
+ *
+ * wm.createWindow({ x: 20, y: 20, width: 200 });
+ * wm.content.innerHTML = 'Hello there!';
+ */
+class WindowManager
+{
+    /**
+     * @param {Window~WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
+     * @param {boolean} [defaultOptions.quiet] suppress the simple-window-manager console message
+     */
+    constructor(defaultOptions)
+    {
+        this._createDom()
+        this.windows = []
+        this.active = null
+        this.modal = null
+        this.options = {}
+        for (let key in WindowOptions)
+        {
+            this.options[key] = WindowOptions[key]
+        }
+        if (defaultOptions)
+        {
+            for (let key in defaultOptions)
+            {
+                this.options[key] = defaultOptions[key]
+            }
+        }
+        if (!defaultOptions || !defaultOptions.quiet)
+        {
+            console.log('%c ☕ simple-window-manager initialized ☕', 'color: #ff00ff')
+        }
+    }
+
+    /**
+     * Create a window
+     * @param {Window~WindowOptions} [options]
+     * @param {string} [options.title]
+     * @param {number} [options.x] position
+     * @param {number} [options.y] position
+     * @param {boolean} [options.modal]
+     * @param {Window} [options.center] center in the middle of an existing Window
+     * @param {string|number} [options.id] if not provide, id will be assigned in order of creation (0, 1, 2...)
+     * @fires open
+     * @fires focus
+     * @fires blur
+     * @fires close
+     * @fires maximize
+     * @fires maximize-restore
+     * @fires minimize
+     * @fires minimize-restore
+     * @fires move
+     * @fires move-start
+     * @fires move-end
+     * @fires resize
+     * @fires resize-start
+     * @fires resize-end
+     */
+    createWindow(options)
+    {
+        options = options || {}
+        for (let key in this.options)
+        {
+            if (!exists(options[key]))
+            {
+                options[key] = this.options[key]
+            }
+        }
+        const win = new Window(this, options);
+        win.on('open', this._open, this)
+        win.on('focus', this._focus, this)
+        win.on('blur', this._blur, this)
+        win.on('close', this._close, this)
+        win.win.addEventListener('mousemove', (e) => this._move(e))
+        win.win.addEventListener('touchmove', (e) => this._move(e))
+        win.win.addEventListener('mouseup', (e) => this._up(e))
+        win.win.addEventListener('touchend', (e) => this._up(e))
+        if (options.center)
+        {
+            win.move(
+                options.center.x + options.center.width / 2 - (options.width ? options.width / 2 : 0),
+                options.center.y + options.center.height / 2 - (options.height ? options.height / 2 : 0)
+            )
+        }
+        if (options.modal)
+        {
+            this.modal = win
+        }
+        return win
+    }
+
+    /**
+     * send window to front
+     * @param {Window} win
+     */
+    sendToFront(win)
+    {
+        const index = this.windows.indexOf(win)
+        if (index !== this.windows.length - 1)
+        {
+            this.windows.splice(index, 1)
+            this.windows.push(win)
+            this._reorder()
+        }
+    }
+
+    /**
+     * send window to back
+     * @param {Window} win
+     */
+    sendToBack(win)
+    {
+        const index = this.windows.indexOf(win)
+        if (index !== 0)
+        {
+            this.windows.splice(index, 1)
+            this.windows.unshift(win)
+            this._reorder()
+        }
+    }
+
+    /**
+     * save the state of all the windows
+     * @returns {object} use this object in load() to restore the state of all windows
+     */
+    save()
+    {
+        const data = {}
+        for (let i = 0; i < this.windows.length; i++)
+        {
+            const entry = this.windows[i]
+            data[entry.id] = entry.save()
+            data[entry.id].order = i
+        }
+        return data
+    }
+
+    /**
+     * restores the state of all the windows
+     * NOTE: this requires that the windows have the same id as when save() was called
+     * @param {object} data created by save()
+     */
+    load(data)
+    {
+        for (let i = 0; i < this.windows.length; i++)
+        {
+            const entry = this.windows[i]
+            if (data[entry.id])
+            {
+                entry.load(data[entry.id])
+            }
+        }
+        // reorder windows
+    }
+
+    /**
+     * reorder windows
+     * @private
+     * @returns {number} available z-index for top window
+     */
+    _reorder()
+    {
+        let i = 0
+        for (; i < this.windows.length; i++)
+        {
+            this.windows[i].z = i
+        }
+    }
+
+    _createDom()
+    {
+        this.win = html.create({
+            parent: document.body, styles: {
+                'user-select': 'none',
+                'width': '100%',
+                'height': '100%',
+                'overflow': 'hidden',
+                'z-index': -1,
+                'cursor': 'default'
+            }
+        })
+        this.overlay = html.create({
+            parent: this.win, styles: {
+                'user-select': 'none',
+                'position': 'absolute',
+                'top': 0,
+                'left': 0,
+                'width': '100%',
+                'height': '100%',
+                'overflow': 'hidden'
+            }
+        })
+        this.overlay.addEventListener('mousemove', (e) => this._move(e))
+        this.overlay.addEventListener('touchmove', (e) => this._move(e))
+        this.overlay.addEventListener('mouseup', (e) => this._up(e))
+        this.overlay.addEventListener('touchend', (e) => this._up(e))
+    }
+
+    _open(win)
+    {
+        const index = this.windows.indexOf(win)
+        if (index === -1)
+        {
+            this.windows.push(win)
+        }
+    }
+
+    _focus(win)
+    {
+        if (this.active === win)
+        {
+            return
+        }
+
+        if (this.active)
+        {
+            this.active.blur()
+        }
+
+        const index = this.windows.indexOf(win)
+        if (index !== this.windows.length - 1)
+        {
+            this.windows.splice(index, 1)
+            this.windows.push(win)
+        }
+        this._reorder()
+
+        this.active = win
+    }
+
+    _blur(win)
+    {
+        if (this.active === win)
+        {
+            this.active = null
+        }
+    }
+
+    _close(win)
+    {
+        if (this.modal === win)
+        {
+            this.modal = null
+        }
+        const index = this.windows.indexOf(win)
+        if (index !== -1)
+        {
+            this.windows.splice(index, 1)
+        }
+        if (this.active === win)
+        {
+            this._blur(win)
+        }
+    }
+
+    _move(e)
+    {
+        for (let key in this.windows)
+        {
+            this.windows[key]._move(e)
+        }
+    }
+
+    _up(e)
+    {
+        for (let key in this.windows)
+        {
+            this.windows[key]._up(e)
+        }
+    }
+
+    _checkModal(win)
+    {
+        return !this.modal || this.modal === win
+    }
+}
+
+module.exports = WindowManager
+},{"./html":20,"./window":23,"./window-options":22,"exists":19}],22:[function(require,module,exports){
+/**
+ * @typedef {object} Window~WindowOptions
+ * @property {number} [x=0]
+ * @property {number} [y=0]
+ * @property {number} [width]
+ * @property {number} [height]
+ * @property {boolean} [movable=true]
+ * @property {boolean} [resizable=true]
+ * @property {boolean} [maximizable=true]
+ * @property {boolean} [minimizable=true]
+ * @property {boolean} [closable=true]
+ * @property {boolean} [titlebar=true]
+ * @property {string} [titlebarHeight=36px]
+ * @property {string} [minWidth=200px]
+ * @property {string} [minHeight=60px]
+ * @property {string} [borderRadius=4px]
+ * @property {number} [minimizeSize=50]
+ * @property {string} [shadow='0 0 12px 1px rgba(0, 0, 0, 0.6)']
+ * @property {number} [animateTime=250]
+ * @property {(string|function)} [ease] easing name (see {@link https://www.npmjs.com/package/penner} for list or function)
+ * @property {string} [backgroundColorWindow=#fefefe]
+ * @property {string} [backgroundColorTitlebarActive=#365d98]
+ * @property {string} [backgroundColorTitlebarInactive=#888888]
+ * @property {string} [foregroundColorButton=#ffffff]
+ * @property {string} [foregroundColorTitle=#ffffff]
+ * @property {string} [backgroundMinimizeButton=...]
+ * @property {string} [backgroundMaximizeButton=...]
+ * @property {string} [backgroundCloseButton=...]
+ * @property {string} [backgroundResize=...]
+ */
+const WindowOptions = {
+    x: 0,
+    y: 0,
+
+    minWidth: '200px',
+    minHeight: '60px',
+
+    borderRadius: '4px',
+    minimizeSize: 50,
+    shadow: '0 0 12px 1px rgba(0, 0, 0, 0.6)',
+    movable: true,
+    resizable: true,
+    maximizable: true,
+    minimizable: true,
+    closable: true,
+
+    titlebar: true,
+    titlebarHeight: '36px',
+
+    animateTime: 250,
+    ease: 'easeInOutSine',
+
+    backgroundColorWindow: '#fefefe',
+    backgroundColorTitlebarActive: '#365d98',
+    backgroundColorTitlebarInactive: '#888888',
+    foregroundColorButton: '#ffffff',
+    foregroundColorTitle: '#ffffff',
+
+    backgroundCloseButton: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAAfElEQVQ4jdXUwQ2AIBBEUULLVkET2N228b1gVFxkIWuik3gbHhCQEH4TYAEESEA09GPpCrBoBeFIfkILlk990UqJa1RUwQCSZdYbaumY0WGsg67lG8M66BxWofWq9tU2sbFZZuO6ZddDaWBz18YyYAjlhV/P/XHwfb4+mw0FvmLroLRViAAAAABJRU5ErkJggg==)',
+    backgroundMaximizeButton: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAAVklEQVQ4jWNgoAX4////1v+Ug60MDAwMjFAD/1PDYYyMjIxM1DAIGVDdQBY0vgmZ5pxB4cFClUzDUPQP/jAcNXDUwMFgIEpepkYxBnPhNkoNopIZmAAAdghhoHiIrEcAAAAASUVORK5CYII=)',
+    backgroundMinimizeButton: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAAOElEQVQ4jWNgGAWjYBSMgiEJGGGM////p1FkECPjLHQD/1NoICMDAwMDEyWGYAMsSOxz1DacKgAAbrQI132oX0IAAAAASUVORK5CYII=)',
+    backgroundRestoreButton: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABmJLR0QA/wD/AP+gvaeTAAAA2klEQVQ4ja2UzQ3CMAyFnyuuSD0wBjvAKGUDRmAERugO5U6G6ABw51CJAR6XBIX8OCHquyR27U9pnltgZYnbkNwB2Ff2zSLyUitITqzXlON03n5beTq1dhPETwBjATZoD0PgQ0QuWgPJ4z9AvzFnUp8AxyaRNCSNFzeZ1CGvJpOyr2yVMmmw6xjEVcDIJHd3Lh+aFAJ7ryB1+S6/5E7gA98ADgDuQU0YA8CtBnjC75hc7XpO9M1FoJ0j42KSi82bqEuRNjZNKrncJ0yJaqCY9FXrlyIKcN0fbqs+F7nRockDNMcAAAAASUVORK5CYII=)',
+
+    backgroundResize: 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAYAAACprHcmAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6QzREODAwQzcyRjZDMTFFMjg5NkREMENBNjJERUE4Q0IiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6QzREODAwQzgyRjZDMTFFMjg5NkREMENBNjJERUE4Q0IiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpDNEQ4MDBDNTJGNkMxMUUyODk2REQwQ0E2MkRFQThDQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpDNEQ4MDBDNjJGNkMxMUUyODk2REQwQ0E2MkRFQThDQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuQy0VQAAACLSURBVHjaYpw9ezYDEUARiO8zEaHQHohPArEcCxEK1wGxPxA/wmeyDZLCIyABJjwKNwJxEFShIi7FyAoPArEZEB8DYi0mHFaHIikEaUwE4mtMWBRGAPE+NIU7kJ0BUxiNQyFInpMJKgFTuBuLQj8gXg3yJCicHyFZDQJfgDgOqhEE3gGxD8jNAAEGADlXJQUd3J75AAAAAElFTkSuQmCC) no-repeat',
+}
+
+module.exports = WindowOptions
+},{}],23:[function(require,module,exports){
+const Events = require('eventemitter3')
+const clicked = require('clicked')
+const Ease = require('../../dom-ease')
+const exists = require('exists')
+
+const html = require('./html')
+
+let id = 0
+
+/**
+ * Window class returned by WindowManager.createWindow()
+ * @extends EventEmitter
+ * @hideconstructor
+ */
+class Window extends Events
+{
+    /**
+     * @param {WindowManager} wm
+     * @param {object} options
+     */
+    constructor(wm, options)
+    {
+        super()
+        this.wm = wm
+
+        this.options = options
+
+        this.id = exists(this.options.id) ? this.options.id : id++
+
+        this._createWindow()
+        this._listeners()
+
+        this.active = false
+        this.maximized = false
+        this.minimized = false
+
+        this._closed = true
+        this._restore = null
+        this._moving = null
+        this._resizing = null
+
+        this.ease = new Ease({ duration: this.options.animateTime, ease: this.options.ease })
+    }
+
+    /**
+     * open the window
+     * @param {boolean} [noFocus] do not focus window when opened
+     * @param {boolean} [noAnimate] do not animate window when opened
+     */
+    open(noFocus, noAnimate)
+    {
+        if (this._closed)
+        {
+            this.emit('open', this)
+            this.win.style.display = 'block'
+            if (!noAnimate)
+            {
+                this.win.style.transform = 'scale(0)'
+                this.ease.add(this.win, { scale: 1 })
+            }
+            this._closed = false
+            if (!noFocus)
+            {
+                this.focus()
+            }
+        }
+    }
+
+    /**
+     * focus the window
+     */
+    focus()
+    {
+        if (this.wm._checkModal(this))
+        {
+            if (this.minimized)
+            {
+                this.minimize()
+            }
+            this.active = true
+            this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarActive
+            this.emit('focus', this)
+        }
+    }
+
+    /**
+     * blur the window
+     */
+    blur()
+    {
+        if (this.wm.modal !== this)
+        {
+            this.active = false
+            this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarInactive
+            this.emit('blur', this)
+        }
+    }
+
+    /**
+     * closes the window (can be reopened with open) if a reference is saved
+     */
+    close()
+    {
+        if (!this._closed)
+        {
+            this._closed = true
+            const ease = this.ease.add(this.win, { scale: 0 })
+            ease.on('complete-scale', () =>
+            {
+                this.win.style.display = 'none'
+                this.emit('close', this);
+            })
+        }
+    }
+
+    /**
+     * left coordinate
+     * @type {number}
+     */
+    get x() { return this.options.x }
+    set x(value)
+    {
+        this.options.x = value
+        this.win.style.left = value + 'px'
+    }
+
+    /**
+     * top coordinate
+     * @type {number}
+     */
+    get y() { return this.options.y }
+    set y(value)
+    {
+        this.options.y = value
+        this.win.style.top = value + 'px'
+    }
+
+    /**
+     * width of window
+     * @type {number}
+     */
+    get width() { return this.options.width || this.win.offsetWidth }
+    set width(value)
+    {
+        this.options.width = value
+        if (value)
+        {
+            this.win.style.width = value + 'px'
+        }
+        else
+        {
+            this.win.style.width = 'auto'
+        }
+    }
+
+    /**
+     * height of window
+     * @type {number}
+     */
+    get height() { return this.options.height || this.win.offsetHeight }
+    set height(value)
+    {
+        this.options.height = value
+        if (value)
+        {
+            this.win.style.height = value + 'px'
+        }
+        else
+        {
+            this.win.style.height = 'auto'
+        }
+    }
+
+    /**
+     * resize the window
+     * @param {number} width
+     * @param {number} height
+     */
+    resize(width, height)
+    {
+        this.width = width
+        this.height = height
+    }
+
+    /**
+     * move window
+     * @param {number} x
+     * @param {number} y
+     */
+    move(x, y)
+    {
+        this.x = x
+        this.y = y
+    }
+
+    /**
+     * minimize window
+     * @param {boolean} noAnimate
+     */
+    minimize(noAnimate)
+    {
+        if (this.wm._checkModal(this) && this.options.minimizable && !this.transitioning)
+        {
+            if (this.minimized)
+            {
+                if (noAnimate)
+                {
+                    this.win.style.transform = 'scaleX(1) scaleY(1)'
+                    this.minimized = false
+                    this.emit('minimize-restore')
+                    this.overlay.style.display = 'none'
+                }
+                else
+                {
+                    this.transitioning = true
+                    const add = this.ease.add(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y })
+                    add.on('complete-top', () =>
+                    {
+                        this.minimized = false
+                        this.emit('minimize-restore', this)
+                        this.transitioning = false
+                        this.overlay.style.display = 'none'
+                    })
+                }
+            }
+            else
+            {
+                const x = this.x, y = this.y
+                const desired = this.options.minimizeSize
+                let delta
+                if (this._lastMinimized)
+                {
+                    delta = { left: this._lastMinimized.x, top: this._lastMinimized.y }
+                }
+                else
+                {
+                    delta = { scaleX: (desired / this.win.offsetWidth), scaleY: (desired / this.win.offsetHeight) }
+                }
+                if (noAnimate)
+                {
+                    this.win.style.transform = 'scale(1) scale(' + (desired / this.win.offsetWidth) + ',' + (desired / this.win.offsetHeight) + ')'
+                    this.win.style.left = delta.left + 'px'
+                    this.win.style.top = delta.top + 'px'
+                    this.minimized = { x, y }
+                    this.emit('minimize', this)
+                    this.overlay.style.display = 'block'
+                }
+                else
+                {
+                    this.transitioning = true
+                    const ease = this.ease.add(this.win, delta)
+                    ease.on('complete-scaleY', () =>
+                    {
+                        this.minimized = { x, y }
+                        this.emit('minimize', this)
+                        this.transitioning = false
+                        this.overlay.style.display = 'block'
+                    })
+                }
+            }
+        }
+    }
+
+    /**
+     * maximize the window
+     */
+    maximize()
+    {
+        if (this.wm._checkModal(this) && this.options.maximizable && !this.transitioning)
+        {
+            this.transitioning = true
+            if (this.maximized)
+            {
+                const ease = this.ease.add(this.win, { left: this.maximized.x, top: this.maximized.y, width: this.maximized.width, height: this.maximized.height })
+                ease.on('complete-height', () =>
+                {
+                    this.options.x = this.maximized.x
+                    this.options.y = this.maximized.y
+                    this.options.width = this.maximized.width
+                    this.options.height = this.maximized.height
+                    this.maximized = null
+                    this.transitioning = false
+                })
+                this.buttons.maximize.style.backgroundImage = this.options.backgroundMaximizeButton
+                this.emit('restore', this)
+            }
+            else
+            {
+                const x = this.x, y = this.y, width = this.win.offsetWidth, height = this.win.offsetHeight
+                const ease = this.ease.add(this.win, { left: 0, top: 0, width: this.wm.overlay.offsetWidth, height: this.wm.overlay.offsetHeight })
+                ease.on('complete-height', () =>
+                {
+                    this.maximized = { x, y, width, height }
+                    this.transitioning = false
+                })
+                this.buttons.maximize.style.backgroundImage = this.options.backgroundRestoreButton
+                this.emit('maximize', this)
+            }
+        }
+    }
+
+    /**
+     * sends window to back of window-manager
+     */
+    sendToBack()
+    {
+        this.wm.sendToBack(this)
+    }
+
+    /**
+     * send window to front of window-manager
+     */
+    sendToFront()
+    {
+        this.wm.sendToFront(this)
+    }
+
+    /**
+     * save the state of the window
+     * @return {object} data
+     */
+    save()
+    {
+        const data = {}
+        const maximized = this.maximized
+        if (maximized)
+        {
+            data.maximized = { x: maximized.x, y: maximized.y, width: maximized.width, height: maximized.height }
+        }
+        const minimized = this.minimized
+        if (minimized)
+        {
+            data.minimized = { x: this.minimized.x, y: this.minimized.y }
+        }
+        const lastMinimized = this._lastMinimized
+        if (lastMinimized)
+        {
+            data.lastMinimized = { x: lastMinimized.x, y: lastMinimized.y }
+        }
+        data.x = this.x
+        data.y = this.y
+        if (exists(this.options.width))
+        {
+            data.width = this.options.width
+        }
+        if (exists(this.options.height))
+        {
+            data.height = this.options.height
+        }
+        return data
+    }
+
+    /**
+     * return the state of the window
+     * @param {object} data from save()
+     */
+    load(data)
+    {
+        if (data.maximized)
+        {
+            if (!this.maximized)
+            {
+                this.maximize(true)
+            }
+            this.maximized = data.maximized
+        }
+        if (data.minimized)
+        {
+            if (!this.minimized)
+            {
+                this.minimize(true)
+            }
+            this.minimized = data.minimized
+        }
+        if (data.lastMinimized)
+        {
+            this._lastMinimized = data.lastMinimized
+        }
+        this.x = data.x
+        this.y = data.y
+        if (exists(data.width))
+        {
+            this.width = data.width
+        }
+        else
+        {
+            this.win.style.width = 'auto'
+        }
+        if (exists(data.height))
+        {
+            this.height = data.height
+        }
+        else
+        {
+            this.win.style.height = 'auto'
+        }
+    }
+
+    /**
+     * change title
+     * @type {string}
+     */
+    get title() { return this._title }
+    set title(value)
+    {
+        this.winTitle.innerText = value
+    }
+
+
+    /**
+     * right coordinate of window
+     * @type {number}
+     */
+    get right() { return this.x + this.width }
+    set right(value)
+    {
+        this.x = value - this.width
+    }
+
+    /**
+     * bottom coordinate of window
+     * @type {number}
+     */
+    get bottom() { return this.y + this.height }
+    set bottom(value)
+    {
+        this.y = value - this.height
+    }
+
+    /**
+     * Fires when window is maximized
+     * @event Window#maximize
+     * @type {Window}
+     */
+
+    /**
+     * Fires when window is restored to normal after being maximized
+     * @event Window#maximize-restore
+     * @type {Window}
+     */
+
+    /**
+     * Fires when window is restored to normal after being minimized
+     * @event Window#minimize-restore
+     * @type {Window}
+     */
+
+    /**
+     * Fires when window opens
+     * @event Window#open
+     * @type {Window}
+     */
+
+    /**
+     * Fires when window gains focus
+     * @event Window#focus
+     * @type {Window}
+     */
+    /**
+     * Fires when window loses focus
+     * @event Window#blur
+     * @type {Window}
+     */
+    /**
+     * Fires when window closes
+     * @event Window#close
+     * @type {Window}
+     */
+
+    /**
+     * Fires when resize starts
+     * @event Window#resize-start
+     * @type {Window}
+     */
+
+    /**
+     * Fires after resize completes
+     * @event Window#resize-end
+     * @type {Window}
+     */
+
+    /**
+     * Fires during resizing
+     * @event Window#resize
+     * @type {Window}
+     */
+
+    /**
+     * Fires when move starts
+     * @event Window#move-start
+     * @type {Window}
+     */
+
+    /**
+     * Fires after move completes
+     * @event Window#move-end
+     * @type {Window}
+     */
+
+    /**
+     * Fires during move
+     * @event Window#move
+     * @type {Window}
+     */
+
+    _createWindow()
+    {
+        this.win = html.create({
+            parent: this.wm.win, styles: {
+                'display': 'none',
+                'border-radius': this.options.borderRadius,
+                'user-select': 'none',
+                'overflow': 'hidden',
+                'position': 'absolute',
+                'min-width': this.options.minWidth,
+                'min-height': this.options.minHeight,
+                'box-shadow': this.options.shadow,
+                'background-color': this.options.backgroundColorWindow,
+                'left': this.options.x,
+                'top': this.options.y,
+                'width': isNaN(this.options.width) ? this.options.width : this.options.width + 'px',
+                'height': isNaN(this.options.height) ? this.options.height : this.options.height + 'px'
+            }
+        })
+
+        this.winBox = html.create({
+            parent: this.win, styles: {
+                'display': 'flex',
+                'flex-direction': 'column',
+                'width': '100%',
+                'height': '100%',
+                'min-height': this.options.minHeight
+            }
+        })
+        this._createTitlebar()
+
+        this.content = html.create({
+            parent: this.winBox, type: 'section', styles: {
+                'display': 'block',
+                'flex': 1,
+                'min-height': this.minHeight,
+                'overflow-x': 'hidden',
+                'overflow-y': 'auto'
+            }
+        })
+
+        if (this.options.resizable)
+        {
+            this._createResize()
+        }
+
+        this.overlay = html.create({
+            parent: this.win, styles: {
+                'display': 'none',
+                'position': 'absolute',
+                'left': 0,
+                'top': 0,
+                'width': '100%',
+                'height': '100%'
+            }
+        })
+        this.overlay.addEventListener('mousedown', (e) => { this._downTitlebar(e); e.stopPropagation() })
+        this.overlay.addEventListener('touchstart', (e) => { this._downTitlebar(e); e.stopPropagation() })
+    }
+
+    _downTitlebar(e)
+    {
+        if (!this.transitioning)
+        {
+            const event = this._convertMoveEvent(e)
+            this._moving = this._toLocal({
+                x: event.pageX,
+                y: event.pageY
+            })
+            this.emit('move-start', this)
+            this._moved = false
+        }
+    }
+
+    _createTitlebar()
+    {
+        this.winTitlebar = html.create({
+            parent: this.winBox, type: 'header', styles: {
+                'user-select': 'none',
+                'display': 'flex',
+                'flex-direction': 'row',
+                'align-items': 'center',
+                'height': this.options.titlebarHeight,
+                'min-height': this.options.titlebarHeight,
+                'border': 0,
+                'padding': '0 8px',
+                'overflow': 'hidden',
+            }
+        })
+        this.winTitle = html.create({
+            parent: this.winTitlebar, type: 'span', html: this.options.title, styles: {
+                'user-select': 'none',
+                'flex': 1,
+                'display': 'flex',
+                'flex-direction': 'row',
+                'align-items': 'center',
+                'user-select': 'none',
+                'cursor': 'default',
+                'padding': 0,
+                'padding-left': '8px',
+                'margin': 0,
+                'font-size': '16px',
+                'font-weight': 400,
+                'color': this.options.foregroundColorTitle
+            }
+        })
+        this._createButtons()
+
+        if (this.options.movable)
+        {
+            this.winTitlebar.addEventListener('mousedown', (e) => this._downTitlebar(e))
+            this.winTitlebar.addEventListener('touchstart', (e) => this._downTitlebar(e))
+        }
+    }
+
+    _createButtons()
+    {
+        this.winButtonGroup = html.create({
+            parent: this.winTitlebar, styles: {
+                'display': 'flex',
+                'flex-direction': 'row',
+                'align-items': 'center',
+                'padding-left': '2px'
+            }
+        })
+        const button = {
+            'display': 'inline-block',
+            'border': 0,
+            'margin': 0,
+            'margin-left': '5px',
+            'padding': 0,
+            'width': '12px',
+            'height': '12px',
+            'background-color': 'transparent',
+            'background-size': 'cover',
+            'background-repeat': 'no-repeat',
+            'opacity': .7,
+            'color': this.options.foregroundColorButton,
+            'outline': 0
+        }
+        this.buttons = {}
+        if (this.options.minimizable)
+        {
+            button.backgroundImage = this.options.backgroundMinimizeButton
+            this.buttons.minimize = html.create({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
+            clicked(this.buttons.minimize, () => this.minimize())
+        }
+        if (this.options.maximizable)
+        {
+            button.backgroundImage = this.options.backgroundMaximizeButton
+            this.buttons.maximize = html.create({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
+            clicked(this.buttons.maximize, () => this.maximize())
+        }
+        if (this.options.closable)
+        {
+            button.backgroundImage = this.options.backgroundCloseButton
+            this.buttons.close = html.create({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
+            clicked(this.buttons.close, () => this.close())
+        }
+        for (let key in this.buttons)
+        {
+            const button = this.buttons[key]
+            button.addEventListener('mousemove', () =>
+            {
+                button.style.opacity = 1
+            })
+            button.addEventListener('mouseout', () =>
+            {
+                button.style.opacity = 0.7
+            })
+        }
+    }
+
+    _createResize()
+    {
+        this.resizeEdge = html.create({
+            parent: this.winBox, type: 'button', html: '&nbsp', styles: {
+                'position': 'absolute',
+                'bottom': 0,
+                'right': '4px',
+                'border': 0,
+                'margin': 0,
+                'padding': 0,
+                'cursor': 'se-resize',
+                'user-select': 'none',
+                'background': this.options.backgroundResize,
+                'height': '15px',
+                'width': '10px'
+            }
+        })
+        const down = (e) =>
+        {
+            if (this.wm._checkModal(this))
+            {
+                const event = this._convertMoveEvent(e)
+                const width = this.width || this.win.offsetWidth
+                const height = this.height || this.win.offsetHeight
+                this._resizing = {
+                    width: width - event.pageX,
+                    height: height - event.pageY
+                }
+                this.emit('resize-start')
+                e.preventDefault()
+            }
+        }
+        this.resizeEdge.addEventListener('mousedown', down)
+        this.resizeEdge.addEventListener('touchstart', down)
+    }
+
+    _move(e)
+    {
+        if (this.wm._checkModal(this))
+        {
+            const event = this._convertMoveEvent(e)
+
+            if (!this._isTouchEvent(e) && e.which !== 1)
+            {
+                this._moving && this._stopMove()
+                this._resizing && this._stopResize()
+            }
+            if (this._moving)
+            {
+                this.move(
+                    event.pageX - this._moving.x,
+                    event.pageY - this._moving.y
+                )
+                if (this.minimized)
+                {
+                    e.preventDefault()
+                    this._lastMinimized = { x: this.win.offsetLeft, y: this.win.offsetTop }
+                    this._moved = true
+                }
+                this.emit('move', this)
+                e.preventDefault()
+            }
+
+            if (this._resizing)
+            {
+                this.resize(
+                    event.pageX + this._resizing.width,
+                    event.pageY + this._resizing.height
+                )
+                this.maximized = null
+                this.emit('resize', this)
+                e.preventDefault()
+            }
+        }
+    }
+
+    _up()
+    {
+        if (this._moving)
+        {
+            if (this.minimized)
+            {
+                if (!this._moved)
+                {
+                    this.minimize()
+                }
+            }
+            this._stopMove()
+        }
+        this._resizing && this._stopResize()
+    }
+
+    _listeners()
+    {
+        this.win.addEventListener('mousedown', () => this.focus())
+        this.win.addEventListener('touchstart', () => this.focus())
+    }
+
+    _stopMove()
+    {
+        this._moving = null
+        this.emit('move-end')
+    }
+
+    _stopResize()
+    {
+        this._restore = this._resizing = null
+        this.emit('resize-end')
+    }
+
+    _isTouchEvent(e)
+    {
+        return !!window.TouchEvent && (e instanceof window.TouchEvent)
+    }
+
+    _convertMoveEvent(e)
+    {
+        return this._isTouchEvent(e) ? e.changedTouches[0] : e
+    }
+
+    _toLocal(coord)
+    {
+        return {
+            x: coord.x - this.x,
+            y: coord.y - this.y
+        }
+    }
+
+    get z() { return parseInt(this.win.style.zIndex) }
+    set z(value) { this.win.style.zIndex = value }
+}
+
+module.exports = Window
+},{"../../dom-ease":3,"./html":20,"clicked":17,"eventemitter3":18,"exists":19}]},{},[16]);
