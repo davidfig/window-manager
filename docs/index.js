@@ -2045,13 +2045,13 @@ var id = 0;
 /**
  * Window class returned by WindowManager.createWindow()
  * @extends EventEmitter
+ * @hideconstructor
  */
 
 var Window = function (_Events) {
     _inherits(Window, _Events);
 
     /**
-     * @private
      * @param {WindowManager} wm
      * @param {object} options
      */
