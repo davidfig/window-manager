@@ -30,7 +30,7 @@
         "private": false,
         "lenient": true,
         "destination": "./docs/jsdoc",
-        "template": "./node_modules/yy-jsdoc-template"
+        "template": "../jsdoc-template"
     },
     "plugins": [
         "./node_modules/yy-jsdoc-template/plugins/skip-node_modules.js"

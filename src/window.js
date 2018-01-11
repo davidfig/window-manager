@@ -10,11 +10,11 @@ let id = 0
 /**
  * Window class returned by WindowManager.createWindow()
  * @extends EventEmitter
+ * @hideconstructor
  */
 class Window extends Events
 {
     /**
-     * @private
      * @param {WindowManager} wm
      * @param {object} options
      */
