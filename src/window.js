@@ -518,8 +518,8 @@ class Window extends Events
                 'background-color': this.options.backgroundColorWindow,
                 'left': this.options.x,
                 'top': this.options.y,
-                'width': this.options.width,
-                'height': this.options.height
+                'width': isNaN(this.options.width) ? this.options.width : this.options.width + 'px',
+                'height': isNaN(this.options.height) ? this.options.height : this.options.height + 'px'
             }
         })
 
