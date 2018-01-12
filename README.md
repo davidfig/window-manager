@@ -26,7 +26,7 @@ I used [Ventus](https://github.com/rlamana/Ventus) to build internal editors, bu
 
 ## simple example
 ```js
-    const WM = require('window-manager)
+    const WM = require('window-manager')
 
     const wm = new WM({ backgroundColorWindow: 'green' })
 
