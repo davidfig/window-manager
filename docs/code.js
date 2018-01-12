@@ -1,3 +1,5 @@
+const FPS = require('yy-fps')
+
 const WM = require('../src/window-manager')
 const html = require('../src/html')
 
@@ -83,3 +85,11 @@ test7.open()
 
 const wallpaper = html.create({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
 wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'
+
+const fps = new FPS()
+function update()
+{
+    fps.frame()
+    requestAnimationFrame(update)
+}
+update()
