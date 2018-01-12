@@ -148,13 +148,21 @@
             
                 <li class="parent" data-name="Window#event:move-start"><a href="Window.html#event:move-start">move-start</a></li>
             
+                <li class="parent" data-name="Window#event:move-x"><a href="Window.html#event:move-x">move-x</a></li>
+            
+                <li class="parent" data-name="Window#event:move-y"><a href="Window.html#event:move-y">move-y</a></li>
+            
                 <li class="parent" data-name="Window#event:open"><a href="Window.html#event:open">open</a></li>
             
                 <li class="parent" data-name="Window#event:resize"><a href="Window.html#event:resize">resize</a></li>
             
                 <li class="parent" data-name="Window#event:resize-end"><a href="Window.html#event:resize-end">resize-end</a></li>
             
+                <li class="parent" data-name="Window#event:resize-height"><a href="Window.html#event:resize-height">resize-height</a></li>
+            
                 <li class="parent" data-name="Window#event:resize-start"><a href="Window.html#event:resize-start">resize-start</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-width"><a href="Window.html#event:resize-width">resize-width</a></li>
             
             </ul>
         </li>
@@ -180,6 +188,8 @@
             
                 <li class="parent  " data-name="WindowManager#createWindow"><a href="WindowManager.html#createWindow">createWindow</a></li>
             
+                <li class="parent  " data-name="WindowManager#edges"><a href="WindowManager.html#edges">edges</a></li>
+            
                 <li class="  " data-name="WindowManager#emit~"><a href="WindowManager.html#emit">emit</a></li>
             
                 <li class="  " data-name="WindowManager#eventNames~"><a href="WindowManager.html#eventNames">eventNames</a></li>
@@ -197,6 +207,8 @@
                 <li class="  " data-name="WindowManager#removeAllListeners~"><a href="WindowManager.html#removeAllListeners">removeAllListeners</a></li>
             
                 <li class="  " data-name="WindowManager#removeListener~"><a href="WindowManager.html#removeListener">removeListener</a></li>
+            
+                <li class="parent  " data-name="WindowManager#removePlugin"><a href="WindowManager.html#removePlugin">removePlugin</a></li>
             
                 <li class="parent  " data-name="WindowManager#save"><a href="WindowManager.html#save">save</a></li>
             
@@ -232,6 +244,7 @@
 const html = require('./html')
 const Window = require('./window')
 const WindowOptions = require('./window-options')
+const Edges = require('./edges')
 
 /**
  * Creates a windowing system to create and manage windows
@@ -248,6 +261,9 @@ class WindowManager
     /**
      * @param {Window~WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
      * @param {boolean} [defaultOptions.quiet] suppress the simple-window-manager console message
+     * @param {object} [defaultOptions.edges] turn on edge snapping
+     * @param {boolean} [defaultOptions.edges.screen] snap to edge of screen
+     * @param {boolean} [defaultOptions.edges.windows] snap to windows
      */
     constructor(defaultOptions)
     {
@@ -271,6 +287,11 @@ class WindowManager
         {
             console.log('%c ☕ simple-window-manager initialized ☕', 'color: #ff00ff')
         }
+        this.plugins = []
+        if (defaultOptions &amp;&amp; defaultOptions['edges'])
+        {
+            this.edges(defaultOptions['edges'])
+        }
     }
 
     /**
@@ -282,20 +303,7 @@ class WindowManager
      * @param {boolean} [options.modal]
      * @param {Window} [options.center] center in the middle of an existing Window
      * @param {string|number} [options.id] if not provide, id will be assigned in order of creation (0, 1, 2...)
-     * @fires open
-     * @fires focus
-     * @fires blur
-     * @fires close
-     * @fires maximize
-     * @fires maximize-restore
-     * @fires minimize
-     * @fires minimize-restore
-     * @fires move
-     * @fires move-start
-     * @fires move-end
-     * @fires resize
-     * @fires resize-start
-     * @fires resize-end
+     * @returns {Window} the created window
      */
     createWindow(options)
     {
@@ -327,7 +335,35 @@ class WindowManager
         {
             this.modal = win
         }
+        if (this.plugins['edges'])
+        {
+            this.plugins['edges'].addWindow(win)
+        }
         return win
+    }
+
+    /**
+     * add edge snapping
+     * @param {object} options
+     * @param {boolean} [options.screen] snap to screen edges
+     * @param {boolean} [options.windows] snap to window edges
+     */
+    edges(options)
+    {
+        this.plugins['edges'] = new Edges(this, options)
+    }
+
+    /**
+     * remove plugin
+     * @param {string} name
+     */
+    removePlugin(name)
+    {
+        if (this.plugins[name])
+        {
+            this.plugins[name].stop()
+            delete this.plugins[name]
+        }
     }
 
     /**
@@ -410,7 +446,7 @@ class WindowManager
 
     _createDom()
     {
-        this.win = html.create({
+        this.win = html({
             parent: document.body, styles: {
                 'user-select': 'none',
                 'width': '100%',
@@ -420,7 +456,7 @@ class WindowManager
                 'cursor': 'default'
             }
         })
-        this.overlay = html.create({
+        this.overlay = html({
             parent: this.win, styles: {
                 'user-select': 'none',
                 'position': 'absolute',
@@ -529,7 +565,7 @@ module.exports = WindowManager</code></pre>
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jan 12 2018 11:22:23 GMT+0800 (DST)
+                Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jan 12 2018 16:17:36 GMT+0800 (DST)
             </div>
         </footer>
     </div>

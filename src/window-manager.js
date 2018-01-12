@@ -3,6 +3,7 @@ const exists = require('exists')
 const html = require('./html')
 const Window = require('./window')
 const WindowOptions = require('./window-options')
+const Edges = require('./edges')
 
 /**
  * Creates a windowing system to create and manage windows
@@ -19,6 +20,9 @@ class WindowManager
     /**
      * @param {Window~WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
      * @param {boolean} [defaultOptions.quiet] suppress the simple-window-manager console message
+     * @param {object} [defaultOptions.edges] turn on edge snapping
+     * @param {boolean} [defaultOptions.edges.screen] snap to edge of screen
+     * @param {boolean} [defaultOptions.edges.windows] snap to windows
      */
     constructor(defaultOptions)
     {
@@ -42,6 +46,11 @@ class WindowManager
         {
             console.log('%c ☕ simple-window-manager initialized ☕', 'color: #ff00ff')
         }
+        this.plugins = []
+        if (defaultOptions && defaultOptions['edges'])
+        {
+            this.edges(defaultOptions['edges'])
+        }
     }
 
     /**
@@ -53,20 +62,7 @@ class WindowManager
      * @param {boolean} [options.modal]
      * @param {Window} [options.center] center in the middle of an existing Window
      * @param {string|number} [options.id] if not provide, id will be assigned in order of creation (0, 1, 2...)
-     * @fires open
-     * @fires focus
-     * @fires blur
-     * @fires close
-     * @fires maximize
-     * @fires maximize-restore
-     * @fires minimize
-     * @fires minimize-restore
-     * @fires move
-     * @fires move-start
-     * @fires move-end
-     * @fires resize
-     * @fires resize-start
-     * @fires resize-end
+     * @returns {Window} the created window
      */
     createWindow(options)
     {
@@ -98,7 +94,35 @@ class WindowManager
         {
             this.modal = win
         }
+        if (this.plugins['edges'])
+        {
+            this.plugins['edges'].addWindow(win)
+        }
         return win
+    }
+
+    /**
+     * add edge snapping plugin
+     * @param {object} options
+     * @param {boolean} [options.screen] snap to screen edges
+     * @param {boolean} [options.windows] snap to window edges
+     */
+    edges(options)
+    {
+        this.plugins['edges'] = new Edges(this, options)
+    }
+
+    /**
+     * remove plugin
+     * @param {string} name of plugin
+     */
+    removePlugin(name)
+    {
+        if (this.plugins[name])
+        {
+            this.plugins[name].stop()
+            delete this.plugins[name]
+        }
     }
 
     /**
@@ -181,7 +205,7 @@ class WindowManager
 
     _createDom()
     {
-        this.win = html.create({
+        this.win = html({
             parent: document.body, styles: {
                 'user-select': 'none',
                 'width': '100%',
@@ -191,7 +215,7 @@ class WindowManager
                 'cursor': 'default'
             }
         })
-        this.overlay = html.create({
+        this.overlay = html({
             parent: this.win, styles: {
                 'user-select': 'none',
                 'position': 'absolute',

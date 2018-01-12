@@ -1,4 +1,4 @@
-function create(options)
+module.exports = function (options)
 {
     options = options || {}
     const object = document.createElement(options.type || 'div')
@@ -18,8 +18,4 @@ function create(options)
         object.innerHTML = options.html
     }
     return object
-}
-
-module.exports = {
-    create
 }

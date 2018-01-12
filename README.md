@@ -1,10 +1,10 @@
 # simple-window-manager
-A javascript-only Window Manager based on Ventus.
+A javascript-only Window Manager
 
 ## features
-* basic windowing experience (works great with electron!)
+* basic windowing experience (works great with electron to run multiple windows under one process!)
 * create normal and modal windows
-* takes advantage of the DOM to allow an undefined width and/or height to automatically adjust size of window based on content
+* takes advantage of all the features of the DOM, including undefined width and/or height to automatically adjust size of window based on content
 * windows may be resized, maximized, and minimized
 * minimize works by minimizing to a small square that can be moved independently. Clicking it restores to its original size and location. Minimizing again moves the small square back to the last minimized location.
 * emits events (using eventemitter3)
@@ -12,7 +12,7 @@ A javascript-only Window Manager based on Ventus.
 
 ## rationale
 
-I used [Ventus](https://github.com/rlamana/Ventus) to build internal editors, but decided I needed a more configurable solution that didn't rely on CSS for configuration so it's easier to use with npm.
+I used [Ventus](https://github.com/rlamana/Ventus) to build internal tools and editors, but I wanted a more configurable solution with a better event model that didn't rely on CSS.
 
 ## live example
 [https://davidfig.github.io/window-manager/](https://davidfig.github.io/window-manager/)
@@ -26,14 +26,14 @@ I used [Ventus](https://github.com/rlamana/Ventus) to build internal editors, bu
 
 ## simple example
 ```js
-    const WM = require('window-manager')
+    var WM = require('simple-window-manager');
 
-    const wm = new WM({ backgroundColorWindow: 'green' })
+    var wm = new WM({ backgroundColorWindow: 'green' });
 
-    const window = wm.createWindow({ width: 500, height: 500, title: 'Test Window' })
-    window.content.style.margin = '10px'
-    window.content.innerHTML = 'This is a nifty window.'
-    window.open()
+    var window = wm.createWindow({ width: 500, height: 500, title: 'Test Window' });
+    window.content.style.margin = '10px';
+    window.content.innerHTML = 'This is a nifty window.';
+    window.open();
 ```
 
 ## License  
