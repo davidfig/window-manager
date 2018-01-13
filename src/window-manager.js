@@ -3,7 +3,7 @@ const exists = require('exists')
 const html = require('./html')
 const Window = require('./window')
 const WindowOptions = require('./window-options')
-const Edges = require('./edges')
+const Snap = require('./snap')
 
 /**
  * Creates a windowing system to create and manage windows
@@ -20,9 +20,9 @@ class WindowManager
     /**
      * @param {Window~WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
      * @param {boolean} [defaultOptions.quiet] suppress the simple-window-manager console message
-     * @param {object} [defaultOptions.edges] turn on edge snapping
-     * @param {boolean} [defaultOptions.edges.screen] snap to edge of screen
-     * @param {boolean} [defaultOptions.edges.windows] snap to windows
+     * @param {object} [defaultOptions.snap] turn on edge snapping
+     * @param {boolean} [defaultOptions.snap.screen] snap to edge of screen
+     * @param {boolean} [defaultOptions.snap.windows] snap to windows
      */
     constructor(defaultOptions)
     {
@@ -47,9 +47,9 @@ class WindowManager
             console.log('%c ☕ simple-window-manager initialized ☕', 'color: #ff00ff')
         }
         this.plugins = []
-        if (defaultOptions && defaultOptions['edges'])
+        if (defaultOptions && defaultOptions['snap'])
         {
-            this.edges(defaultOptions['edges'])
+            this.snap(defaultOptions['snap'])
         }
     }
 
@@ -94,9 +94,9 @@ class WindowManager
         {
             this.modal = win
         }
-        if (this.plugins['edges'])
+        if (this.plugins['snap'])
         {
-            this.plugins['edges'].addWindow(win)
+            this.plugins['snap'].addWindow(win)
         }
         return win
     }
@@ -107,9 +107,9 @@ class WindowManager
      * @param {boolean} [options.screen] snap to screen edges
      * @param {boolean} [options.windows] snap to window edges
      */
-    edges(options)
+    snap(options)
     {
-        this.plugins['edges'] = new Edges(this, options)
+        this.plugins['snap'] = new Snap(this, options)
     }
 
     /**
