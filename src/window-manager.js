@@ -104,8 +104,11 @@ class WindowManager
     /**
      * add edge snapping plugin
      * @param {object} options
-     * @param {boolean} [options.screen] snap to screen edges
-     * @param {boolean} [options.windows] snap to window edges
+     * @param {boolean} [options.screen=true] snap to screen edges
+     * @param {boolean} [options.windows=true] snap to window edges
+     * @param {number} [options.snap=20] distance to edge before snapping
+     * @param {string} [options.color=#a8f0f4] color for snap bars
+     * @param {number} [options.spacing=0] spacing distance between window and edges
      */
     snap(options)
     {

@@ -30,7 +30,7 @@ I used [Ventus](https://github.com/rlamana/Ventus) to build internal tools and e
     var WM = require('simple-window-manager');
 
     var wm = new WM({ backgroundColorWindow: 'green' });
-
+    wm.snap({ windows})
     var window = wm.createWindow({ width: 500, height: 500, title: 'Test Window' });
     window.content.style.margin = '10px';
     window.content.innerHTML = 'This is a nifty window.';

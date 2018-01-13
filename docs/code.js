@@ -6,7 +6,7 @@ const html = require('../src/html')
 // create a window manager and change some of the default styles
 const wm = new WM({
     borderRadius: '10px',
-    snap: { screen: true, windows: true }
+    snap: { screen: true, windows: true, spacing: 5 }
 })
 
 test()

@@ -1,3 +1,5 @@
+const exists = require('exists')
+
 const html = require('./html')
 
 const DEFAULT_COLOR = '#a8f0f4'
@@ -8,25 +10,30 @@ module.exports = class Snap
     /**
      * add edge snapping plugin
      * @param {object} options
-     * @param {boolean} [options.screen] snap to screen edges
-     * @param {boolean} [options.windows] snap to window edges
+     * @param {boolean} [options.screen=true] snap to screen edges
+     * @param {boolean} [options.windows=true] snap to window edges
+     * @param {number} [options.snap=20] distance to edge before snapping and width/height of snap bars
+     * @param {string} [options.color=#a8f0f4] color for snap bars
+     * @param {number} [options.spacing=0] spacing distance between window and edges
      * @private
      */
     constructor(wm, options)
     {
         options = options || {}
         this.wm = wm
-        this.snap = 20
-        this.screen = options.screen
-        this.windows = options.windows
+        this.snap = options.snap || 20
+        this.screen = exists(options.screen) ? options.screen : true
+        this.windows = exists(options.windows) ? options.windows : true
         const backgroundColor = options.color || DEFAULT_COLOR
         this.size = options.size || DEFAULT_SIZE
+        this.spacing = options.spacing || 0
         this.highlights = html({ parent: this.wm.overlay, styles: { 'position': 'absolute' } })
         this.horizontal = html({
             parent: this.highlights, styles: {
                 display: 'none',
                 position: 'absolute',
                 height: this.size + 'px',
+                borderRadius: this.size + 'px',
                 backgroundColor
             }
         })
@@ -35,6 +42,7 @@ module.exports = class Snap
                 display: 'none',
                 position: 'absolute',
                 width: this.size + 'px',
+                borderRadius: this.size + 'px',
                 backgroundColor
             }
         })
@@ -58,26 +66,26 @@ module.exports = class Snap
     {
         const width = document.body.clientWidth
         const height = document.body.clientHeight
-        if (rect.left - this.snap <= width && rect.left + rect.width + this.snap >= 0)
+        if (rect.left - this.snap <= width && rect.right + this.snap >= 0)
         {
             if (Math.abs(rect.top - 0) <= this.snap)
             {
                 horizontal.push({ distance: Math.abs(rect.top - 0), left: 0, width, top: 0, side: 'top' })
             }
-            else if (Math.abs(rect.top + rect.height - height) <= this.snap)
+            else if (Math.abs(rect.bottom - height) <= this.snap)
             {
-                horizontal.push({ distance: Math.abs(rect.top + rect.height - height), left: 0, width, top: height, side: 'bottom' })
+                horizontal.push({ distance: Math.abs(rect.bottom - height), left: 0, width, top: height, side: 'bottom' })
             }
         }
-        if (rect.top - this.snap <= height && rect.top + rect.height + this.snap >= 0)
+        if (rect.top - this.snap <= height && rect.bottom + this.snap >= 0)
         {
             if (Math.abs(rect.left - 0) <= this.snap)
             {
                 vertical.push({ distance: Math.abs(rect.left - 0), top: 0, height, left: 0, side: 'left' })
             }
-            else if (Math.abs(rect.left + rect.width - width) <= this.snap)
+            else if (Math.abs(rect.right - width) <= this.snap)
             {
-                vertical.push({ distance: Math.abs(rect.left + rect.width - width), top: 0, height, left: width, side: 'right' })
+                vertical.push({ distance: Math.abs(rect.right - width), top: 0, height, left: width, side: 'right' })
             }
         }
     }
@@ -94,10 +102,26 @@ module.exports = class Snap
                     if (Math.abs(rect.top - rect2.bottom) <= this.snap)
                     {
                         horizontal.push({ distance: Math.abs(rect.top - rect2.bottom), left: rect2.left, width: rect2.width, top: rect2.bottom, side: 'top' })
+                        if (Math.abs(rect.left - rect2.left) <= this.snap)
+                        {
+                            vertical.push({ distance: Math.abs(rect.left - rect2.left), top: rect2.top, height: rect2.height, left: rect2.left, side: 'left', noSpacing: true })
+                        }
+                        else if (Math.abs(rect.right - rect2.right) <= this.snap)
+                        {
+                            vertical.push({ distance: Math.abs(rect.right - rect2.right), top: rect2.top, height: rect2.height, left: rect2.right, side: 'right', noSpacing: true })
+                        }
                     }
                     else if (Math.abs(rect.bottom - rect2.top) <= this.snap)
                     {
                         horizontal.push({ distance: Math.abs(rect.bottom - rect2.top), left: rect2.left, width: rect2.width, top: rect2.top, side: 'bottom' })
+                        if (Math.abs(rect.left - rect2.left) <= this.snap)
+                        {
+                            vertical.push({ distance: Math.abs(rect.left - rect2.left), top: rect2.top, height: rect2.height, left: rect2.left, side: 'left', noSpacing: true })
+                        }
+                        else if (Math.abs(rect.right - rect2.right) <= this.snap)
+                        {
+                            vertical.push({ distance: Math.abs(rect.right - rect2.right), top: rect2.top, height: rect2.height, left: rect2.right, side: 'right', noSpacing: true })
+                        }
                     }
                 }
                 if (rect.top - this.snap <= rect2.bottom && rect.bottom + this.snap >= rect2.top)
@@ -105,10 +129,26 @@ module.exports = class Snap
                     if (Math.abs(rect.left - rect2.right) <= this.snap)
                     {
                         vertical.push({ distance: Math.abs(rect.left - rect2.right), top: rect2.top, height: rect2.height, left: rect2.right, side: 'left' })
+                        if (Math.abs(rect.top - rect2.top) <= this.snap)
+                        {
+                            horizontal.push({ distance: Math.abs(rect.top - rect2.top), left: rect2.left, width: rect2.width, top: rect2.top, side: 'top', noSpacing: true })
+                        }
+                        else if (Math.abs(rect.bottom - rect2.bottom) <= this.snap)
+                        {
+                            horizontal.push({ distance: Math.abs(rect.bottom - rect2.bottom), left: rect2.left, width: rect2.width, top: rect2.bottom, side: 'bottom', noSpacing: true })
+                        }
                     }
                     else if (Math.abs(rect.right - rect2.left) <= this.snap)
                     {
                         vertical.push({ distance: Math.abs(rect.right - rect2.left), top: rect2.top, height: rect2.height, left: rect2.left, side: 'right' })
+                        if (Math.abs(rect.top - rect2.top) <= this.snap)
+                        {
+                            horizontal.push({ distance: Math.abs(rect.top - rect2.top), left: rect2.left, width: rect2.width, top: rect2.top, side: 'top', noSpacing: true })
+                        }
+                        else if (Math.abs(rect.bottom - rect2.bottom) <= this.snap)
+                        {
+                            horizontal.push({ distance: Math.abs(rect.bottom - rect2.bottom), left: rect2.left, width: rect2.width, top: rect2.bottom, side: 'bottom', noSpacing: true })
+                        }
                     }
                 }
             }
@@ -144,6 +184,7 @@ module.exports = class Snap
             this.horizontal.style.top = find.top - this.size / 2 + 'px'
             this.horizontal.y = find.top
             this.horizontal.side = find.side
+            this.horizontal.noSpacing = find.noSpacing
         }
         if (vertical.length)
         {
@@ -155,6 +196,7 @@ module.exports = class Snap
             this.vertical.style.left = find.left - this.size / 2 + 'px'
             this.vertical.x = find.left
             this.vertical.side = find.side
+            this.vertical.noSpacing = find.noSpacing
         }
     }
 
@@ -166,30 +208,31 @@ module.exports = class Snap
         }
         if (this.horizontal.style.display === 'block')
         {
+            const spacing = this.horizontal.noSpacing ? 0 : this.spacing
             const adjust = win.minimized ? (win.height - win.height * win.minimized.scaleY) / 2 : 0
             switch (this.horizontal.side)
             {
                 case 'top':
-
-                    win.y = this.horizontal.y - adjust
+                    win.y = this.horizontal.y - adjust + spacing
                     break
 
                 case 'bottom':
-                    win.bottom = this.horizontal.y + adjust
+                    win.bottom = this.horizontal.y + adjust - spacing
                     break
             }
         }
         if (this.vertical.style.display === 'block')
         {
+            const spacing = this.vertical.noSpacing ? 0 : this.spacing
             const adjust = win.minimized ? (win.width - win.width * win.minimized.scaleX) / 2 : 0
             switch (this.vertical.side)
             {
                 case 'left':
-                    win.x = this.vertical.x - adjust
+                    win.x = this.vertical.x - adjust + spacing
                     break
 
                 case 'right':
-                    win.right = this.vertical.x + adjust
+                    win.right = this.vertical.x + adjust - spacing
                     break
             }
         }
