@@ -4,6 +4,7 @@ A javascript-only Window Manager
 ## features
 * basic windowing experience (works great with electron to run multiple windows under one process!)
 * create normal and modal windows
+* optionally snap windows to screen edges and/or other windows
 * takes advantage of all the features of the DOM, including undefined width and/or height to automatically adjust size of window based on content
 * windows may be resized, maximized, and minimized
 * minimize works by minimizing to a small square that can be moved independently. Clicking it restores to its original size and location. Minimizing again moves the small square back to the last minimized location.

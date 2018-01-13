@@ -22,35 +22,18 @@ module.exports = class Edges
         if (options.screen)
         {
             const edges = this.windowEdges = {}
+            const height = document.body.clientHeight
             edges.top = this.addEdge({ type: 'horizontal', start: 0, end: window.innerWidth, y: 0 })
-            edges.bottom = this.addEdge({ type: 'horizontal', start: 0, end: window.innerWidth, y: window.innerHeight })
-            edges.left = this.addEdge({ type: 'vertical', start: 0, end: window.innerHeight, x: 0 })
-            edges.right = this.addEdge({ type: 'vertical', start: 0, end: window.innerHeight, x: window.innerWidth })
-            this.boundResizeWindowEdges = this.resizeWindowEdges.bind(this)
-            window.addEventListener('resize', this.boundResizeWindowEdges)
+            edges.bottom = this.addEdge({ type: 'horizontal', start: 0, end: window.innerWidth, y: height })
+            edges.left = this.addEdge({ type: 'vertical', start: 0, end: height, x: 0 })
+            edges.right = this.addEdge({ type: 'vertical', start: 0, end: height, x: window.innerWidth })
         }
     }
 
     stop()
     {
-        window.removeEventListener('resize', this.boundResizeWindowEdges)
         this.highlights.remove()
         this.stopped = true
-    }
-
-    resizeWindowEdges()
-    {
-        if (this.stopped)
-        {
-            return
-        }
-        const edges = this.windowEdges
-        edges.top.end = window.innerWidth
-        edges.bottom.end = window.innerWidth
-        edges.bottom.y = window.innerHeight
-        edges.left.end = window.innerHeight
-        edges.right.end = window.innerHeight
-        edges.right.x = window.innerWidth
     }
 
     addEdge(edge)
@@ -106,6 +89,26 @@ module.exports = class Edges
         }
     }
 
+    resizeScreenEdges()
+    {
+        if (this.stopped)
+        {
+            return
+        }
+        const height = document.body.clientHeight
+        const edges = this.windowEdges
+        edges.top.end = window.innerWidth
+        edges.bottom.end = window.innerWidth
+        edges.bottom.y = height
+        edges.left.end = height
+        edges.right.end = height
+        edges.right.x = window.innerWidth
+        this.resizeEdge(edges.top)
+        this.resizeEdge(edges.bottom)
+        this.resizeEdge(edges.left)
+        this.resizeEdge(edges.right)
+    }
+
     moveStart(win)
     {
         for (let id in this.windows)
@@ -115,6 +118,10 @@ module.exports = class Edges
             {
                 this.updateEdges(window)
             }
+        }
+        if (this.windowEdges)
+        {
+            this.resizeScreenEdges()
         }
     }
 
@@ -133,7 +140,7 @@ module.exports = class Edges
         const vertical = []
         for (let edge of this.edges)
         {
-            if (edge.win && (edge.win.minimized || edge.win === win))
+            if (edge.win && ((!win.minimized && edge.win.minimized) || (win.minimized && !edge.win.minimized) || edge.win === win))
             {
                 continue
             }
@@ -145,16 +152,10 @@ module.exports = class Edges
                         if (Math.abs(win.y - edge.y) <= this.snap)
                         {
                             horizontal.push({ edge, distance: Math.abs(win.y - edge.y), side: 'top' })
-                            // edge.show.style.display = 'block'
-                            // edge.side = 'top'
-                            // this.showing.push(edge)
                         }
                         else if (Math.abs(win.bottom - edge.y) <= this.snap)
                         {
                             horizontal.push({ edge, distance: Math.abs(win.y - edge.y), side: 'bottom' })
-                            // edge.show.style.display = 'block'
-                            // edge.side = 'bottom'
-                            // this.showing.push(edge)
                         }
                     }
                     break
@@ -165,16 +166,10 @@ module.exports = class Edges
                         if (Math.abs(win.x - edge.x) <= this.snap)
                         {
                             vertical.push({ edge, distance: Math.abs(win.x - edge.x), side: 'left' })
-                            // edge.show.style.display = 'block'
-                            // edge.side = 'left'
-                            // this.showing.push(edge)
                         }
                         else if (Math.abs(win.right - edge.x) <= this.snap)
                         {
                             vertical.push({ edge, distance: Math.abs(win.right - edge.x), side: 'right' })
-                            // edge.show.style.display = 'block'
-                            // edge.side = 'right'
-                            // this.showing.push(edge)
                         }
                     }
                     break

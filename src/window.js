@@ -252,16 +252,19 @@ class Window extends Events
                 const x = this.x, y = this.y
                 const desired = this.options.minimizeSize
                 let delta
-                if (this._lastMinimized)
-                {
-                    delta = { left: this._lastMinimized.x, top: this._lastMinimized.y }
-                }
-                else
-                {
-                    delta = { scaleX: (desired / this.win.offsetWidth), scaleY: (desired / this.win.offsetHeight) }
-                }
+                const scaleX = desired / this.width
+                const scaleY = desired / this.height
+                // if (this._lastMinimized)
+                // {
+                //     delta = { left: this._lastMinimized.x, top: this._lastMinimized.y }
+                // }
+                // else
+                // {
+                // delta = { scaleX: (desired / this.win.offsetWidth), scaleY: (desired / this.win.offsetHeight) }
+                // }
                 if (noAnimate)
                 {
+debugger
                     this.win.style.transform = 'scale(1) scale(' + (desired / this.win.offsetWidth) + ',' + (desired / this.win.offsetHeight) + ')'
                     this.win.style.left = delta.left + 'px'
                     this.win.style.top = delta.top + 'px'
@@ -272,10 +275,10 @@ class Window extends Events
                 else
                 {
                     this.transitioning = true
-                    const ease = this.ease.add(this.win, delta)
+                    const ease = this.ease.add(this.win, { scaleX, scaleY })
                     ease.on('complete-scaleY', () =>
                     {
-                        this.minimized = { x, y }
+                        this.minimized = { x, y, scaleX, scaleY }
                         this.emit('minimize', this)
                         this.transitioning = false
                         this.overlay.style.display = 'block'
@@ -618,10 +621,20 @@ class Window extends Events
         if (!this.transitioning)
         {
             const event = this._convertMoveEvent(e)
-            this._moving = this._toLocal({
-                x: event.pageX,
-                y: event.pageY
-            })
+            if (this.minimized)
+            {
+                this._moving = {
+                    x: event.pageX - this.x,
+                    y: event.pageY - this.y
+                }
+            }
+            else
+            {
+                this._moving = {
+                    x: event.pageX - this.x,
+                    y: event.pageY - this.y
+                }
+            }
             this.emit('move-start', this)
             this._moved = false
         }
@@ -775,15 +788,22 @@ class Window extends Events
             }
             if (this._moving)
             {
-                this.move(
-                    event.pageX - this._moving.x,
-                    event.pageY - this._moving.y
-                )
                 if (this.minimized)
                 {
-                    e.preventDefault()
+                    this.move(
+                        event.pageX - this._moving.x,
+                        event.pageY - this._moving.y
+                    )
                     this._lastMinimized = { x: this.win.offsetLeft, y: this.win.offsetTop }
                     this._moved = true
+                    e.preventDefault()
+                }
+                else
+                {
+                    this.move(
+                        event.pageX - this._moving.x,
+                        event.pageY - this._moving.y
+                    )
                 }
                 this.emit('move', this)
                 e.preventDefault()
@@ -844,14 +864,6 @@ class Window extends Events
     _convertMoveEvent(e)
     {
         return this._isTouchEvent(e) ? e.changedTouches[0] : e
-    }
-
-    _toLocal(coord)
-    {
-        return {
-            x: coord.x - this.x,
-            y: coord.y - this.y
-        }
     }
 
     get z() { return parseInt(this.win.style.zIndex) }
