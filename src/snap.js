@@ -20,7 +20,7 @@ module.exports = class Snap
      */
     constructor(wm, options)
     {
-        options = options || {}
+        options = !exists(options) || typeof options !== 'object' ? {} : options
         this.wm = wm
         this.snap = options.snap || 20
         this.screen = exists(options.screen) ? options.screen : true
