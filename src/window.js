@@ -1,6 +1,6 @@
 const Events = require('eventemitter3')
 const clicked = require('clicked')
-const Ease = require('../../dom-ease')
+const Ease = require('dom-ease')
 const exists = require('exists')
 
 const html = require('./html')
@@ -115,7 +115,7 @@ class Window extends Events
     }
 
     /**
-     * closes the window (can be reopened with open) if a reference is saved
+     * closes the window (can be reopened with open)
      */
     close()
     {
@@ -123,7 +123,7 @@ class Window extends Events
         {
             this._closed = true
             const ease = this.ease.add(this.win, { scale: 0 })
-            ease.on('complete-scale', () =>
+            ease.on('complete', () =>
             {
                 this.win.style.display = 'none'
                 this.emit('close', this);
@@ -141,6 +141,10 @@ class Window extends Events
         this.options.x = value
         this.win.style.left = value + 'px'
         this.emit('move-x', this)
+        if (this.minimized)
+        {
+            this._lastMinimized.left = this.win.offsetLeft
+        }
     }
 
     /**
@@ -153,6 +157,10 @@ class Window extends Events
         this.options.y = value
         this.win.style.top = value + 'px'
         this.emit('move-y', this)
+        if (this.minimized)
+        {
+            this._lastMinimized.top = this.win.offsetTop
+        }
     }
 
     /**
@@ -237,8 +245,8 @@ class Window extends Events
                 else
                 {
                     this.transitioning = true
-                    const add = this.ease.add(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y })
-                    add.on('complete-top', () =>
+                    const ease = this.ease.add(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y })
+                    ease.on('complete', () =>
                     {
                         this.minimized = false
                         this.emit('minimize-restore', this)
@@ -249,39 +257,34 @@ class Window extends Events
             }
             else
             {
-                const x = this.x, y = this.y
+                const x = this.x
+                const y = this.y
+                const left = this._lastMinimized ? this._lastMinimized.left : this.x
+                const top = this._lastMinimized ? this._lastMinimized.top : this.y
                 const desired = this.options.minimizeSize
-                let delta
                 const scaleX = desired / this.width
                 const scaleY = desired / this.height
-                // if (this._lastMinimized)
-                // {
-                //     delta = { left: this._lastMinimized.x, top: this._lastMinimized.y }
-                // }
-                // else
-                // {
-                // delta = { scaleX: (desired / this.win.offsetWidth), scaleY: (desired / this.win.offsetHeight) }
-                // }
                 if (noAnimate)
                 {
-debugger
-                    this.win.style.transform = 'scale(1) scale(' + (desired / this.win.offsetWidth) + ',' + (desired / this.win.offsetHeight) + ')'
-                    this.win.style.left = delta.left + 'px'
-                    this.win.style.top = delta.top + 'px'
-                    this.minimized = { x, y }
+                    this.win.style.transform = 'scale(1) scale(' + scaleX + ',' + scaleY + ')'
+                    this.win.style.left = left + 'px'
+                    this.win.style.top = top + 'px'
+                    this.minimized = { x, y, scaleX, scaleY }
                     this.emit('minimize', this)
                     this.overlay.style.display = 'block'
+                    this._lastMinimized = { left, top }
                 }
                 else
                 {
                     this.transitioning = true
-                    const ease = this.ease.add(this.win, { scaleX, scaleY })
-                    ease.on('complete-scaleY', () =>
+                    const ease = this.ease.add(this.win, { left, top, scaleX, scaleY })
+                    ease.on('complete', () =>
                     {
                         this.minimized = { x, y, scaleX, scaleY }
                         this.emit('minimize', this)
                         this.transitioning = false
                         this.overlay.style.display = 'block'
+                        this._lastMinimized = { left, top }
                     })
                 }
             }
@@ -299,7 +302,7 @@ debugger
             if (this.maximized)
             {
                 const ease = this.ease.add(this.win, { left: this.maximized.x, top: this.maximized.y, width: this.maximized.width, height: this.maximized.height })
-                ease.on('complete-height', () =>
+                ease.on('complete', () =>
                 {
                     this.options.x = this.maximized.x
                     this.options.y = this.maximized.y
@@ -315,7 +318,7 @@ debugger
             {
                 const x = this.x, y = this.y, width = this.win.offsetWidth, height = this.win.offsetHeight
                 const ease = this.ease.add(this.win, { left: 0, top: 0, width: this.wm.overlay.offsetWidth, height: this.wm.overlay.offsetHeight })
-                ease.on('complete-height', () =>
+                ease.on('complete', () =>
                 {
                     this.maximized = { x, y, width, height }
                     this.transitioning = false
@@ -352,17 +355,17 @@ debugger
         const maximized = this.maximized
         if (maximized)
         {
-            data.maximized = { x: maximized.x, y: maximized.y, width: maximized.width, height: maximized.height }
+            data.maximized = { left: maximized.left, top: maximized.top, width: maximized.width, height: maximized.height }
         }
         const minimized = this.minimized
         if (minimized)
         {
-            data.minimized = { x: this.minimized.x, y: this.minimized.y }
+            data.minimized = { x: this.minimized.x, y: this.minimized.y, scaleX: this.minimized.scaleX, scaleY: this.minimized.scaleY }
         }
         const lastMinimized = this._lastMinimized
         if (lastMinimized)
         {
-            data.lastMinimized = { x: lastMinimized.x, y: lastMinimized.y }
+            data.lastMinimized = { left: lastMinimized.left, top: lastMinimized.top }
         }
         data.x = this.x
         data.y = this.y
@@ -621,19 +624,9 @@ debugger
         if (!this.transitioning)
         {
             const event = this._convertMoveEvent(e)
-            if (this.minimized)
-            {
-                this._moving = {
-                    x: event.pageX - this.x,
-                    y: event.pageY - this.y
-                }
-            }
-            else
-            {
-                this._moving = {
-                    x: event.pageX - this.x,
-                    y: event.pageY - this.y
-                }
+            this._moving = {
+                x: event.pageX - this.x,
+                y: event.pageY - this.y
             }
             this.emit('move-start', this)
             this._moved = false
@@ -790,21 +783,12 @@ debugger
             {
                 if (this.minimized)
                 {
-                    this.move(
-                        event.pageX - this._moving.x,
-                        event.pageY - this._moving.y
-                    )
-                    this._lastMinimized = { x: this.win.offsetLeft, y: this.win.offsetTop }
                     this._moved = true
-                    e.preventDefault()
                 }
-                else
-                {
-                    this.move(
-                        event.pageX - this._moving.x,
-                        event.pageY - this._moving.y
-                    )
-                }
+                this.move(
+                    event.pageX - this._moving.x,
+                    event.pageY - this._moving.y
+                )
                 this.emit('move', this)
                 e.preventDefault()
             }

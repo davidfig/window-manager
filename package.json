@@ -22,7 +22,7 @@
   "license": "MIT",
   "dependencies": {
     "clicked": "^1.3.0",
-    "dom-ease": "^0.6.2",
+    "dom-ease": "^0.7.1",
     "eventemitter3": "^3.0.0",
     "exists": "^1.0.1"
   },
