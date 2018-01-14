@@ -299,37 +299,66 @@ class Window extends Events
     /**
      * maximize the window
      */
-    maximize()
+    maximize(noAnimate)
     {
         if (this.wm._checkModal(this) && this.options.maximizable && !this.transitioning)
         {
-            this.transitioning = true
             if (this.maximized)
             {
-                const ease = this.ease.add(this.win, { left: this.maximized.x, top: this.maximized.y, width: this.maximized.width, height: this.maximized.height })
-                ease.on('complete', () =>
+                if (noAnimate)
                 {
-                    this.options.x = this.maximized.x
-                    this.options.y = this.maximized.y
-                    this.options.width = this.maximized.width
-                    this.options.height = this.maximized.height
+                    this.x = this.maximized.x
+                    this.y = this.maximized.y
+                    this.width = this.maximized.width
+                    this.height = this.maximized.height
                     this.maximized = null
-                    this.transitioning = false
-                })
+                    this.emit('restore', this)
+                }
+                else
+                {
+                    this.transitioning = true
+                    const ease = this.ease.add(this.win, { left: this.maximized.x, top: this.maximized.y, width: this.maximized.width, height: this.maximized.height })
+                    ease.on('complete', () =>
+                    {
+                        this.x = this.maximized.x
+                        this.y = this.maximized.y
+                        this.width = this.maximized.width
+                        this.height = this.maximized.height
+                        this.maximized = null
+                        this.transitioning = false
+                        this.emit('restore', this)
+                    })
+                }
                 this.buttons.maximize.style.backgroundImage = this.options.backgroundMaximizeButton
-                this.emit('restore', this)
             }
             else
             {
                 const x = this.x, y = this.y, width = this.win.offsetWidth, height = this.win.offsetHeight
-                const ease = this.ease.add(this.win, { left: 0, top: 0, width: this.wm.overlay.offsetWidth, height: this.wm.overlay.offsetHeight })
-                ease.on('complete', () =>
+                if (noAnimate)
                 {
                     this.maximized = { x, y, width, height }
-                    this.transitioning = false
-                })
+                    this.x = 0
+                    this.y = 0
+                    this.width = this.wm.overlay.offsetWidth + 'px'
+                    this.height = this.wm.overlay.offsetHeight + 'px'
+                    this.emit('maximize', this)
+                }
+                else
+                {
+                    this.transitioning = true
+                    const ease = this.ease.add(this.win, { left: 0, top: 0, width: this.wm.overlay.offsetWidth, height: this.wm.overlay.offsetHeight })
+                    ease.on('complete', () =>
+                    {
+                        this.x = 0
+                        this.y = 0
+                        this.width = this.wm.overlay.offsetWidth + 'px'
+                        this.height = this.wm.overlay.offsetHeight + 'px'
+                        this.maximized = { x, y, width, height }
+                        this.transitioning = false
+                    })
+                    this.emit('maximize', this)
+                }
                 this.buttons.maximize.style.backgroundImage = this.options.backgroundRestoreButton
-                this.emit('maximize', this)
             }
         }
     }
@@ -397,7 +426,10 @@ class Window extends Events
             {
                 this.maximize(true)
             }
-            this.maximized = data.maximized
+        }
+        else if (this.maximized)
+        {
+            this.maximize(true)
         }
         if (data.minimized)
         {
@@ -406,6 +438,10 @@ class Window extends Events
                 this.minimize(true)
             }
             this.minimized = data.minimized
+        }
+        else if (this.minimized)
+        {
+            this.minimize(true)
         }
         if (data.lastMinimized)
         {
