@@ -21,8 +21,11 @@ class WindowManager
      * @param {Window~WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
      * @param {boolean} [defaultOptions.quiet] suppress the simple-window-manager console message
      * @param {object} [defaultOptions.snap] turn on edge snapping
-     * @param {boolean} [defaultOptions.snap.screen] snap to edge of screen
-     * @param {boolean} [defaultOptions.snap.windows] snap to windows
+     * @param {boolean} [defaultOptions.snap.screen=true] snap to edge of screen
+     * @param {boolean} [defaultOptions.snap.windows=true] snap to windows
+     * @param {number} [defaultOptions.snap.snap=20] distance to edge before snapping and width/height of snap bars
+     * @param {string} [defaultOptions.snap.color=#a8f0f4] color for snap bars
+     * @param {number} [defaultOptions.snap.spacing=0] spacing distance between window and edges
      */
     constructor(defaultOptions)
     {

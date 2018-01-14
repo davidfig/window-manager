@@ -9,6 +9,7 @@ module.exports = class Snap
 {
     /**
      * add edge snapping plugin
+     * @param {WindowManager} wm
      * @param {object} options
      * @param {boolean} [options.screen=true] snap to screen edges
      * @param {boolean} [options.windows=true] snap to window edges
