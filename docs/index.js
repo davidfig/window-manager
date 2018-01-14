@@ -3045,7 +3045,7 @@ module.exports = class Snap
      * @param {boolean} [options.windows=true] snap to window edges
      * @param {number} [options.snap=20] distance to edge before snapping and width/height of snap bars
      * @param {string} [options.color=#a8f0f4] color for snap bars
-     * @param {number} [options.spacing=0] spacing distance between window and edges
+     * @param {number} [options.spacing=5] spacing distance between window and edges
      * @private
      */
     constructor(wm, options)
@@ -3057,7 +3057,7 @@ module.exports = class Snap
         this.windows = exists(options.windows) ? options.windows : true
         const backgroundColor = options.color || DEFAULT_COLOR
         this.size = options.size || DEFAULT_SIZE
-        this.spacing = options.spacing || 0
+        this.spacing = options.spacing || 5
         this.highlights = html({ parent: this.wm.overlay, styles: { 'position': 'absolute' } })
         this.horizontal = html({
             parent: this.highlights, styles: {
