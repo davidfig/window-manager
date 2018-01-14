@@ -289,6 +289,7 @@ class Window extends Events
                         this.transitioning = false
                         this.overlay.style.display = 'block'
                         this._lastMinimized = { left, top }
+                        this.move(left, top)
                     })
                 }
             }

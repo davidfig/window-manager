@@ -27,7 +27,7 @@ function test()
     const test = wm.createWindow({ x: 10, y: 10, title: 'Test Window', resizable: false })
     test.content.style.padding = '1em'
     test.content.innerHTML = 'This is a test window.'
-    test.open(false, true)
+    test.open()
 }
 
 function test2()
@@ -42,7 +42,7 @@ function test2()
     })
     test.content.style.padding = '0.5em'
     test.content.innerHTML = 'This is a pink test window.<br><br>Check out the fancy title bar for other style tests.<br><br><br>And scrolling!!!'
-    test.open(false, true)
+    test.open()
 }
 
 function test3()
@@ -74,14 +74,14 @@ function test3()
         }
         modal.open()
     }
-    test.open(false, true)
+    test.open()
 }
 
 function test4()
 {
     const test = wm.createWindow({ x: 300, y: 20, title: 'My wife\'s art gallery!' })
     test.content.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/-slAp_gVa70" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>'
-    test.open(false, true)
+    test.open()
     test.sendToBack()
 }
 
@@ -92,7 +92,7 @@ function test5()
     const buttons = html({ parent: test.content, styles: { 'text-align': 'center' } })
     const save = html({ parent: buttons, html: 'save window state', type: 'button', styles: { margin: '1em', background: 'rgb(200,255,200)' } })
     const load = html({ parent: buttons, html: 'load window state', type: 'button', styles: { margin: '1em', background: 'rgb(255,200,200)' } })
-    test.open(false, true)
+    test.open()
     let data
     save.onclick = () => data = wm.save()
     load.onclick = () => { if (data) wm.load(data) }
@@ -108,14 +108,14 @@ function test6()
         test.content.innerHTML = ''
         test.content.innerHTML = '<iframe width="100%", height="100%" src="https://yopeyopey.com/games/gotpaws/"></iframe>'
     }
-    test.open(false, true)
+    test.open()
 }
 
 function test7()
 {
     const test = wm.createWindow({ x: 700, y: 40, width: 400, height: 300, title: 'API documentation' })
     test.content.innerHTML = '<iframe width="100%" height="100%" src="https://davidfig.github.io/window-manager/jsdoc/"></iframe>'
-    test.open(false, true)
+    test.open()
 }
 
 const wallpaper = html({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
