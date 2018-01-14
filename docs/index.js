@@ -1,99 +1,236 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-"use strict";
+const FPS = require('yy-fps')
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+const WM = require('../src/window-manager')
+const html = require('../src/html')
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+// create a window manager and change some of the default styles
+const wm = new WM({
+    borderRadius: '10px',
+    snap: { screen: true, windows: true, spacing: 5 }
+})
 
-module.exports = function () {
-    function BackgroundColor(element, colors, options) {
-        _classCallCheck(this, BackgroundColor);
 
-        this.element = element;
-        if (Array.isArray(colors)) {
-            this.colors = colors;
-        } else {
-            this.colors = [colors];
+window.onload = () =>
+{
+    test()
+    test2()
+    test3()
+    test4()
+    test5()
+    test6()
+    test7()
+    update()
+}
+
+function test()
+{
+    const test = wm.createWindow({ x: 10, y: 10, title: 'Test Window', resizable: false })
+    test.content.style.padding = '1em'
+    test.content.innerHTML = 'This is a test window.'
+    test.open(false, true)
+}
+
+function test2()
+{
+    const test = wm.createWindow({
+        width: 300, height: 150,
+        x: 100, y: 100,
+        backgroundColorWindow: 'rgb(255,200,255)',
+        titlebarHeight: '22px',
+        backgroundColorTitlebarActive: 'green',
+        backgroundColorTitlebarInactive: 'purple'
+    })
+    test.content.style.padding = '0.5em'
+    test.content.innerHTML = 'This is a pink test window.<br><br>Check out the fancy title bar for other style tests.<br><br><br>And scrolling!!!'
+    test.open(false, true)
+}
+
+function test3()
+{
+    // create a test window with a button to create a modal window
+    const test = wm.createWindow({ x: 300, y: 400, width: 350, title: 'This is one fancy demo!' })
+    test.content.style.padding = '1em'
+    html({ parent: test.content, html: 'OK. It isn\'t that fancy, but it shows off some of the functionality of this library.<br><br>Please excuse the mess. I do NOT keep my desktop this messy, but I thought it made for a good demo.' })
+    const div = html({ parent: test.content, styles: { textAlign: 'center', marginTop: '1em' } })
+    const button = html({ parent: div, type: 'button', html: 'open modal window' })
+    button.onclick = () =>
+    {
+        // create a modal window
+        const modal = wm.createWindow({
+            modal: true,
+            width: 200,
+            center: test, // center window in test
+            title: 'modal window',
+            minimizable: false,
+            maximizable: false
+        })
+        const div = html({ parent: modal.content, styles: { 'margin': '0.5em' } })
+        html({ parent: div, html: 'This needs to be closed before using other windows.' })
+        const buttonDiv = html({ parent: div, styles: { 'text-align': 'center', margin: '1em' } })
+        const button = html({ parent: buttonDiv, type: 'button', html: 'close modal' })
+        button.onclick = () =>
+        {
+            modal.close()
         }
-        this.original = element.style.backgroundColor;
-        colors.push(this.original);
-        this.interval = options.duration / colors.length;
-        this.options = options;
-        this.time = 0;
+        modal.open()
+    }
+    test.open(false, true)
+}
+
+function test4()
+{
+    const test = wm.createWindow({ x: 300, y: 20, title: 'My wife\'s art gallery!' })
+    test.content.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/-slAp_gVa70" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>'
+    test.open(false, true)
+    test.sendToBack()
+}
+
+function test5()
+{
+    const test = wm.createWindow({ x: 20, y: 600, title: 'window save/load' })
+    html({ parent: test.content, html: 'Save the windows, and then move windows around and load them.', styles: { margin: '0.5em' } })
+    const buttons = html({ parent: test.content, styles: { 'text-align': 'center' } })
+    const save = html({ parent: buttons, html: 'save window state', type: 'button', styles: { margin: '1em', background: 'rgb(200,255,200)' } })
+    const load = html({ parent: buttons, html: 'load window state', type: 'button', styles: { margin: '1em', background: 'rgb(255,200,200)' } })
+    test.open(false, true)
+    let data
+    save.onclick = () => data = wm.save()
+    load.onclick = () => { if (data) wm.load(data) }
+}
+
+function test6()
+{
+    const test = wm.createWindow({ x: 800, y: 350, width: 250, height: 350, title: 'One of my early games' })
+    const game = html({ parent: test.content, type: 'button', html: 'play game', styles: { 'margin-top': '50%', 'margin-left': '50%', transform: 'translate(-50%, 0)' } })
+    game.onclick = () =>
+    {
+        test.content.style.overflow = 'hidden'
+        test.content.innerHTML = ''
+        test.content.innerHTML = '<iframe width="100%", height="100%" src="https://yopeyopey.com/games/gotpaws/"></iframe>'
+    }
+    test.open(false, true)
+}
+
+function test7()
+{
+    const test = wm.createWindow({ x: 700, y: 40, width: 400, height: 300, title: 'API documentation' })
+    test.content.innerHTML = '<iframe width="100%" height="100%" src="https://davidfig.github.io/window-manager/jsdoc/"></iframe>'
+    test.open(false, true)
+}
+
+const wallpaper = html({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
+wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'
+
+const fps = new FPS()
+function update()
+{
+    fps.frame(false, true)
+    requestAnimationFrame(update)
+}
+},{"../src/html":11,"../src/window-manager":13,"yy-fps":10}],2:[function(require,module,exports){
+/**
+ * Javascript: create click event for both mouse and touch
+ * @example
+ *
+ * import clicked from 'clicked';
+ * // or var clicked = require('clicked');
+ *
+ *  function handleClick()
+ *  {
+ *      console.log('I was clicked.');
+ *  }
+ *
+ *  var div = document.getElementById('clickme');
+ *  clicked(div, handleClick, {thresshold: 15});
+ *
+ */
+
+/**
+ * @param {HTMLElement} element
+ * @param {function} callback called after click: callback(event, options.args)
+ * @param {object} [options]
+ * @param {number} [options.thresshold=10] if touch moves threshhold-pixels then the touch-click is cancelled
+ * @param {*} [options.args] arguments for callback function
+ * @returns {object} object
+ * @returns {function} object.disable() - disables clicked
+ * @returns {function} object.enable() - enables clicked after disable() is called
+ */
+function clicked(element, callback, options)
+{
+    function touchstart(e)
+    {
+        if (disabled)
+        {
+            return;
+        }
+        if (e.touches.length === 1)
+        {
+            lastX = e.changedTouches[0].screenX;
+            lastY = e.changedTouches[0].screenY;
+            down = true;
+        }
     }
 
-    _createClass(BackgroundColor, [{
-        key: "update",
-        value: function update() {
-            var i = Math.floor(this.time / this.interval);
-            var color = this.colors[i];
-            if (this.element.style.backgroundColor !== color) {
-                this.element.style.backgroundColor = this.colors[i];
-            }
-        }
-    }, {
-        key: "reverse",
-        value: function reverse() {
-            var reverse = [];
-            for (var color in this.colors) {
-                reverse.unshift(this.colors[color]);
-            }
-            reverse.push(reverse.shift());
-            this.colors = reverse;
-        }
-    }]);
-
-    return BackgroundColor;
-}();
-
-},{}],2:[function(require,module,exports){
-"use strict";
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-module.exports = function () {
-    function Color(element, colors, options) {
-        _classCallCheck(this, Color);
-
-        this.element = element;
-        if (Array.isArray(colors)) {
-            this.colors = colors;
-        } else {
-            this.colors = [colors];
-        }
-        this.original = element.style.color;
-        colors.push(this.original);
-        this.interval = options.duration / colors.length;
-        this.options = options;
-        this.time = 0;
+    function pastThreshhold(x, y)
+    {
+        return Math.abs(lastX - x) > threshhold || Math.abs(lastY - y) > threshhold;
     }
 
-    _createClass(Color, [{
-        key: "update",
-        value: function update() {
-            var i = Math.floor(this.time / this.interval);
-            var color = this.colors[i];
-            if (this.element.style.color !== color) {
-                this.element.style.color = this.colors[i];
-            }
+    function touchmove(e)
+    {
+        if (!down || e.touches.length !== 1)
+        {
+            touchcancel();
+            return;
         }
-    }, {
-        key: "reverse",
-        value: function reverse() {
-            var reverse = [];
-            for (var color in this.colors) {
-                reverse.unshift(this.colors[color]);
-            }
-            reverse.push(reverse.shift());
-            this.colors = reverse;
+        var x = e.changedTouches[0].screenX;
+        var y = e.changedTouches[0].screenY;
+        if (pastThreshhold(x, y))
+        {
+            touchcancel();
         }
-    }]);
+    }
 
-    return Color;
-}();
+    function touchcancel()
+    {
+        down = false;
+    }
 
+    function touchend(e)
+    {
+        if (down)
+        {
+            e.preventDefault();
+            callback(e, options.args);
+        }
+    }
+
+    function mouseclick(e)
+    {
+        if (!disabled)
+        {
+            callback(e, options.args);
+        }
+    }
+
+    options = options || {};
+    var down, lastX, lastY, disabled;
+    var threshhold = options.thresshold || 10;
+
+    element.addEventListener('click', mouseclick);
+    element.addEventListener('touchstart', touchstart, { passive: true });
+    element.addEventListener('touchmove', touchmove, { passive: true });
+    element.addEventListener('touchcancel', touchcancel);
+    element.addEventListener('touchend', touchend);
+
+    return {
+        disable: function () { disabled = true; },
+        enable: function () { disabled = false; }
+    };
+}
+
+module.exports = clicked;
 },{}],3:[function(require,module,exports){
 'use strict';
 
@@ -109,10 +246,10 @@ var EventEmitter = require('eventemitter3');
 var Penner = require('penner');
 var exists = require('exists');
 
-var DomEaseElement = require('./easeElement');
+var Ease = require('./ease');
 
 /**
- * Manages all animations running on DOM objects
+ * Manages all eases
  * @extends EventEmitter
  * @example
  * var Ease = require('dom-ease');
@@ -130,8 +267,9 @@ var DomEase = function (_EventEmitter) {
      * @param {number} [options.duration=1000] default duration
      * @param {(string|function)} [options.ease=penner.linear] default ease
      * @param {(string|function)} [options.autostart=true]
-     * @fires DomEase#complete
+     * @param {boolean} [options.pauseOnBlur] pause timer on blur, resume on focus
      * @fires DomEase#each
+     * @fires DomEase#complete
      */
     function DomEase(options) {
         _classCallCheck(this, DomEase);
@@ -146,12 +284,19 @@ var DomEase = function (_EventEmitter) {
         if (!options.autostart) {
             _this.start();
         }
+        if (options.pauseOnBlur) {
+            window.addEventListener('blur', function () {
+                return _this.blur();
+            });
+            window.addEventListener('focus', function () {
+                return _this.focus();
+            });
+        }
         return _this;
     }
 
     /**
-     * start animation loop
-     * alternatively, you can manually call update() on each loop
+     * start animation loop (automatically called unless options.autostart=false)
      */
 
 
@@ -161,6 +306,22 @@ var DomEase = function (_EventEmitter) {
             if (!this._requested) {
                 this._requested = true;
                 this.loop();
+                this.running = true;
+            }
+        }
+    }, {
+        key: 'blur',
+        value: function blur() {
+            if (this.running) {
+                this.stop();
+                this.running = true;
+            }
+        }
+    }, {
+        key: 'focus',
+        value: function focus() {
+            if (this.running) {
+                this.start();
             }
         }
     }, {
@@ -188,17 +349,18 @@ var DomEase = function (_EventEmitter) {
             if (this._requested) {
                 window.cancelAnimationFrame(this._requestId);
                 this._requested = false;
+                this.running = false;
             }
         }
 
         /**
-         * add animation(s) to a DOM element
-         * @param {(HTMLElement|HTMLElement[])} element
+         * add eases
+         * @param {HTMLElement} element
          * @param {object} params
-         * @param {number} [params.left] uses px
-         * @param {number} [params.top] uses px
-         * @param {number} [params.width] uses px
-         * @param {number} [params.height] uses px
+         * @param {number} [params.left] in px
+         * @param {number} [params.top] in px
+         * @param {number} [params.width] in px
+         * @param {number} [params.height] in px
          * @param {number} [params.scale]
          * @param {number} [params.scaleX]
          * @param {number} [params.scaleY]
@@ -210,23 +372,12 @@ var DomEase = function (_EventEmitter) {
          * @param {(string|function)} [options.ease]
          * @param {(boolean|number)} [options.repeat]
          * @param {boolean} [options.reverse]
-         * @returns {DomEaseElement}
+         * @returns {Ease}
          */
 
     }, {
         key: 'add',
         value: function add(element, params, options) {
-            // call add on all elements if array
-            if (Array.isArray(element)) {
-                for (var i = 0; i < element.length; i++) {
-                    if (i === element.length - 1) {
-                        return this.add(element[i], params, options);
-                    } else {
-                        this.add(element[i], params, options);
-                    }
-                }
-            }
-
             // set up default options
             options = options || {};
             options.duration = exists(options.duration) ? options.duration : this.options.duration;
@@ -234,46 +385,55 @@ var DomEase = function (_EventEmitter) {
             if (typeof options.ease === 'string') {
                 options.ease = Penner[options.ease];
             }
-
-            if (element.__domEase) {
-                element.__domEase.add(params, options);
-            } else {
-                var domEase = element.__domEase = new DomEaseElement(element);
-                domEase.add(params, options);
-                this.list.push(domEase);
-            }
-            return element.__domEase;
+            var ease = new Ease(element, params, options);
+            this.list.push(ease);
+            return ease;
         }
 
         /**
-         * remove animation(s)
-         * @param {(Animation|HTMLElement)} object
+         * remove all eases on element
+         * @param {HTMLElement} element
+         */
+
+    }, {
+        key: 'removeObjectEases',
+        value: function removeObjectEases(element) {
+            var list = this.list;
+            for (var i = 0, _i = list.length; i < _i; i++) {
+                var ease = list[i];
+                if (ease.element === element) {
+                    list.splice(i, 1);
+                    i--;
+                    _i--;
+                }
+            }
+        }
+
+        /**
+         * remove eases using Ease object returned by add()
+         * @param {Ease} ease
          */
 
     }, {
         key: 'remove',
-        value: function remove(object) {
-            var element = object.__domEase ? object.__domEase.element : object;
-            var index = this.list.indexOf(element);
-            if (index !== -1) {
-                this.list.splice(index, 1);
+        value: function remove(ease) {
+            var list = this.list;
+            for (var i = 0, _i = list.length; i < _i; i++) {
+                if (list[i] === ease) {
+                    list.splice(i, 1);
+                    return;
+                }
             }
-            delete element.__domEase;
         }
 
         /**
-         * remove all animations from list
+         * remove all eases
          */
 
     }, {
         key: 'removeAll',
         value: function removeAll() {
-            while (this.list.length) {
-                var _DomEaseElement = this.list.pop();
-                if (_DomEaseElement.element.__domEase) {
-                    delete _DomEaseElement.element.__domEase;
-                }
-            }
+            this.list = [];
         }
 
         /**
@@ -292,58 +452,21 @@ var DomEase = function (_EventEmitter) {
                 }
             }
             this.emit('each', this);
-            if (!this.empty && Array.keys(this.list).length === 0 && !this.empty) {
+            if (!this.empty && this.list.length === 0) {
                 this.emit('done', this);
                 this.empty = true;
             }
         }
 
         /**
-         * number of elements being DomEaseElementd
+         * number of eases
          * @returns {number}
          */
 
     }, {
-        key: 'countElements',
-        value: function countElements() {
+        key: 'getCount',
+        value: function getCount() {
             return this.list.length;
-        }
-
-        /**
-         * number of active animations across all elements
-         * @returns {number}
-         */
-
-    }, {
-        key: 'countRunning',
-        value: function countRunning() {
-            var count = 0;
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
-
-            try {
-                for (var _iterator = this.list[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var entry = _step.value;
-
-                    count += Object.keys(entry) - 1;
-                }
-            } catch (err) {
-                _didIteratorError = true;
-                _iteratorError = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion && _iterator.return) {
-                        _iterator.return();
-                    }
-                } finally {
-                    if (_didIteratorError) {
-                        throw _iteratorError;
-                    }
-                }
-            }
-
-            return count;
         }
     }]);
 
@@ -364,7 +487,7 @@ var DomEase = function (_EventEmitter) {
 
 module.exports = DomEase;
 
-},{"./easeElement":4,"eventemitter3":13,"exists":14,"penner":15}],4:[function(require,module,exports){
+},{"./ease":4,"eventemitter3":5,"exists":6,"penner":7}],4:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -376,516 +499,352 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var EventEmitter = require('eventemitter3');
+var exists = require('exists');
 
-var Left = require('./left');
-var Top = require('./top');
-var Color = require('./color');
-var BackgroundColor = require('./backgroundColor');
-var ScaleX = require('./scaleX');
-var ScaleY = require('./scaleY');
-var Scale = require('./scale');
-var Opacity = require('./opacity');
-var Width = require('./width');
-var Height = require('./height');
-
-var DomEaseElement = function (_EventEmitter) {
-    _inherits(DomEaseElement, _EventEmitter);
+var Ease = function (_EventEmitter) {
+    _inherits(Ease, _EventEmitter);
 
     /**
-     * each DOM element has its own DomEaseElement object returned by add() or accessed through HTMLElement.__domEase
+     * Ease class returned by DomEase.add()
      * @extends EventEmitter
-     * @fires DomEaseElement#each-*
-     * @fires DomEaseElement#complete-*
-     * @fires DomEaseElement#loop-* - called when animation repeats or reverses
+     * @param {HTMLElement} element
+     * @param {object} params
+     * @param {number} [params.left] in px
+     * @param {number} [params.top] in px
+     * @param {number} [params.width] in px
+     * @param {number} [params.height] in px
+     * @param {number} [params.scale]
+     * @param {number} [params.scaleX]
+     * @param {number} [params.scaleY]
+     * @param {number} [params.opacity]
+     * @param {(color|color[])} [params.color]
+     * @param {(color|color[])} [params.backgroundColor]
+     * @param {object} [options]
+     * @param {number} [options.duration]
+     * @param {(string|function)} [options.ease]
+     * @param {(boolean|number)} [options.repeat]
+     * @param {boolean} [options.reverse]
+     * @returns {Ease}
+     * @fires Ease#each
+     * @fires Ease#complete
+     * @fires Ease#loop
+     * @hideconstructor
      */
-    function DomEaseElement(element) {
-        _classCallCheck(this, DomEaseElement);
+    function Ease(element, params, options) {
+        _classCallCheck(this, Ease);
 
-        /**
-         * element being animated
-         * @member {HTMLElement}
-         */
-        var _this = _possibleConstructorReturn(this, (DomEaseElement.__proto__ || Object.getPrototypeOf(DomEaseElement)).call(this));
+        var _this = _possibleConstructorReturn(this, (Ease.__proto__ || Object.getPrototypeOf(Ease)).call(this));
 
         _this.element = element;
-        _this.eases = {};
+        _this.list = [];
+        _this.time = 0;
+        _this.duration = options.duration;
+        _this.ease = options.ease;
+        _this.repeat = options.repeat;
+        _this.reverse = options.reverse;
+        for (var entry in params) {
+            switch (entry) {
+                case 'left':
+                    _this.numberStart(entry, element.offsetLeft, params[entry], 'px');
+                    break;
+
+                case 'top':
+                    _this.numberStart(entry, element.offsetTop, params[entry], 'px');
+                    break;
+
+                case 'color':
+                    _this.colorStart('color', element.style.color, params[entry]);
+                    break;
+
+                case 'backgroundColor':
+                    _this.colorStart('backgroundColor', element.style.backgroundColor, params[entry]);
+                    break;
+
+                case 'scale':
+                    _this.transformStart(entry, params[entry]);
+                    break;
+
+                case 'scaleX':
+                    _this.transformStart(entry, params[entry]);
+                    break;
+
+                case 'scaleY':
+                    _this.transformStart(entry, params[entry]);
+                    break;
+
+                case 'opacity':
+                    _this.numberStart(entry, exists(element.opacity) ? parseFloat(element.opacity) : 1, params[entry]);
+                    break;
+
+                case 'width':
+                    _this.numberStart(entry, element.offsetWidth, params[entry], 'px');
+                    break;
+
+                case 'height':
+                    _this.numberStart(entry, element.offsetHeight, params[entry], 'px');
+                    break;
+
+                default:
+                    console.warn(entry + ' not setup for animation in dom-ease.');
+            }
+        }
         return _this;
     }
 
-    _createClass(DomEaseElement, [{
-        key: 'add',
-        value: function add(params, options) {
-            for (var entry in params) {
-                switch (entry) {
-                    case 'left':
-                        this.eases['left'] = new Left(this.element, params[entry], options);
-                        break;
+    /**
+     * create number entry
+     * @private
+     * @param {string} entry
+     * @param {number} start
+     * @param {number} to
+     * @param {string} [units]
+     */
 
-                    case 'top':
-                        this.eases['top'] = new Top(this.element, params[entry], options);
-                        break;
 
-                    case 'color':
-                        this.eases[entry] = new Color(this.element, params[entry], options);
-                        break;
+    _createClass(Ease, [{
+        key: 'numberStart',
+        value: function numberStart(entry, start, to, units) {
+            var ease = { type: 'number', entry: entry, to: to, start: start, delta: to - start, units: units || '' };
+            this.list.push(ease);
+        }
+    }, {
+        key: 'numberUpdate',
+        value: function numberUpdate(ease, percent) {
+            this.element.style[ease.entry] = ease.start + ease.delta * percent + ease.units;
+        }
 
-                    case 'backgroundColor':
-                        this.eases[entry] = new BackgroundColor(this.element, params[entry], options);
-                        break;
+        /**
+         * reverse number and transform
+         * @private
+         * @param {object} ease
+         */
 
-                    case 'scale':
-                        this.eases[entry] = new Scale(this.element, params[entry], options);
-                        break;
-
-                    case 'scaleX':
-                        this.eases[entry] = new ScaleX(this.element, params[entry], options);
-                        break;
-
-                    case 'scaleY':
-                        this.eases[entry] = new ScaleY(this.element, params[entry], options);
-                        break;
-
-                    case 'opacity':
-                        this.eases[entry] = new Opacity(this.element, params[entry], options);
-                        break;
-
-                    case 'width':
-                        this.eases[entry] = new Width(this.element, params[entry], options);
-                        break;
-
-                    case 'height':
-                        this.eases[entry] = new Height(this.element, params[entry], options);
-                        break;
-
-                    default:
-                        console.warn(entry + ' not setup for animation in DomEase.');
+    }, {
+        key: 'easeReverse',
+        value: function easeReverse(ease) {
+            var swap = ease.to;
+            ease.to = ease.start;
+            ease.start = swap;
+            ease.delta = -ease.delta;
+        }
+    }, {
+        key: 'transformStart',
+        value: function transformStart(entry, to) {
+            var ease = { type: 'transform', entry: entry, to: to };
+            if (!this.transforms) {
+                this.readTransform();
+            }
+            var transforms = this.transforms;
+            var found = void 0;
+            for (var i = 0, _i = transforms.length; i < _i; i++) {
+                var transform = transforms[i];
+                if (transform.name === entry) {
+                    switch (entry) {
+                        case 'scale':case 'scaleX':case 'scaleY':
+                            ease.start = parseFloat(transform.values);
+                            break;
+                    }
+                    found = true;
+                    break;
                 }
             }
+            if (!found) {
+                switch (entry) {
+                    case 'scale':case 'scaleX':case 'scaleY':
+                        ease.start = 1;
+                }
+            }
+            ease.delta = to - ease.start;
+            this.list.push(ease);
+        }
+    }, {
+        key: 'transformUpdate',
+        value: function transformUpdate(ease, percent) {
+            if (!this.changedTransform) {
+                this.readTransform();
+                this.changedTransform = true;
+            }
+            var name = ease.entry;
+            var transforms = this.transforms;
+            var values = ease.start + ease.delta * percent;
+            for (var i = 0, _i = transforms.length; i < _i; i++) {
+                if (transforms[i].name === name) {
+                    transforms[i].values = values;
+                    return;
+                }
+            }
+            this.transforms.push({ name: name, values: values });
+        }
+    }, {
+        key: 'colorUpdate',
+        value: function colorUpdate(ease) {
+            var elementStyle = this.element.style;
+            var style = ease.style;
+            var colors = ease.colors;
+            var i = Math.floor(this.time / ease.interval);
+            var color = colors[i];
+            if (elementStyle[style] !== color) {
+                elementStyle[style] = colors[i];
+            }
+        }
+    }, {
+        key: 'colorReverse',
+        value: function colorReverse(ease) {
+            var reverse = [];
+            var colors = ease.colors;
+            for (var color in colors) {
+                reverse.unshift(colors[color]);
+            }
+            reverse.push(reverse.shift());
+            ease.colors = reverse;
+        }
+    }, {
+        key: 'colorStart',
+        value: function colorStart(style, original, colors) {
+            var ease = { type: 'color', style: style };
+            if (Array.isArray(colors)) {
+                ease.colors = colors;
+            } else {
+                ease.colors = [colors];
+            }
+            colors.push(original);
+            ease.interval = this.duration / colors.length;
+            this.list.push(ease);
         }
     }, {
         key: 'update',
         value: function update(elapsed) {
-            var eases = this.eases;
-            for (var key in eases) {
-                var ease = eases[key];
-                ease.time += elapsed;
-                var leftover = ease.time >= ease.options.duration ? ease.time - ease.options.duration : null;
-                ease.update();
-                if (leftover !== null) {
-                    var options = ease.options;
-                    if (options.reverse) {
-                        this.emit('loop-' + key, ease.element);
-                        ease.reverse();
-                        ease.time = leftover;
-                        if (!options.repeat) {
-                            options.reverse = false;
-                        } else if (options.repeat !== true) {
-                            options.repeat--;
-                        }
-                    } else if (options.repeat) {
-                        this.emit('loop-' + key, ease.element);
-                        ease.time = leftover;
-                        if (options.repeat !== true) {
-                            options.repeat--;
-                        }
-                    } else {
-                        this.emit('complete-' + key, ease.element);
-                        delete eases[key];
-                    }
+            this.changedTransform = false;
+            var list = this.list;
+            var leftover = null;
+            this.time += elapsed;
+            if (this.time >= this.duration) {
+                leftover = this.time - this.duration;
+                this.time -= leftover;
+            }
+            var percent = this.ease(this.time, 0, 1, this.duration);
+            for (var i = 0, _i = list.length; i < _i; i++) {
+                var ease = list[i];
+                switch (ease.type) {
+                    case 'number':
+                        this.numberUpdate(ease, percent);
+                        break;
+
+                    case 'color':
+                        this.colorUpdate(ease);
+                        break;
+
+                    case 'transform':
+                        this.transformUpdate(ease, percent);
+                        break;
                 }
-                this.emit('each-' + key, ease.element);
+            }
+            if (this.changedTransform) {
+                this.writeTransform();
             }
             this.emit('each', this);
-            if (Object.keys(eases) === 0) {
-                this.emit('empty', this);
-                return true;
+
+            // handle end of duration
+            if (leftover !== null) {
+                if (this.reverse) {
+                    this.reverseEases();
+                    this.time = leftover;
+                    this.emit('loop', this);
+                    if (!this.repeat) {
+                        this.reverse = false;
+                    } else if (this.repeat !== true) {
+                        this.repeat--;
+                    }
+                } else if (this.repeat) {
+                    this.emit('loop', this);
+                    this.time = leftover;
+                    if (this.repeat !== true) {
+                        this.repeat--;
+                    }
+                } else {
+                    this.emit('complete', this);
+                    return true;
+                }
             }
+        }
+    }, {
+        key: 'reverseEases',
+        value: function reverseEases() {
+            var list = this.list;
+            for (var i = 0, _i = list.length; i < _i; i++) {
+                var ease = list[i];
+                if (ease.type === 'color') {
+                    this.colorReverse(ease);
+                } else {
+                    this.easeReverse(ease);
+                }
+            }
+        }
+    }, {
+        key: 'readTransform',
+        value: function readTransform() {
+            this.transforms = [];
+            var transform = this.element.style.transform;
+            var inside = void 0,
+                name = '',
+                values = void 0;
+            for (var i = 0, _i = transform.length; i < _i; i++) {
+                var letter = transform[i];
+                if (inside) {
+                    if (letter === ')') {
+                        inside = false;
+                        this.transforms.push({ name: name, values: values });
+                        name = '';
+                    } else {
+                        values += letter;
+                    }
+                } else {
+                    if (letter === '(') {
+                        values = '';
+                        inside = true;
+                    } else if (letter !== ' ') {
+                        name += letter;
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'writeTransform',
+        value: function writeTransform() {
+            var transforms = this.transforms;
+            var s = '';
+            for (var i = 0, _i = transforms.length; i < _i; i++) {
+                var transform = transforms[i];
+                s += transform.name + '(' + transform.values + ')';
+            }
+            this.element.style.transform = s;
         }
     }]);
 
-    return DomEaseElement;
+    return Ease;
 }(EventEmitter);
 
 /**
- * fires when there are no more animations
- * where name is the name of the element being DomEaseElementd (e.g., complete-left fires when left finishes animating)
- * @event DomEaseElement#complete-*
- * @type {DomEaseElement}
+ * fires when eases are complete
+ * @event Ease#complete
+ * @type {Ease}
  */
 
 /**
- * fires on each loop where there are animations
- * where name is the name of the element being DomEaseElementd (e.g., complete-left fires when left finishes animating)
- * @event DomEaseElement#each-*
- * @type {DomEaseElement}
+ * fires on each loop while eases are running
+ * @event Ease#each
+ * @type {Ease}
  */
 
 /**
- * fires when an animation repeats or reverses
- * where name is the name of the element being DomEaseElementd (e.g., complete-left fires when left finishes animating)
- * @event DomEaseElement#loop-*
- * @type {DomEaseElement}
+ * fires when eases repeat or reverse
+ * @event Ease#loop
+ * @type {Ease}
  */
 
-module.exports = DomEaseElement;
+module.exports = Ease;
 
-},{"./backgroundColor":1,"./color":2,"./height":5,"./left":6,"./opacity":7,"./scale":8,"./scaleX":9,"./scaleY":10,"./top":11,"./width":12,"eventemitter3":13}],5:[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-module.exports = function () {
-    function Height(element, height, options) {
-        _classCallCheck(this, Height);
-
-        this.element = element;
-        this.to = height;
-        this.options = options;
-        this.start = element.offsetHeight;
-        this.delta = this.to - this.start;
-        this.time = 0;
-    }
-
-    _createClass(Height, [{
-        key: 'update',
-        value: function update() {
-            var options = this.options;
-            this.element.style.height = options.ease(this.time, this.start, this.delta, options.duration) + 'px';
-        }
-    }, {
-        key: 'reverse',
-        value: function reverse() {
-            var swap = this.to;
-            this.to = this.start;
-            this.start = swap;
-            this.delta = -this.delta;
-        }
-    }]);
-
-    return Height;
-}();
-
-},{}],6:[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-module.exports = function () {
-    function Left(element, x, options) {
-        _classCallCheck(this, Left);
-
-        this.element = element;
-        this.to = x;
-        this.options = options;
-        this.start = element.offsetLeft;
-        this.delta = this.to - this.start;
-        this.time = 0;
-    }
-
-    _createClass(Left, [{
-        key: 'update',
-        value: function update() {
-            var options = this.options;
-            this.element.style.left = options.ease(this.time, this.start, this.delta, options.duration) + 'px';
-        }
-    }, {
-        key: 'reverse',
-        value: function reverse() {
-            var swap = this.to;
-            this.to = this.start;
-            this.start = swap;
-            this.delta = -this.delta;
-        }
-    }]);
-
-    return Left;
-}();
-
-},{}],7:[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var exists = require('exists');
-
-module.exports = function () {
-    function Opacity(element, opacity, options) {
-        _classCallCheck(this, Opacity);
-
-        this.element = element;
-        this.to = opacity;
-        this.options = options;
-        this.start = exists(element.opacity) ? parseFloat(element.opacity) : 1;
-        this.delta = this.to - this.start;
-        this.time = 0;
-    }
-
-    _createClass(Opacity, [{
-        key: 'update',
-        value: function update() {
-            var options = this.options;
-            this.element.style.opacity = options.ease(this.time, this.start, this.delta, options.duration);
-        }
-    }, {
-        key: 'reverse',
-        value: function reverse() {
-            var swap = this.to;
-            this.to = this.start;
-            this.start = swap;
-            this.delta = -this.delta;
-        }
-    }]);
-
-    return Opacity;
-}();
-
-},{"exists":14}],8:[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-module.exports = function () {
-    function Scale(element, value, options) {
-        _classCallCheck(this, Scale);
-
-        this.element = element;
-        this.options = options;
-        this.to = value;
-        var transform = element.style.transform;
-        var scale = transform.indexOf('scale(');
-        if (scale == -1) {
-            this.start = 1;
-        } else {
-            var extract = transform.substring(scale + 'scale('.length, transform.indexOf(')', scale));
-            this.start = parseFloat(extract);
-        }
-        this.delta = this.to - this.start;
-        this.time = 0;
-    }
-
-    _createClass(Scale, [{
-        key: 'update',
-        value: function update() {
-            var options = this.options;
-            var value = options.ease(this.time, this.start, this.delta, options.duration);
-            var transform = this.element.style.transform;
-            var scale = transform.indexOf('scale(');
-            if (!transform) {
-                this.element.style.transform = 'scale(' + value + ')';
-            } else if (scale == -1) {
-                this.element.style.transform += ' scale(' + value + ')';
-            } else {
-                this.element.style.transform = transform.substr(0, scale + 'scale('.length) + value + transform.substr(transform.indexOf(')'));
-            }
-        }
-    }, {
-        key: 'reverse',
-        value: function reverse() {
-            var swap = this.to;
-            this.to = this.start;
-            this.start = swap;
-            this.delta = -this.delta;
-        }
-    }]);
-
-    return Scale;
-}();
-
-},{}],9:[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-module.exports = function () {
-    function ScaleX(element, x, options) {
-        _classCallCheck(this, ScaleX);
-
-        this.element = element;
-        this.options = options;
-        this.to = x;
-        var transform = element.style.transform;
-        var scaleX = transform.indexOf('scaleX');
-        if (scaleX == -1) {
-            this.start = 1;
-        } else {
-            var extract = transform.substring(scaleX + 'scaleX'.length + 1, transform.indexOf(')', scaleX));
-            this.start = parseFloat(extract);
-        }
-        this.delta = this.to - this.start;
-        this.time = 0;
-    }
-
-    _createClass(ScaleX, [{
-        key: 'update',
-        value: function update() {
-            var options = this.options;
-            var scale = options.ease(this.time, this.start, this.delta, options.duration);
-            var transform = this.element.style.transform;
-            var scaleX = transform.indexOf('scaleX');
-
-            if (!transform) {
-                this.element.style.transform = 'scaleX(' + scale + ')';
-            } else if (scaleX == -1) {
-                this.element.style.transform += ' scaleX(' + scale + ')';
-            } else {
-                this.element.style.transform = transform.substr(0, scaleX + 'scaleX('.length) + scale + transform.indexOf(')', scaleX);
-            }
-        }
-    }, {
-        key: 'reverse',
-        value: function reverse() {
-            var swap = this.to;
-            this.to = this.start;
-            this.start = swap;
-            this.delta = -this.delta;
-        }
-    }]);
-
-    return ScaleX;
-}();
-
-},{}],10:[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-module.exports = function () {
-    function ScaleY(element, y, options) {
-        _classCallCheck(this, ScaleY);
-
-        this.element = element;
-        this.options = options;
-        this.to = y;
-        var transform = element.style.transform;
-        var scaleY = transform.indexOf('scaleY');
-        if (scaleY == -1) {
-            this.start = 1;
-        } else {
-            var extract = transform.substring(scaleY + 'scaleY'.length + 1, transform.indexOf(')', scaleY));
-            this.start = parseFloat(extract);
-        }
-        this.delta = this.to - this.start;
-        this.time = 0;
-    }
-
-    _createClass(ScaleY, [{
-        key: 'update',
-        value: function update() {
-            var options = this.options;
-            var scale = options.ease(this.time, this.start, this.delta, options.duration);
-            var transform = this.element.style.transform;
-            var scaleY = transform.indexOf('scaleY');
-
-            if (!transform) {
-                this.element.style.transform = 'scaleY(' + scale + ')';
-            } else if (scaleY == -1) {
-                this.element.style.transform += ' scaleY(' + scale + ')';
-            } else {
-                this.element.style.transform = transform.substr(0, scaleY + 'scaleY('.length) + scale + transform.indexOf(')', scaleY);
-            }
-        }
-    }, {
-        key: 'reverse',
-        value: function reverse() {
-            var swap = this.to;
-            this.to = this.start;
-            this.start = swap;
-            this.delta = -this.delta;
-        }
-    }]);
-
-    return ScaleY;
-}();
-
-},{}],11:[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-module.exports = function () {
-    function Top(element, y, options) {
-        _classCallCheck(this, Top);
-
-        this.element = element;
-        this.to = y;
-        this.options = options;
-        this.start = element.offsetTop;
-        this.delta = this.to - this.start;
-        this.time = 0;
-    }
-
-    _createClass(Top, [{
-        key: 'update',
-        value: function update() {
-            var options = this.options;
-            this.element.style.top = options.ease(this.time, this.start, this.delta, options.duration) + 'px';
-        }
-    }, {
-        key: 'reverse',
-        value: function reverse() {
-            var swap = this.to;
-            this.to = this.start;
-            this.start = swap;
-            this.delta = -this.delta;
-        }
-    }]);
-
-    return Top;
-}();
-
-},{}],12:[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-module.exports = function () {
-    function Width(element, width, options) {
-        _classCallCheck(this, Width);
-
-        this.element = element;
-        this.to = width;
-        this.options = options;
-        this.start = element.offsetWidth;
-        this.delta = this.to - this.start;
-        this.time = 0;
-    }
-
-    _createClass(Width, [{
-        key: 'update',
-        value: function update() {
-            var options = this.options;
-            this.element.style.width = options.ease(this.time, this.start, this.delta, options.duration) + 'px';
-        }
-    }, {
-        key: 'reverse',
-        value: function reverse() {
-            var swap = this.to;
-            this.to = this.start;
-            this.start = swap;
-            this.delta = -this.delta;
-        }
-    }]);
-
-    return Width;
-}();
-
-},{}],13:[function(require,module,exports){
+},{"eventemitter3":5,"exists":6}],5:[function(require,module,exports){
 'use strict';
 
 var has = Object.prototype.hasOwnProperty
@@ -1223,7 +1182,7 @@ if ('undefined' !== typeof module) {
   module.exports = EventEmitter;
 }
 
-},{}],14:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 module.exports = exists;
 
 module.exports.allExist = allExist;
@@ -1236,7 +1195,7 @@ function allExist (/* vals */) {
   var vals = Array.prototype.slice.call(arguments);
   return vals.every(exists);
 }
-},{}],15:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 
 /*
 	Copyright © 2001 Robert Penner
@@ -1504,210 +1463,7 @@ function allExist (/* vals */) {
 
 }).call(this);
 
-},{}],16:[function(require,module,exports){
-const FPS = require('yy-fps')
-
-const WM = require('../src/window-manager')
-const html = require('../src/html')
-
-// create a window manager and change some of the default styles
-const wm = new WM({
-    borderRadius: '10px'
-})
-
-const test = wm.createWindow( { x: 10, y: 10, title: 'Test Window', resizable: false })
-test.content.style.padding = '1em'
-test.content.innerHTML = 'This is a test window.'
-test.open()
-
-const test2 = wm.createWindow({
-    width: 300, height: 150,
-    x: 100, y: 100,
-    backgroundColorWindow: 'rgb(255,200,255)',
-    titlebarHeight: '22px',
-    backgroundColorTitlebarActive: 'green',
-    backgroundColorTitlebarInactive: 'purple'
-})
-test2.content.style.padding = '0.5em'
-test2.content.innerHTML = 'This is a pink test window.<br><br>Check out the fancy title bar for other style tests.<br><br><br>And scrolling!!!'
-test2.open()
-
-// create a test window with a button to create a modal window
-const test3 = wm.createWindow({ x: 300, y: 400, width: 350, title: 'This is one fancy demo!' })
-test3.content.style.padding = '1em'
-html.create({ parent: test3.content, html: 'OK. It isn\'t that fancy, but it shows off some of the functionality of this library.<br><br>Please excuse the mess. I do NOT keep my desktop this messy, but I thought it made for a good demo.' })
-const div = html.create({ parent: test3.content, styles: { textAlign: 'center', marginTop: '1em' } })
-const button = html.create({ parent: div, type: 'button', html: 'open modal window' })
-button.onclick = () =>
-{
-    // create a modal window
-    const modal = wm.createWindow({
-        modal: true,
-        width: 200,
-        center: test3, // center window in test3
-        title: 'modal window',
-        minimizable: false,
-        maximizable: false
-    })
-    const div = html.create({ parent: modal.content, styles: { 'margin': '0.5em' }})
-    html.create({ parent: div, html: 'This needs to be closed before using other windows.' })
-    const buttonDiv = html.create({ parent: div, styles: { 'text-align': 'center', margin: '1em' } })
-    const button = html.create({ parent: buttonDiv, type: 'button', html: 'close modal' })
-    button.onclick = () =>
-    {
-        modal.close()
-    }
-    modal.open()
-}
-test3.open()
-
-const test4 = wm.createWindow({ x: 300, y: 20, title: 'My wife\'s art gallery!' })
-test4.content.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/-slAp_gVa70" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>'
-test4.open()
-test4.sendToBack()
-
-const test5 = wm.createWindow({ x: 20, y: 600, title: 'window save/load' })
-html.create({ parent: test5.content, html: 'Save the windows, and then move windows around and load them.', styles: { margin: '0.5em' }})
-const buttons = html.create({ parent: test5.content, styles: { 'text-align': 'center' } })
-const save = html.create({ parent: buttons, html: 'save window state', type: 'button', styles: { margin: '1em', background: 'rgb(200,255,200)' } })
-const load = html.create({ parent: buttons, html: 'load window state', type: 'button', styles: { margin: '1em', background: 'rgb(255,200,200)' } })
-test5.open()
-let data
-save.onclick = () => data = wm.save()
-load.onclick = () => { if (data) wm.load(data) }
-
-const test6 = wm.createWindow({ x: 800, y: 350, width: 250, height: 350, title: 'One of my early games' })
-const game = html.create({ parent: test6.content, type: 'button', html: 'play game', styles: { 'margin-top': '50%', 'margin-left': '50%', transform: 'translate(-50%, 0)' } })
-game.onclick = () =>
-{
-    test6.content.style.overflow = 'hidden'
-    test6.content.innerHTML = ''
-    test6.content.innerHTML = '<iframe width="100%", height="100%" src="https://yopeyopey.com/games/gotpaws/"></iframe>'
-}
-test6.open()
-
-const test7 = wm.createWindow({ x: 700, y: 40, width: 400, height: 300, title: 'API documentation' })
-test7.content.innerHTML = '<iframe width="100%" height="100%" src="https://davidfig.github.io/window-manager/jsdoc/"></iframe>'
-test7.open()
-
-const wallpaper = html.create({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
-wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'
-
-const fps = new FPS()
-function update()
-{
-    fps.frame()
-    requestAnimationFrame(update)
-}
-update()
-},{"../src/html":23,"../src/window-manager":24,"yy-fps":22}],17:[function(require,module,exports){
-/**
- * Javascript: create click event for both mouse and touch
- * @example
- *
- * import clicked from 'clicked';
- * // or var clicked = require('clicked');
- *
- *  function handleClick()
- *  {
- *      console.log('I was clicked.');
- *  }
- *
- *  var div = document.getElementById('clickme');
- *  clicked(div, handleClick, {thresshold: 15});
- *
- */
-
-/**
- * @param {HTMLElement} element
- * @param {function} callback called after click: callback(event, options.args)
- * @param {object} [options]
- * @param {number} [options.thresshold=10] if touch moves threshhold-pixels then the touch-click is cancelled
- * @param {*} [options.args] arguments for callback function
- * @returns {object} object
- * @returns {function} object.disable() - disables clicked
- * @returns {function} object.enable() - enables clicked after disable() is called
- */
-function clicked(element, callback, options)
-{
-    function touchstart(e)
-    {
-        if (disabled)
-        {
-            return;
-        }
-        if (e.touches.length === 1)
-        {
-            lastX = e.changedTouches[0].screenX;
-            lastY = e.changedTouches[0].screenY;
-            down = true;
-        }
-    }
-
-    function pastThreshhold(x, y)
-    {
-        return Math.abs(lastX - x) > threshhold || Math.abs(lastY - y) > threshhold;
-    }
-
-    function touchmove(e)
-    {
-        if (!down || e.touches.length !== 1)
-        {
-            touchcancel();
-            return;
-        }
-        var x = e.changedTouches[0].screenX;
-        var y = e.changedTouches[0].screenY;
-        if (pastThreshhold(x, y))
-        {
-            touchcancel();
-        }
-    }
-
-    function touchcancel()
-    {
-        down = false;
-    }
-
-    function touchend(e)
-    {
-        if (down)
-        {
-            e.preventDefault();
-            callback(e, options.args);
-        }
-    }
-
-    function mouseclick(e)
-    {
-        if (!disabled)
-        {
-            callback(e, options.args);
-        }
-    }
-
-    options = options || {};
-    var down, lastX, lastY, disabled;
-    var threshhold = options.thresshold || 10;
-
-    element.addEventListener('click', mouseclick);
-    element.addEventListener('touchstart', touchstart, { passive: true });
-    element.addEventListener('touchmove', touchmove, { passive: true });
-    element.addEventListener('touchcancel', touchcancel);
-    element.addEventListener('touchend', touchend);
-
-    return {
-        disable: function () { disabled = true; },
-        enable: function () { disabled = false; }
-    };
-}
-
-module.exports = clicked;
-},{}],18:[function(require,module,exports){
-arguments[4][13][0].apply(exports,arguments)
-},{"dup":13}],19:[function(require,module,exports){
-arguments[4][14][0].apply(exports,arguments)
-},{"dup":14}],20:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 // TinyColor v1.4.1
 // https://github.com/bgrins/TinyColor
 // Brian Grinstead, MIT License
@@ -2904,7 +2660,7 @@ else {
 
 })(Math);
 
-},{}],21:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 // yy-counter
 // In-browser counter to watch changeable values like counters or FPS
 // David Figatner
@@ -3022,7 +2778,7 @@ module.exports = class Counter
         this.div.innerHTML = s
     }
 }
-},{}],22:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -3249,8 +3005,8 @@ module.exports = function () {
     return FPS;
 }();
 
-},{"tinycolor2":20,"yy-counter":21}],23:[function(require,module,exports){
-function create(options)
+},{"tinycolor2":8,"yy-counter":9}],11:[function(require,module,exports){
+module.exports = function (options)
 {
     options = options || {}
     const object = document.createElement(options.type || 'div')
@@ -3271,16 +3027,255 @@ function create(options)
     }
     return object
 }
+},{}],12:[function(require,module,exports){
+const exists = require('exists')
 
-module.exports = {
-    create
+const html = require('./html')
+
+const DEFAULT_COLOR = '#a8f0f4'
+const DEFAULT_SIZE = 10
+
+module.exports = class Snap
+{
+    /**
+     * add edge snapping plugin
+     * @param {object} options
+     * @param {boolean} [options.screen=true] snap to screen edges
+     * @param {boolean} [options.windows=true] snap to window edges
+     * @param {number} [options.snap=20] distance to edge before snapping and width/height of snap bars
+     * @param {string} [options.color=#a8f0f4] color for snap bars
+     * @param {number} [options.spacing=0] spacing distance between window and edges
+     * @private
+     */
+    constructor(wm, options)
+    {
+        options = options || {}
+        this.wm = wm
+        this.snap = options.snap || 20
+        this.screen = exists(options.screen) ? options.screen : true
+        this.windows = exists(options.windows) ? options.windows : true
+        const backgroundColor = options.color || DEFAULT_COLOR
+        this.size = options.size || DEFAULT_SIZE
+        this.spacing = options.spacing || 0
+        this.highlights = html({ parent: this.wm.overlay, styles: { 'position': 'absolute' } })
+        this.horizontal = html({
+            parent: this.highlights, styles: {
+                display: 'none',
+                position: 'absolute',
+                height: this.size + 'px',
+                borderRadius: this.size + 'px',
+                backgroundColor
+            }
+        })
+        this.vertical = html({
+            parent: this.highlights, styles: {
+                display: 'none',
+                position: 'absolute',
+                width: this.size + 'px',
+                borderRadius: this.size + 'px',
+                backgroundColor
+            }
+        })
+        this.horizontal
+        this.showing = []
+    }
+
+    stop()
+    {
+        this.highlights.remove()
+        this.stopped = true
+    }
+
+    addWindow(win)
+    {
+        win.on('move', () => this.move(win))
+        win.on('move-end', () => this.moveEnd(win))
+    }
+
+    screenMove(rect, horizontal, vertical)
+    {
+        const width = document.body.clientWidth
+        const height = document.body.clientHeight
+        if (rect.left - this.snap <= width && rect.right + this.snap >= 0)
+        {
+            if (Math.abs(rect.top - 0) <= this.snap)
+            {
+                horizontal.push({ distance: Math.abs(rect.top - 0), left: 0, width, top: 0, side: 'top' })
+            }
+            else if (Math.abs(rect.bottom - height) <= this.snap)
+            {
+                horizontal.push({ distance: Math.abs(rect.bottom - height), left: 0, width, top: height, side: 'bottom' })
+            }
+        }
+        if (rect.top - this.snap <= height && rect.bottom + this.snap >= 0)
+        {
+            if (Math.abs(rect.left - 0) <= this.snap)
+            {
+                vertical.push({ distance: Math.abs(rect.left - 0), top: 0, height, left: 0, side: 'left' })
+            }
+            else if (Math.abs(rect.right - width) <= this.snap)
+            {
+                vertical.push({ distance: Math.abs(rect.right - width), top: 0, height, left: width, side: 'right' })
+            }
+        }
+    }
+
+    windowsMove(original, rect, horizontal, vertical)
+    {
+        for (let win of this.wm.windows)
+        {
+            if (!win.options.noSnap && win !== original)
+            {
+                const rect2 = win.win.getBoundingClientRect()
+                if (rect.left - this.snap <= rect2.right && rect.right + this.snap >= rect2.left)
+                {
+                    if (Math.abs(rect.top - rect2.bottom) <= this.snap)
+                    {
+                        horizontal.push({ distance: Math.abs(rect.top - rect2.bottom), left: rect2.left, width: rect2.width, top: rect2.bottom, side: 'top' })
+                        if (Math.abs(rect.left - rect2.left) <= this.snap)
+                        {
+                            vertical.push({ distance: Math.abs(rect.left - rect2.left), top: rect2.top, height: rect2.height, left: rect2.left, side: 'left', noSpacing: true })
+                        }
+                        else if (Math.abs(rect.right - rect2.right) <= this.snap)
+                        {
+                            vertical.push({ distance: Math.abs(rect.right - rect2.right), top: rect2.top, height: rect2.height, left: rect2.right, side: 'right', noSpacing: true })
+                        }
+                    }
+                    else if (Math.abs(rect.bottom - rect2.top) <= this.snap)
+                    {
+                        horizontal.push({ distance: Math.abs(rect.bottom - rect2.top), left: rect2.left, width: rect2.width, top: rect2.top, side: 'bottom' })
+                        if (Math.abs(rect.left - rect2.left) <= this.snap)
+                        {
+                            vertical.push({ distance: Math.abs(rect.left - rect2.left), top: rect2.top, height: rect2.height, left: rect2.left, side: 'left', noSpacing: true })
+                        }
+                        else if (Math.abs(rect.right - rect2.right) <= this.snap)
+                        {
+                            vertical.push({ distance: Math.abs(rect.right - rect2.right), top: rect2.top, height: rect2.height, left: rect2.right, side: 'right', noSpacing: true })
+                        }
+                    }
+                }
+                if (rect.top - this.snap <= rect2.bottom && rect.bottom + this.snap >= rect2.top)
+                {
+                    if (Math.abs(rect.left - rect2.right) <= this.snap)
+                    {
+                        vertical.push({ distance: Math.abs(rect.left - rect2.right), top: rect2.top, height: rect2.height, left: rect2.right, side: 'left' })
+                        if (Math.abs(rect.top - rect2.top) <= this.snap)
+                        {
+                            horizontal.push({ distance: Math.abs(rect.top - rect2.top), left: rect2.left, width: rect2.width, top: rect2.top, side: 'top', noSpacing: true })
+                        }
+                        else if (Math.abs(rect.bottom - rect2.bottom) <= this.snap)
+                        {
+                            horizontal.push({ distance: Math.abs(rect.bottom - rect2.bottom), left: rect2.left, width: rect2.width, top: rect2.bottom, side: 'bottom', noSpacing: true })
+                        }
+                    }
+                    else if (Math.abs(rect.right - rect2.left) <= this.snap)
+                    {
+                        vertical.push({ distance: Math.abs(rect.right - rect2.left), top: rect2.top, height: rect2.height, left: rect2.left, side: 'right' })
+                        if (Math.abs(rect.top - rect2.top) <= this.snap)
+                        {
+                            horizontal.push({ distance: Math.abs(rect.top - rect2.top), left: rect2.left, width: rect2.width, top: rect2.top, side: 'top', noSpacing: true })
+                        }
+                        else if (Math.abs(rect.bottom - rect2.bottom) <= this.snap)
+                        {
+                            horizontal.push({ distance: Math.abs(rect.bottom - rect2.bottom), left: rect2.left, width: rect2.width, top: rect2.bottom, side: 'bottom', noSpacing: true })
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    move(win)
+    {
+        if (this.stopped || win.options.noSnap)
+        {
+            return
+        }
+        this.horizontal.style.display = 'none'
+        this.vertical.style.display = 'none'
+        const horizontal = []
+        const vertical = []
+        const rect = win.win.getBoundingClientRect()
+        if (this.screen)
+        {
+            this.screenMove(rect, horizontal, vertical)
+        }
+        if (this.windows)
+        {
+            this.windowsMove(win, rect, horizontal, vertical)
+        }
+        if (horizontal.length)
+        {
+            horizontal.sort((a, b) => { return a.distance - b.distance })
+            const find = horizontal[0]
+            this.horizontal.style.display = 'block'
+            this.horizontal.style.left = find.left + 'px'
+            this.horizontal.style.width = find.width + 'px'
+            this.horizontal.style.top = find.top - this.size / 2 + 'px'
+            this.horizontal.y = find.top
+            this.horizontal.side = find.side
+            this.horizontal.noSpacing = find.noSpacing
+        }
+        if (vertical.length)
+        {
+            vertical.sort((a, b) => { return a.distance - b.distance })
+            const find = vertical[0]
+            this.vertical.style.display  = 'block'
+            this.vertical.style.top = find.top + 'px'
+            this.vertical.style.height = find.height + 'px'
+            this.vertical.style.left = find.left - this.size / 2 + 'px'
+            this.vertical.x = find.left
+            this.vertical.side = find.side
+            this.vertical.noSpacing = find.noSpacing
+        }
+    }
+
+    moveEnd(win)
+    {
+        if (this.stopped)
+        {
+            return
+        }
+        if (this.horizontal.style.display === 'block')
+        {
+            const spacing = this.horizontal.noSpacing ? 0 : this.spacing
+            const adjust = win.minimized ? (win.height - win.height * win.minimized.scaleY) / 2 : 0
+            switch (this.horizontal.side)
+            {
+                case 'top':
+                    win.y = this.horizontal.y - adjust + spacing
+                    break
+
+                case 'bottom':
+                    win.bottom = this.horizontal.y + adjust - spacing
+                    break
+            }
+        }
+        if (this.vertical.style.display === 'block')
+        {
+            const spacing = this.vertical.noSpacing ? 0 : this.spacing
+            const adjust = win.minimized ? (win.width - win.width * win.minimized.scaleX) / 2 : 0
+            switch (this.vertical.side)
+            {
+                case 'left':
+                    win.x = this.vertical.x - adjust + spacing
+                    break
+
+                case 'right':
+                    win.right = this.vertical.x + adjust - spacing
+                    break
+            }
+        }
+        this.horizontal.style.display = this.vertical.style.display = 'none'
+    }
 }
-},{}],24:[function(require,module,exports){
+},{"./html":11,"exists":6}],13:[function(require,module,exports){
 const exists = require('exists')
 
 const html = require('./html')
 const Window = require('./window')
 const WindowOptions = require('./window-options')
+const Snap = require('./snap')
 
 /**
  * Creates a windowing system to create and manage windows
@@ -3297,6 +3292,9 @@ class WindowManager
     /**
      * @param {Window~WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
      * @param {boolean} [defaultOptions.quiet] suppress the simple-window-manager console message
+     * @param {object} [defaultOptions.snap] turn on edge snapping
+     * @param {boolean} [defaultOptions.snap.screen] snap to edge of screen
+     * @param {boolean} [defaultOptions.snap.windows] snap to windows
      */
     constructor(defaultOptions)
     {
@@ -3320,6 +3318,11 @@ class WindowManager
         {
             console.log('%c ☕ simple-window-manager initialized ☕', 'color: #ff00ff')
         }
+        this.plugins = []
+        if (defaultOptions && defaultOptions['snap'])
+        {
+            this.snap(defaultOptions['snap'])
+        }
     }
 
     /**
@@ -3331,20 +3334,7 @@ class WindowManager
      * @param {boolean} [options.modal]
      * @param {Window} [options.center] center in the middle of an existing Window
      * @param {string|number} [options.id] if not provide, id will be assigned in order of creation (0, 1, 2...)
-     * @fires open
-     * @fires focus
-     * @fires blur
-     * @fires close
-     * @fires maximize
-     * @fires maximize-restore
-     * @fires minimize
-     * @fires minimize-restore
-     * @fires move
-     * @fires move-start
-     * @fires move-end
-     * @fires resize
-     * @fires resize-start
-     * @fires resize-end
+     * @returns {Window} the created window
      */
     createWindow(options)
     {
@@ -3376,7 +3366,38 @@ class WindowManager
         {
             this.modal = win
         }
+        if (this.plugins['snap'])
+        {
+            this.plugins['snap'].addWindow(win)
+        }
         return win
+    }
+
+    /**
+     * add edge snapping plugin
+     * @param {object} options
+     * @param {boolean} [options.screen=true] snap to screen edges
+     * @param {boolean} [options.windows=true] snap to window edges
+     * @param {number} [options.snap=20] distance to edge before snapping
+     * @param {string} [options.color=#a8f0f4] color for snap bars
+     * @param {number} [options.spacing=0] spacing distance between window and edges
+     */
+    snap(options)
+    {
+        this.plugins['snap'] = new Snap(this, options)
+    }
+
+    /**
+     * remove plugin
+     * @param {string} name of plugin
+     */
+    removePlugin(name)
+    {
+        if (this.plugins[name])
+        {
+            this.plugins[name].stop()
+            delete this.plugins[name]
+        }
     }
 
     /**
@@ -3459,7 +3480,7 @@ class WindowManager
 
     _createDom()
     {
-        this.win = html.create({
+        this.win = html({
             parent: document.body, styles: {
                 'user-select': 'none',
                 'width': '100%',
@@ -3469,7 +3490,7 @@ class WindowManager
                 'cursor': 'default'
             }
         })
-        this.overlay = html.create({
+        this.overlay = html({
             parent: this.win, styles: {
                 'user-select': 'none',
                 'position': 'absolute',
@@ -3566,7 +3587,7 @@ class WindowManager
 }
 
 module.exports = WindowManager
-},{"./html":23,"./window":26,"./window-options":25,"exists":19}],25:[function(require,module,exports){
+},{"./html":11,"./snap":12,"./window":15,"./window-options":14,"exists":6}],14:[function(require,module,exports){
 /**
  * @typedef {object} Window~WindowOptions
  * @property {number} [x=0]
@@ -3578,6 +3599,7 @@ module.exports = WindowManager
  * @property {boolean} [maximizable=true]
  * @property {boolean} [minimizable=true]
  * @property {boolean} [closable=true]
+ * @property {boolean} [noSnap] don't snap this window or use this window as a snap target (edges plugin)
  * @property {boolean} [titlebar=true]
  * @property {string} [titlebarHeight=36px]
  * @property {string} [minWidth=200px]
@@ -3634,10 +3656,10 @@ const WindowOptions = {
 }
 
 module.exports = WindowOptions
-},{}],26:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 const Events = require('eventemitter3')
 const clicked = require('clicked')
-const Ease = require('../../dom-ease')
+const Ease = require('dom-ease')
 const exists = require('exists')
 
 const html = require('./html')
@@ -3648,6 +3670,24 @@ let id = 0
  * Window class returned by WindowManager.createWindow()
  * @extends EventEmitter
  * @hideconstructor
+ * @fires open
+ * @fires focus
+ * @fires blur
+ * @fires close
+ * @fires maximize
+ * @fires maximize-restore
+ * @fires minimize
+ * @fires minimize-restore
+ * @fires move
+ * @fires move-start
+ * @fires move-end
+ * @fires resize
+ * @fires resize-start
+ * @fires resize-end
+ * @fires move-x
+ * @fires move-y
+ * @fires resize-width
+ * @fires resize-height
  */
 class Window extends Events
 {
@@ -3734,7 +3774,7 @@ class Window extends Events
     }
 
     /**
-     * closes the window (can be reopened with open) if a reference is saved
+     * closes the window (can be reopened with open)
      */
     close()
     {
@@ -3742,7 +3782,7 @@ class Window extends Events
         {
             this._closed = true
             const ease = this.ease.add(this.win, { scale: 0 })
-            ease.on('complete-scale', () =>
+            ease.on('complete', () =>
             {
                 this.win.style.display = 'none'
                 this.emit('close', this);
@@ -3759,6 +3799,11 @@ class Window extends Events
     {
         this.options.x = value
         this.win.style.left = value + 'px'
+        this.emit('move-x', this)
+        if (this.minimized)
+        {
+            this._lastMinimized.left = value
+        }
     }
 
     /**
@@ -3770,6 +3815,11 @@ class Window extends Events
     {
         this.options.y = value
         this.win.style.top = value + 'px'
+        this.emit('move-y', this)
+        if (this.minimized)
+        {
+            this._lastMinimized.top = value
+        }
     }
 
     /**
@@ -3789,6 +3839,7 @@ class Window extends Events
             this.win.style.width = 'auto'
             this.options.width = ''
         }
+        this.emit('resize-width', this)
     }
 
     /**
@@ -3808,6 +3859,7 @@ class Window extends Events
             this.win.style.height = 'auto'
             this.options.height = ''
         }
+        this.emit('resize-height', this)
     }
 
     /**
@@ -3844,18 +3896,22 @@ class Window extends Events
             {
                 if (noAnimate)
                 {
-                    this.win.style.transform = 'scaleX(1) scaleY(1)'
+                    this.win.style.transform = ''
+                    const x = this.minimized.x, y = this.minimized.y
                     this.minimized = false
-                    this.emit('minimize-restore')
+                    this.move(x, y)
+                    this.emit('minimize-restore', this)
                     this.overlay.style.display = 'none'
                 }
                 else
                 {
                     this.transitioning = true
-                    const add = this.ease.add(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y })
-                    add.on('complete-top', () =>
+                    const ease = this.ease.add(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y })
+                    ease.on('complete', () =>
                     {
+                        const x = this.minimized.x, y = this.minimized.y
                         this.minimized = false
+                        this.move(x, y)
                         this.emit('minimize-restore', this)
                         this.transitioning = false
                         this.overlay.style.display = 'none'
@@ -3864,36 +3920,34 @@ class Window extends Events
             }
             else
             {
-                const x = this.x, y = this.y
+                const x = this.x
+                const y = this.y
+                const left = this._lastMinimized ? this._lastMinimized.left : this.x
+                const top = this._lastMinimized ? this._lastMinimized.top : this.y
                 const desired = this.options.minimizeSize
-                let delta
-                if (this._lastMinimized)
-                {
-                    delta = { left: this._lastMinimized.x, top: this._lastMinimized.y }
-                }
-                else
-                {
-                    delta = { scaleX: (desired / this.win.offsetWidth), scaleY: (desired / this.win.offsetHeight) }
-                }
+                const scaleX = desired / this.width
+                const scaleY = desired / this.height
                 if (noAnimate)
                 {
-                    this.win.style.transform = 'scale(1) scale(' + (desired / this.win.offsetWidth) + ',' + (desired / this.win.offsetHeight) + ')'
-                    this.win.style.left = delta.left + 'px'
-                    this.win.style.top = delta.top + 'px'
-                    this.minimized = { x, y }
+                    this.win.style.transform = 'scale(1) scaleX(' + scaleX + ') scaleY(' + scaleY + ')'
+                    this.win.style.left = left + 'px'
+                    this.win.style.top = top + 'px'
+                    this.minimized = { x, y, scaleX, scaleY }
                     this.emit('minimize', this)
                     this.overlay.style.display = 'block'
+                    this._lastMinimized = { left, top }
                 }
                 else
                 {
                     this.transitioning = true
-                    const ease = this.ease.add(this.win, delta)
-                    ease.on('complete-scaleY', () =>
+                    const ease = this.ease.add(this.win, { left, top, scaleX, scaleY })
+                    ease.on('complete', () =>
                     {
-                        this.minimized = { x, y }
+                        this.minimized = { x, y, scaleX, scaleY }
                         this.emit('minimize', this)
                         this.transitioning = false
                         this.overlay.style.display = 'block'
+                        this._lastMinimized = { left, top }
                     })
                 }
             }
@@ -3911,7 +3965,7 @@ class Window extends Events
             if (this.maximized)
             {
                 const ease = this.ease.add(this.win, { left: this.maximized.x, top: this.maximized.y, width: this.maximized.width, height: this.maximized.height })
-                ease.on('complete-height', () =>
+                ease.on('complete', () =>
                 {
                     this.options.x = this.maximized.x
                     this.options.y = this.maximized.y
@@ -3927,7 +3981,7 @@ class Window extends Events
             {
                 const x = this.x, y = this.y, width = this.win.offsetWidth, height = this.win.offsetHeight
                 const ease = this.ease.add(this.win, { left: 0, top: 0, width: this.wm.overlay.offsetWidth, height: this.wm.overlay.offsetHeight })
-                ease.on('complete-height', () =>
+                ease.on('complete', () =>
                 {
                     this.maximized = { x, y, width, height }
                     this.transitioning = false
@@ -3964,17 +4018,17 @@ class Window extends Events
         const maximized = this.maximized
         if (maximized)
         {
-            data.maximized = { x: maximized.x, y: maximized.y, width: maximized.width, height: maximized.height }
+            data.maximized = { left: maximized.left, top: maximized.top, width: maximized.width, height: maximized.height }
         }
         const minimized = this.minimized
         if (minimized)
         {
-            data.minimized = { x: this.minimized.x, y: this.minimized.y }
+            data.minimized = { x: this.minimized.x, y: this.minimized.y, scaleX: this.minimized.scaleX, scaleY: this.minimized.scaleY }
         }
         const lastMinimized = this._lastMinimized
         if (lastMinimized)
         {
-            data.lastMinimized = { x: lastMinimized.x, y: lastMinimized.y }
+            data.lastMinimized = { left: lastMinimized.left, top: lastMinimized.top }
         }
         data.x = this.x
         data.y = this.y
@@ -4043,6 +4097,7 @@ class Window extends Events
     set title(value)
     {
         this.winTitle.innerText = value
+        this.emit('title-change', this)
     }
 
 
@@ -4142,9 +4197,34 @@ class Window extends Events
      * @type {Window}
      */
 
+    /**
+     * Fires when width is changed
+     * @event Window#resize-width
+     * @type {Window}
+     */
+
+    /**
+     * Fires when height is changed
+     * @event Window#resize-height
+     * @type {Window}
+     */
+
+    /**
+     * Fires when x position of window is changed
+     * @event Window#move-x
+     * @type {Window}
+     */
+
+
+    /**
+     * Fires when y position of window is changed
+     * @event Window#move-y
+     * @type {Window}
+     */
+
     _createWindow()
     {
-        this.win = html.create({
+        this.win = html({
             parent: this.wm.win, styles: {
                 'display': 'none',
                 'border-radius': this.options.borderRadius,
@@ -4162,7 +4242,7 @@ class Window extends Events
             }
         })
 
-        this.winBox = html.create({
+        this.winBox = html({
             parent: this.win, styles: {
                 'display': 'flex',
                 'flex-direction': 'column',
@@ -4173,7 +4253,7 @@ class Window extends Events
         })
         this._createTitlebar()
 
-        this.content = html.create({
+        this.content = html({
             parent: this.winBox, type: 'section', styles: {
                 'display': 'block',
                 'flex': 1,
@@ -4188,7 +4268,7 @@ class Window extends Events
             this._createResize()
         }
 
-        this.overlay = html.create({
+        this.overlay = html({
             parent: this.win, styles: {
                 'display': 'none',
                 'position': 'absolute',
@@ -4207,10 +4287,10 @@ class Window extends Events
         if (!this.transitioning)
         {
             const event = this._convertMoveEvent(e)
-            this._moving = this._toLocal({
-                x: event.pageX,
-                y: event.pageY
-            })
+            this._moving = {
+                x: event.pageX - this.x,
+                y: event.pageY - this.y
+            }
             this.emit('move-start', this)
             this._moved = false
         }
@@ -4218,7 +4298,7 @@ class Window extends Events
 
     _createTitlebar()
     {
-        this.winTitlebar = html.create({
+        this.winTitlebar = html({
             parent: this.winBox, type: 'header', styles: {
                 'user-select': 'none',
                 'display': 'flex',
@@ -4231,7 +4311,7 @@ class Window extends Events
                 'overflow': 'hidden',
             }
         })
-        this.winTitle = html.create({
+        this.winTitle = html({
             parent: this.winTitlebar, type: 'span', html: this.options.title, styles: {
                 'user-select': 'none',
                 'flex': 1,
@@ -4259,7 +4339,7 @@ class Window extends Events
 
     _createButtons()
     {
-        this.winButtonGroup = html.create({
+        this.winButtonGroup = html({
             parent: this.winTitlebar, styles: {
                 'display': 'flex',
                 'flex-direction': 'row',
@@ -4286,19 +4366,19 @@ class Window extends Events
         if (this.options.minimizable)
         {
             button.backgroundImage = this.options.backgroundMinimizeButton
-            this.buttons.minimize = html.create({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
+            this.buttons.minimize = html({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
             clicked(this.buttons.minimize, () => this.minimize())
         }
         if (this.options.maximizable)
         {
             button.backgroundImage = this.options.backgroundMaximizeButton
-            this.buttons.maximize = html.create({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
+            this.buttons.maximize = html({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
             clicked(this.buttons.maximize, () => this.maximize())
         }
         if (this.options.closable)
         {
             button.backgroundImage = this.options.backgroundCloseButton
-            this.buttons.close = html.create({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
+            this.buttons.close = html({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
             clicked(this.buttons.close, () => this.close())
         }
         for (let key in this.buttons)
@@ -4317,7 +4397,7 @@ class Window extends Events
 
     _createResize()
     {
-        this.resizeEdge = html.create({
+        this.resizeEdge = html({
             parent: this.winBox, type: 'button', html: '&nbsp', styles: {
                 'position': 'absolute',
                 'bottom': 0,
@@ -4364,16 +4444,14 @@ class Window extends Events
             }
             if (this._moving)
             {
+                if (this.minimized)
+                {
+                    this._moved = true
+                }
                 this.move(
                     event.pageX - this._moving.x,
                     event.pageY - this._moving.y
                 )
-                if (this.minimized)
-                {
-                    e.preventDefault()
-                    this._lastMinimized = { x: this.win.offsetLeft, y: this.win.offsetTop }
-                    this._moved = true
-                }
                 this.emit('move', this)
                 e.preventDefault()
             }
@@ -4416,13 +4494,13 @@ class Window extends Events
     _stopMove()
     {
         this._moving = null
-        this.emit('move-end')
+        this.emit('move-end', this)
     }
 
     _stopResize()
     {
         this._restore = this._resizing = null
-        this.emit('resize-end')
+        this.emit('resize-end', this)
     }
 
     _isTouchEvent(e)
@@ -4435,17 +4513,9 @@ class Window extends Events
         return this._isTouchEvent(e) ? e.changedTouches[0] : e
     }
 
-    _toLocal(coord)
-    {
-        return {
-            x: coord.x - this.x,
-            y: coord.y - this.y
-        }
-    }
-
     get z() { return parseInt(this.win.style.zIndex) }
     set z(value) { this.win.style.zIndex = value }
 }
 
 module.exports = Window
-},{"../../dom-ease":3,"./html":23,"clicked":17,"eventemitter3":18,"exists":19}]},{},[16]);
+},{"./html":11,"clicked":2,"dom-ease":3,"eventemitter3":5,"exists":6}]},{},[1]);

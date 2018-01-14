@@ -188,8 +188,6 @@
             
                 <li class="parent  " data-name="WindowManager#createWindow"><a href="WindowManager.html#createWindow">createWindow</a></li>
             
-                <li class="parent  " data-name="WindowManager#edges"><a href="WindowManager.html#edges">edges</a></li>
-            
                 <li class="  " data-name="WindowManager#emit~"><a href="WindowManager.html#emit">emit</a></li>
             
                 <li class="  " data-name="WindowManager#eventNames~"><a href="WindowManager.html#eventNames">eventNames</a></li>
@@ -216,6 +214,8 @@
             
                 <li class="parent  " data-name="WindowManager#sendToFront"><a href="WindowManager.html#sendToFront">sendToFront</a></li>
             
+                <li class="parent  " data-name="WindowManager#snap"><a href="WindowManager.html#snap">snap</a></li>
+            
             </ul>
             <ul class="events itemMembers">
             
@@ -241,7 +241,7 @@
         <article>
             <pre id="source-code" class="prettyprint source "><code>const Events = require('eventemitter3')
 const clicked = require('clicked')
-const Ease = require('../../dom-ease')
+const Ease = require('dom-ease')
 const exists = require('exists')
 
 const html = require('./html')
@@ -266,6 +266,10 @@ let id = 0
  * @fires resize
  * @fires resize-start
  * @fires resize-end
+ * @fires move-x
+ * @fires move-y
+ * @fires resize-width
+ * @fires resize-height
  */
 class Window extends Events
 {
@@ -352,7 +356,7 @@ class Window extends Events
     }
 
     /**
-     * closes the window (can be reopened with open) if a reference is saved
+     * closes the window (can be reopened with open)
      */
     close()
     {
@@ -360,7 +364,7 @@ class Window extends Events
         {
             this._closed = true
             const ease = this.ease.add(this.win, { scale: 0 })
-            ease.on('complete-scale', () =>
+            ease.on('complete', () =>
             {
                 this.win.style.display = 'none'
                 this.emit('close', this);
@@ -378,6 +382,10 @@ class Window extends Events
         this.options.x = value
         this.win.style.left = value + 'px'
         this.emit('move-x', this)
+        if (this.minimized)
+        {
+            this._lastMinimized.left = value
+        }
     }
 
     /**
@@ -390,6 +398,10 @@ class Window extends Events
         this.options.y = value
         this.win.style.top = value + 'px'
         this.emit('move-y', this)
+        if (this.minimized)
+        {
+            this._lastMinimized.top = value
+        }
     }
 
     /**
@@ -466,18 +478,22 @@ class Window extends Events
             {
                 if (noAnimate)
                 {
-                    this.win.style.transform = 'scaleX(1) scaleY(1)'
+                    this.win.style.transform = ''
+                    const x = this.minimized.x, y = this.minimized.y
                     this.minimized = false
+                    this.move(x, y)
                     this.emit('minimize-restore', this)
                     this.overlay.style.display = 'none'
                 }
                 else
                 {
                     this.transitioning = true
-                    const add = this.ease.add(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y })
-                    add.on('complete-top', () =>
+                    const ease = this.ease.add(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y })
+                    ease.on('complete', () =>
                     {
+                        const x = this.minimized.x, y = this.minimized.y
                         this.minimized = false
+                        this.move(x, y)
                         this.emit('minimize-restore', this)
                         this.transitioning = false
                         this.overlay.style.display = 'none'
@@ -486,36 +502,34 @@ class Window extends Events
             }
             else
             {
-                const x = this.x, y = this.y
+                const x = this.x
+                const y = this.y
+                const left = this._lastMinimized ? this._lastMinimized.left : this.x
+                const top = this._lastMinimized ? this._lastMinimized.top : this.y
                 const desired = this.options.minimizeSize
-                let delta
-                if (this._lastMinimized)
-                {
-                    delta = { left: this._lastMinimized.x, top: this._lastMinimized.y }
-                }
-                else
-                {
-                    delta = { scaleX: (desired / this.win.offsetWidth), scaleY: (desired / this.win.offsetHeight) }
-                }
+                const scaleX = desired / this.width
+                const scaleY = desired / this.height
                 if (noAnimate)
                 {
-                    this.win.style.transform = 'scale(1) scale(' + (desired / this.win.offsetWidth) + ',' + (desired / this.win.offsetHeight) + ')'
-                    this.win.style.left = delta.left + 'px'
-                    this.win.style.top = delta.top + 'px'
-                    this.minimized = { x, y }
+                    this.win.style.transform = 'scale(1) scaleX(' + scaleX + ') scaleY(' + scaleY + ')'
+                    this.win.style.left = left + 'px'
+                    this.win.style.top = top + 'px'
+                    this.minimized = { x, y, scaleX, scaleY }
                     this.emit('minimize', this)
                     this.overlay.style.display = 'block'
+                    this._lastMinimized = { left, top }
                 }
                 else
                 {
                     this.transitioning = true
-                    const ease = this.ease.add(this.win, delta)
-                    ease.on('complete-scaleY', () =>
+                    const ease = this.ease.add(this.win, { left, top, scaleX, scaleY })
+                    ease.on('complete', () =>
                     {
-                        this.minimized = { x, y }
+                        this.minimized = { x, y, scaleX, scaleY }
                         this.emit('minimize', this)
                         this.transitioning = false
                         this.overlay.style.display = 'block'
+                        this._lastMinimized = { left, top }
                     })
                 }
             }
@@ -533,7 +547,7 @@ class Window extends Events
             if (this.maximized)
             {
                 const ease = this.ease.add(this.win, { left: this.maximized.x, top: this.maximized.y, width: this.maximized.width, height: this.maximized.height })
-                ease.on('complete-height', () =>
+                ease.on('complete', () =>
                 {
                     this.options.x = this.maximized.x
                     this.options.y = this.maximized.y
@@ -549,7 +563,7 @@ class Window extends Events
             {
                 const x = this.x, y = this.y, width = this.win.offsetWidth, height = this.win.offsetHeight
                 const ease = this.ease.add(this.win, { left: 0, top: 0, width: this.wm.overlay.offsetWidth, height: this.wm.overlay.offsetHeight })
-                ease.on('complete-height', () =>
+                ease.on('complete', () =>
                 {
                     this.maximized = { x, y, width, height }
                     this.transitioning = false
@@ -586,17 +600,17 @@ class Window extends Events
         const maximized = this.maximized
         if (maximized)
         {
-            data.maximized = { x: maximized.x, y: maximized.y, width: maximized.width, height: maximized.height }
+            data.maximized = { left: maximized.left, top: maximized.top, width: maximized.width, height: maximized.height }
         }
         const minimized = this.minimized
         if (minimized)
         {
-            data.minimized = { x: this.minimized.x, y: this.minimized.y }
+            data.minimized = { x: this.minimized.x, y: this.minimized.y, scaleX: this.minimized.scaleX, scaleY: this.minimized.scaleY }
         }
         const lastMinimized = this._lastMinimized
         if (lastMinimized)
         {
-            data.lastMinimized = { x: lastMinimized.x, y: lastMinimized.y }
+            data.lastMinimized = { left: lastMinimized.left, top: lastMinimized.top }
         }
         data.x = this.x
         data.y = this.y
@@ -855,10 +869,10 @@ class Window extends Events
         if (!this.transitioning)
         {
             const event = this._convertMoveEvent(e)
-            this._moving = this._toLocal({
-                x: event.pageX,
-                y: event.pageY
-            })
+            this._moving = {
+                x: event.pageX - this.x,
+                y: event.pageY - this.y
+            }
             this.emit('move-start', this)
             this._moved = false
         }
@@ -1012,16 +1026,14 @@ class Window extends Events
             }
             if (this._moving)
             {
+                if (this.minimized)
+                {
+                    this._moved = true
+                }
                 this.move(
                     event.pageX - this._moving.x,
                     event.pageY - this._moving.y
                 )
-                if (this.minimized)
-                {
-                    e.preventDefault()
-                    this._lastMinimized = { x: this.win.offsetLeft, y: this.win.offsetTop }
-                    this._moved = true
-                }
                 this.emit('move', this)
                 e.preventDefault()
             }
@@ -1083,14 +1095,6 @@ class Window extends Events
         return this._isTouchEvent(e) ? e.changedTouches[0] : e
     }
 
-    _toLocal(coord)
-    {
-        return {
-            x: coord.x - this.x,
-            y: coord.y - this.y
-        }
-    }
-
     get z() { return parseInt(this.win.style.zIndex) }
     set z(value) { this.win.style.zIndex = value }
 }
@@ -1108,7 +1112,7 @@ module.exports = Window</code></pre>
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jan 12 2018 16:17:36 GMT+0800 (DST)
+                Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jan 14 2018 10:11:33 GMT+0800 (DST)
             </div>
         </footer>
     </div>

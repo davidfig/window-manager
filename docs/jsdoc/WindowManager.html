@@ -188,8 +188,6 @@
             
                 <li class="parent  " data-name="WindowManager#createWindow"><a href="WindowManager.html#createWindow">createWindow</a></li>
             
-                <li class="parent  " data-name="WindowManager#edges"><a href="WindowManager.html#edges">edges</a></li>
-            
                 <li class="  " data-name="WindowManager#emit~"><a href="WindowManager.html#emit">emit</a></li>
             
                 <li class="  " data-name="WindowManager#eventNames~"><a href="WindowManager.html#eventNames">eventNames</a></li>
@@ -215,6 +213,8 @@
                 <li class="parent  " data-name="WindowManager#sendToBack"><a href="WindowManager.html#sendToBack">sendToBack</a></li>
             
                 <li class="parent  " data-name="WindowManager#sendToFront"><a href="WindowManager.html#sendToFront">sendToFront</a></li>
+            
+                <li class="parent  " data-name="WindowManager#snap"><a href="WindowManager.html#snap">snap</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -380,7 +380,7 @@
 	
         <tr>
             
-                <td class="name"><code>edges</code></td>
+                <td class="name"><code>snap</code></td>
             
             
             <td class="type">
@@ -924,209 +924,6 @@
     
     </tbody>
 </table>
-
-    
-
-    
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-        <h4 class="name" id="edges">
-            <a class="share-icon" href="#edges"><span class="glyphicon glyphicon-link"></span></a>
-            <span class="">
-                edges
-            </span>
-            <span class="signature">(options)</span>
-            
-            
-            
-            
-        </h4>
-
-        
-        <div class="tag-source">
-            <a href="src_window-manager.js.html#line110">window-manager.js:110</a>
-        </div>
-        
-    </div>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        add edge snapping
-    </div>
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                
-                
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>screen</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                snap to screen edges</td>
-        </tr>
-	
-	
-	
-        <tr>
-            
-                <td class="name"><code>windows</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-            
-            
-            
-            <td class="description last">
-                
-                    
-                        <span class="optional">optional</span>
-                    
-                    
-                        
-                    
-                
-                snap to window edges</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-            </td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-
-    
-
-    
 
     
 
@@ -1724,7 +1521,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window-manager.js.html#line179">window-manager.js:179</a>
+            <a href="src_window-manager.js.html#line182">window-manager.js:182</a>
         </div>
         
     </div>
@@ -2699,7 +2496,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window-manager.js.html#line119">window-manager.js:119</a>
+            <a href="src_window-manager.js.html#line122">window-manager.js:122</a>
         </div>
         
     </div>
@@ -2757,7 +2554,7 @@ listeners.
             
             <td class="description last">
                 
-                </td>
+                of plugin</td>
         </tr>
 	
 	
@@ -2820,7 +2617,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window-manager.js.html#line162">window-manager.js:162</a>
+            <a href="src_window-manager.js.html#line165">window-manager.js:165</a>
         </div>
         
     </div>
@@ -2925,7 +2722,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window-manager.js.html#line147">window-manager.js:147</a>
+            <a href="src_window-manager.js.html#line150">window-manager.js:150</a>
         </div>
         
     </div>
@@ -3046,7 +2843,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window-manager.js.html#line132">window-manager.js:132</a>
+            <a href="src_window-manager.js.html#line135">window-manager.js:135</a>
         </div>
         
     </div>
@@ -3149,6 +2946,331 @@ listeners.
     
 </dd>
 
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="snap">
+            <a class="share-icon" href="#snap"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                snap
+            </span>
+            <span class="signature">(options)</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_window-manager.js.html#line113">window-manager.js:113</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        add edge snapping plugin
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                
+                
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		<th>Default</th>
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>screen</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                snap to screen edges</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>windows</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                snap to window edges</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>snap</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    20
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                distance to edge before snapping</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>color</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    #a8f0f4
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                color for snap bars</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>spacing</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+            
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+            
+            <td class="description last">
+                
+                    
+                        <span class="optional">optional</span>
+                    
+                    
+                        
+                    
+                
+                spacing distance between window and edges</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+            </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
         </dl>
     
 
@@ -3169,7 +3291,7 @@ listeners.
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jan 12 2018 16:17:37 GMT+0800 (DST)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jan 14 2018 10:11:33 GMT+0800 (DST)
             </div>
         </footer>
     </div>

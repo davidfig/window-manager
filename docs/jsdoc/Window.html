@@ -188,8 +188,6 @@
             
                 <li class="parent  " data-name="WindowManager#createWindow"><a href="WindowManager.html#createWindow">createWindow</a></li>
             
-                <li class="parent  " data-name="WindowManager#edges"><a href="WindowManager.html#edges">edges</a></li>
-            
                 <li class="  " data-name="WindowManager#emit~"><a href="WindowManager.html#emit">emit</a></li>
             
                 <li class="  " data-name="WindowManager#eventNames~"><a href="WindowManager.html#eventNames">eventNames</a></li>
@@ -215,6 +213,8 @@
                 <li class="parent  " data-name="WindowManager#sendToBack"><a href="WindowManager.html#sendToBack">sendToBack</a></li>
             
                 <li class="parent  " data-name="WindowManager#sendToFront"><a href="WindowManager.html#sendToFront">sendToFront</a></li>
+            
+                <li class="parent  " data-name="WindowManager#snap"><a href="WindowManager.html#snap">snap</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -679,7 +679,7 @@
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line103">window.js:103</a>
+            <a href="src_window.js.html#line107">window.js:107</a>
         </div>
         
     </div>
@@ -755,7 +755,7 @@
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line116">window.js:116</a>
+            <a href="src_window.js.html#line120">window.js:120</a>
         </div>
         
     </div>
@@ -766,7 +766,7 @@
 
     
     <div class="description">
-        closes the window (can be reopened with open) if a reference is saved
+        closes the window (can be reopened with open)
     </div>
     
 
@@ -1094,7 +1094,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line86">window.js:86</a>
+            <a href="src_window.js.html#line90">window.js:90</a>
         </div>
         
     </div>
@@ -1480,7 +1480,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line377">window.js:377</a>
+            <a href="src_window.js.html#line391">window.js:391</a>
         </div>
         
     </div>
@@ -1601,7 +1601,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line287">window.js:287</a>
+            <a href="src_window.js.html#line301">window.js:301</a>
         </div>
         
     </div>
@@ -1677,7 +1677,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line220">window.js:220</a>
+            <a href="src_window.js.html#line232">window.js:232</a>
         </div>
         
     </div>
@@ -1798,7 +1798,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line210">window.js:210</a>
+            <a href="src_window.js.html#line222">window.js:222</a>
         </div>
         
     </div>
@@ -2410,7 +2410,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line64">window.js:64</a>
+            <a href="src_window.js.html#line68">window.js:68</a>
         </div>
         
     </div>
@@ -2954,7 +2954,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line199">window.js:199</a>
+            <a href="src_window.js.html#line211">window.js:211</a>
         </div>
         
     </div>
@@ -3098,7 +3098,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line342">window.js:342</a>
+            <a href="src_window.js.html#line356">window.js:356</a>
         </div>
         
     </div>
@@ -3203,7 +3203,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line325">window.js:325</a>
+            <a href="src_window.js.html#line339">window.js:339</a>
         </div>
         
     </div>
@@ -3279,7 +3279,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line333">window.js:333</a>
+            <a href="src_window.js.html#line347">window.js:347</a>
         </div>
         
     </div>
@@ -3720,6 +3720,41 @@ listeners.
             
             
             <td class="description last"></td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>noSnap</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+                    
+                
+                </td>
+            
+            
+            
+                <td class="default">
+                
+                </td>
+            
+            
+            <td class="description last">don't snap this window or use this window as a snap target (edges plugin)</td>
         </tr>
 	
 	
@@ -4444,7 +4479,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line480">window.js:480</a>
+            <a href="src_window.js.html#line494">window.js:494</a>
         </div>
         
     </div>
@@ -4530,7 +4565,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line485">window.js:485</a>
+            <a href="src_window.js.html#line499">window.js:499</a>
         </div>
         
     </div>
@@ -4616,7 +4651,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line475">window.js:475</a>
+            <a href="src_window.js.html#line489">window.js:489</a>
         </div>
         
     </div>
@@ -4702,7 +4737,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line451">window.js:451</a>
+            <a href="src_window.js.html#line465">window.js:465</a>
         </div>
         
     </div>
@@ -4788,7 +4823,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line457">window.js:457</a>
+            <a href="src_window.js.html#line471">window.js:471</a>
         </div>
         
     </div>
@@ -4874,7 +4909,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line463">window.js:463</a>
+            <a href="src_window.js.html#line477">window.js:477</a>
         </div>
         
     </div>
@@ -4960,7 +4995,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line521">window.js:521</a>
+            <a href="src_window.js.html#line535">window.js:535</a>
         </div>
         
     </div>
@@ -5046,7 +5081,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line515">window.js:515</a>
+            <a href="src_window.js.html#line529">window.js:529</a>
         </div>
         
     </div>
@@ -5132,7 +5167,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line509">window.js:509</a>
+            <a href="src_window.js.html#line523">window.js:523</a>
         </div>
         
     </div>
@@ -5218,7 +5253,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line539">window.js:539</a>
+            <a href="src_window.js.html#line553">window.js:553</a>
         </div>
         
     </div>
@@ -5304,7 +5339,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line546">window.js:546</a>
+            <a href="src_window.js.html#line560">window.js:560</a>
         </div>
         
     </div>
@@ -5390,7 +5425,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line469">window.js:469</a>
+            <a href="src_window.js.html#line483">window.js:483</a>
         </div>
         
     </div>
@@ -5476,7 +5511,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line503">window.js:503</a>
+            <a href="src_window.js.html#line517">window.js:517</a>
         </div>
         
     </div>
@@ -5562,7 +5597,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line497">window.js:497</a>
+            <a href="src_window.js.html#line511">window.js:511</a>
         </div>
         
     </div>
@@ -5648,7 +5683,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line533">window.js:533</a>
+            <a href="src_window.js.html#line547">window.js:547</a>
         </div>
         
     </div>
@@ -5734,7 +5769,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line491">window.js:491</a>
+            <a href="src_window.js.html#line505">window.js:505</a>
         </div>
         
     </div>
@@ -5820,7 +5855,7 @@ listeners.
 
         
         <div class="tag-source">
-            <a href="src_window.js.html#line527">window.js:527</a>
+            <a href="src_window.js.html#line541">window.js:541</a>
         </div>
         
     </div>
@@ -5902,7 +5937,7 @@ listeners.
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jan 12 2018 16:17:37 GMT+0800 (DST)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Jan 14 2018 10:11:33 GMT+0800 (DST)
             </div>
         </footer>
     </div>
