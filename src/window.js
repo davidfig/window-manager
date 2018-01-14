@@ -143,7 +143,7 @@ class Window extends Events
         this.emit('move-x', this)
         if (this.minimized)
         {
-            this._lastMinimized.left = this.win.offsetLeft
+            this._lastMinimized.left = value
         }
     }
 
@@ -159,7 +159,7 @@ class Window extends Events
         this.emit('move-y', this)
         if (this.minimized)
         {
-            this._lastMinimized.top = this.win.offsetTop
+            this._lastMinimized.top = value
         }
     }
 
@@ -237,8 +237,10 @@ class Window extends Events
             {
                 if (noAnimate)
                 {
-                    this.win.style.transform = 'scaleX(1) scaleY(1)'
+                    this.win.style.transform = ''
+                    const x = this.minimized.x, y = this.minimized.y
                     this.minimized = false
+                    this.move(x, y)
                     this.emit('minimize-restore', this)
                     this.overlay.style.display = 'none'
                 }
@@ -248,7 +250,9 @@ class Window extends Events
                     const ease = this.ease.add(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y })
                     ease.on('complete', () =>
                     {
+                        const x = this.minimized.x, y = this.minimized.y
                         this.minimized = false
+                        this.move(x, y)
                         this.emit('minimize-restore', this)
                         this.transitioning = false
                         this.overlay.style.display = 'none'
@@ -266,7 +270,7 @@ class Window extends Events
                 const scaleY = desired / this.height
                 if (noAnimate)
                 {
-                    this.win.style.transform = 'scale(1) scale(' + scaleX + ',' + scaleY + ')'
+                    this.win.style.transform = 'scale(1) scaleX(' + scaleX + ') scaleY(' + scaleY + ')'
                     this.win.style.left = left + 'px'
                     this.win.style.top = top + 'px'
                     this.minimized = { x, y, scaleX, scaleY }
