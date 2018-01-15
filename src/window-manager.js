@@ -63,7 +63,6 @@ class WindowManager
      * @param {number} [options.x] position
      * @param {number} [options.y] position
      * @param {boolean} [options.modal]
-     * @param {Window} [options.center] center in the middle of an existing Window
      * @param {string|number} [options.id] if not provide, id will be assigned in order of creation (0, 1, 2...)
      * @returns {Window} the created window
      */
@@ -86,13 +85,6 @@ class WindowManager
         win.win.addEventListener('touchmove', (e) => this._move(e))
         win.win.addEventListener('mouseup', (e) => this._up(e))
         win.win.addEventListener('touchend', (e) => this._up(e))
-        if (options.center)
-        {
-            win.move(
-                options.center.x + options.center.width / 2 - (options.width ? options.width / 2 : 0),
-                options.center.y + options.center.height / 2 - (options.height ? options.height / 2 : 0)
-            )
-        }
         if (options.modal)
         {
             this.modal = win

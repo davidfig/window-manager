@@ -58,7 +58,6 @@ function test3()
         const modal = wm.createWindow({
             modal: true,
             width: 200,
-            center: test, // center window in test
             title: 'modal window',
             minimizable: false,
             maximizable: false
@@ -72,6 +71,9 @@ function test3()
             modal.close()
         }
         modal.open()
+
+        // center window in test
+        modal.center(test)
     }
     test.open()
 }

@@ -500,6 +500,18 @@ class Window extends Events
     }
 
     /**
+     * centers window in middle of other window
+     * @param {Window} win
+     */
+    center(win)
+    {
+        this.move(
+            win.x + win.width / 2 - this.width / 2,
+            win.y + win.height / 2 - this.height / 2
+        )
+    }
+
+    /**
      * Fires when window is maximized
      * @event Window#maximize
      * @type {Window}
