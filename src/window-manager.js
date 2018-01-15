@@ -192,6 +192,19 @@ class WindowManager
     }
 
     /**
+     * close all windows
+     */
+    closeAll()
+    {
+        for (let win of this.windows)
+        {
+            win.close()
+        }
+        this.windows = []
+        this.active = this.modal = null
+    }
+
+    /**
      * reorder windows
      * @private
      * @returns {number} available z-index for top window
