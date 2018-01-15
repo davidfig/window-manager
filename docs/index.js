@@ -10,7 +10,6 @@ const wm = new WM({
     snap: { screen: true, windows: true, spacing: 5 }
 })
 
-
 window.onload = () =>
 {
     test()
@@ -60,7 +59,6 @@ function test3()
         const modal = wm.createWindow({
             modal: true,
             width: 200,
-            center: test, // center window in test
             title: 'modal window',
             minimizable: false,
             maximizable: false
@@ -74,6 +72,9 @@ function test3()
             modal.close()
         }
         modal.open()
+
+        // center window in test
+        modal.center(test)
     }
     test.open()
 }
@@ -3298,7 +3299,7 @@ class WindowManager
      * @param {boolean} [defaultOptions.snap.windows=true] snap to windows
      * @param {number} [defaultOptions.snap.snap=20] distance to edge before snapping and width/height of snap bars
      * @param {string} [defaultOptions.snap.color=#a8f0f4] color for snap bars
-     * @param {number} [defaultOptions.snap.spacing=0] spacing distance between window and edges
+     * @param {number} [defaultOptions.snap.spacing=5] spacing distance between window and edges
      */
     constructor(defaultOptions)
     {
@@ -3336,7 +3337,6 @@ class WindowManager
      * @param {number} [options.x] position
      * @param {number} [options.y] position
      * @param {boolean} [options.modal]
-     * @param {Window} [options.center] center in the middle of an existing Window
      * @param {string|number} [options.id] if not provide, id will be assigned in order of creation (0, 1, 2...)
      * @returns {Window} the created window
      */
@@ -3359,13 +3359,6 @@ class WindowManager
         win.win.addEventListener('touchmove', (e) => this._move(e))
         win.win.addEventListener('mouseup', (e) => this._up(e))
         win.win.addEventListener('touchend', (e) => this._up(e))
-        if (options.center)
-        {
-            win.move(
-                options.center.x + options.center.width / 2 - (options.width ? options.width / 2 : 0),
-                options.center.y + options.center.height / 2 - (options.height ? options.height / 2 : 0)
-            )
-        }
         if (options.modal)
         {
             this.modal = win
@@ -3389,6 +3382,10 @@ class WindowManager
     snap(options)
     {
         this.plugins['snap'] = new Snap(this, options)
+        for (let win of this.windows)
+        {
+            this.plugins['snap'].addWindow(win)
+        }
     }
 
     /**
@@ -4160,6 +4157,18 @@ class Window extends Events
     set bottom(value)
     {
         this.y = value - this.height
+    }
+
+    /**
+     * centers window in middle of other window
+     * @param {Window} win
+     */
+    center(win)
+    {
+        this.move(
+            win.x + win.width / 2 - this.width / 2,
+            win.y + win.height / 2 - this.height / 2
+        )
     }
 
     /**
