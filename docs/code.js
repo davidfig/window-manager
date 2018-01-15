@@ -1,5 +1,4 @@
 const FPS = require('yy-fps')
-const clicked = require('clicked')
 
 const WM = require('../src/window-manager')
 const html = require('../src/html')
@@ -41,12 +40,7 @@ function test2()
         backgroundColorTitlebarInactive: 'purple'
     })
     test.content.style.padding = '0.5em'
-    html({ parent: test.content, html: '<p>This is a pink test window.</p><p>Check out the fancy title bar.</p>' })
-    const button = html({ parent: test.content, type: 'button', html: 'change content...', styles: { display: 'block' } })
-    clicked(button, () =>
-    {
-        wm.attachWindow(new wm.DialogInput())
-    })
+    test.content.innerHTML = 'This is a pink test window.<br><br>Check out the fancy title bar for other style tests.<br><br><br>And scrolling!!!'
     test.open()
 }
 
