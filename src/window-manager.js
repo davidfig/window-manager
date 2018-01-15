@@ -25,7 +25,7 @@ class WindowManager
      * @param {boolean} [defaultOptions.snap.windows=true] snap to windows
      * @param {number} [defaultOptions.snap.snap=20] distance to edge before snapping and width/height of snap bars
      * @param {string} [defaultOptions.snap.color=#a8f0f4] color for snap bars
-     * @param {number} [defaultOptions.snap.spacing=0] spacing distance between window and edges
+     * @param {number} [defaultOptions.snap.spacing=5] spacing distance between window and edges
      */
     constructor(defaultOptions)
     {
@@ -116,6 +116,10 @@ class WindowManager
     snap(options)
     {
         this.plugins['snap'] = new Snap(this, options)
+        for (let win of this.windows)
+        {
+            this.plugins['snap'].addWindow(win)
+        }
     }
 
     /**
