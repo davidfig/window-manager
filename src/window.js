@@ -694,6 +694,7 @@ class Window extends Events
                 'display': 'flex',
                 'flex-direction': 'row',
                 'align-items': 'center',
+                'justify-content': 'center',
                 'height': this.options.titlebarHeight,
                 'min-height': this.options.titlebarHeight,
                 'border': 0,
@@ -701,23 +702,30 @@ class Window extends Events
                 'overflow': 'hidden',
             }
         })
-        this.winTitle = html({
-            parent: this.winTitlebar, type: 'span', html: this.options.title, styles: {
-                'user-select': 'none',
-                'flex': 1,
-                'display': 'flex',
-                'flex-direction': 'row',
-                'align-items': 'center',
-                'user-select': 'none',
-                'cursor': 'default',
-                'padding': 0,
-                'padding-left': '8px',
-                'margin': 0,
-                'font-size': '16px',
-                'font-weight': 400,
-                'color': this.options.foregroundColorTitle
-            }
-        })
+        const winTitleStyles = {
+            'user-select': 'none',
+            'flex': 1,
+            'display': 'flex',
+            'flex-direction': 'row',
+            'align-items': 'center',
+            'user-select': 'none',
+            'cursor': 'default',
+            'padding': 0,
+            'margin': 0,
+            'font-size': '16px',
+            'font-weight': 400,
+            'color': this.options.foregroundColorTitle
+        }
+        if (this.options.titleCenter)
+        {
+            winTitleStyles['justify-content'] = 'center'
+        }
+        else
+        {
+            winTitleStyles['padding-left'] = '8px'
+
+        }
+        this.winTitle = html({ parent: this.winTitlebar, type: 'span', html: this.options.title, styles: winTitleStyles })
         this._createButtons()
 
         if (this.options.movable)
@@ -734,7 +742,7 @@ class Window extends Events
                 'display': 'flex',
                 'flex-direction': 'row',
                 'align-items': 'center',
-                'padding-left': '2px'
+                'padding-left': '10px'
             }
         })
         const button = {

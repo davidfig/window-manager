@@ -24,7 +24,7 @@ window.onload = () =>
 
 function test()
 {
-    const test = wm.createWindow({ x: 10, y: 10, title: 'Test Window', resizable: false })
+    const test = wm.createWindow({ x: 10, y: 10, title: 'Test Window', resizable: false, maximizable: false, minimizable: false, titleCenter: true, closable: false })
     test.content.style.padding = '1em'
     test.content.innerHTML = 'This is a test window.'
     test.open()
@@ -3603,6 +3603,7 @@ module.exports = WindowManager
  * @property {boolean} [noSnap] don't snap this window or use this window as a snap target (edges plugin)
  * @property {boolean} [titlebar=true]
  * @property {string} [titlebarHeight=36px]
+ * @property {boolean} [titleCenter]
  * @property {string} [minWidth=200px]
  * @property {string} [minHeight=60px]
  * @property {string} [borderRadius=4px]
@@ -4354,6 +4355,7 @@ class Window extends Events
                 'display': 'flex',
                 'flex-direction': 'row',
                 'align-items': 'center',
+                'justify-content': 'center',
                 'height': this.options.titlebarHeight,
                 'min-height': this.options.titlebarHeight,
                 'border': 0,
@@ -4361,23 +4363,30 @@ class Window extends Events
                 'overflow': 'hidden',
             }
         })
-        this.winTitle = html({
-            parent: this.winTitlebar, type: 'span', html: this.options.title, styles: {
-                'user-select': 'none',
-                'flex': 1,
-                'display': 'flex',
-                'flex-direction': 'row',
-                'align-items': 'center',
-                'user-select': 'none',
-                'cursor': 'default',
-                'padding': 0,
-                'padding-left': '8px',
-                'margin': 0,
-                'font-size': '16px',
-                'font-weight': 400,
-                'color': this.options.foregroundColorTitle
-            }
-        })
+        const winTitleStyles = {
+            'user-select': 'none',
+            'flex': 1,
+            'display': 'flex',
+            'flex-direction': 'row',
+            'align-items': 'center',
+            'user-select': 'none',
+            'cursor': 'default',
+            'padding': 0,
+            'margin': 0,
+            'font-size': '16px',
+            'font-weight': 400,
+            'color': this.options.foregroundColorTitle
+        }
+        if (this.options.titleCenter)
+        {
+            winTitleStyles['justify-content'] = 'center'
+        }
+        else
+        {
+            winTitleStyles['padding-left'] = '8px'
+
+        }
+        this.winTitle = html({ parent: this.winTitlebar, type: 'span', html: this.options.title, styles: winTitleStyles })
         this._createButtons()
 
         if (this.options.movable)
@@ -4394,7 +4403,7 @@ class Window extends Events
                 'display': 'flex',
                 'flex-direction': 'row',
                 'align-items': 'center',
-                'padding-left': '2px'
+                'padding-left': '10px'
             }
         })
         const button = {

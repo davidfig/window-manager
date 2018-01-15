@@ -12,6 +12,7 @@
  * @property {boolean} [noSnap] don't snap this window or use this window as a snap target (edges plugin)
  * @property {boolean} [titlebar=true]
  * @property {string} [titlebarHeight=36px]
+ * @property {boolean} [titleCenter]
  * @property {string} [minWidth=200px]
  * @property {string} [minHeight=60px]
  * @property {string} [borderRadius=4px]

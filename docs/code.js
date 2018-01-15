@@ -23,7 +23,7 @@ window.onload = () =>
 
 function test()
 {
-    const test = wm.createWindow({ x: 10, y: 10, title: 'Test Window', resizable: false })
+    const test = wm.createWindow({ x: 10, y: 10, title: 'Test Window', resizable: false, maximizable: false, minimizable: false, titleCenter: true, closable: false })
     test.content.style.padding = '1em'
     test.content.innerHTML = 'This is a test window.'
     test.open()
