@@ -27,11 +27,11 @@
     "exists": "^1.0.1"
   },
   "devDependencies": {
-    "yy-fps": "^0.6.0",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "canvas": "^1.6.9",
     "jsdoc": "^3.5.5",
-    "yy-jsdoc-template": "^1.2.0"
+    "yy-fps": "^0.6.0",
+    "yy-jsdoc-template": "^1.3.0"
   }
 }
