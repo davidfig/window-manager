@@ -3494,6 +3494,11 @@ class WindowManager
 
     _createDom()
     {
+        /**
+         * This is the top-level DOM element
+         * @type {HTMLElement}
+         * @readonly
+         */
         this.win = html({
             parent: document.body, styles: {
                 'user-select': 'none',
@@ -3504,6 +3509,12 @@ class WindowManager
                 'cursor': 'default'
             }
         })
+
+        /**
+         * This is the bottom DOM element. Use this to set a wallpaper or attach elements underneath the windows
+         * @type {HTMLElement}
+         * @readonly
+         */
         this.overlay = html({
             parent: this.win, styles: {
                 'user-select': 'none',
@@ -3613,7 +3624,7 @@ module.exports = WindowManager
  * @property {boolean} [maximizable=true]
  * @property {boolean} [minimizable=true]
  * @property {boolean} [closable=true]
- * @property {boolean} [noSnap] don't snap this window or use this window as a snap target (edges plugin)
+ * @property {boolean} [noSnap] don't snap this window or use this window as a snap target
  * @property {boolean} [titlebar=true]
  * @property {string} [titlebarHeight=36px]
  * @property {boolean} [titleCenter]
@@ -4288,6 +4299,11 @@ class Window extends Events
 
     _createWindow()
     {
+        /**
+         * This is the top-level DOM element
+         * @type {HTMLElement}
+         * @readonly
+         */
         this.win = html({
             parent: this.wm.win, styles: {
                 'display': 'none',
@@ -4317,6 +4333,11 @@ class Window extends Events
         })
         this._createTitlebar()
 
+        /**
+         * This is the content DOM element. Use this to add content to the Window.
+         * @type {HTMLElement}
+         * @readonly
+         */
         this.content = html({
             parent: this.winBox, type: 'section', styles: {
                 'display': 'block',

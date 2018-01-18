@@ -220,6 +220,11 @@ class WindowManager
 
     _createDom()
     {
+        /**
+         * This is the top-level DOM element
+         * @type {HTMLElement}
+         * @readonly
+         */
         this.win = html({
             parent: document.body, styles: {
                 'user-select': 'none',
@@ -230,6 +235,12 @@ class WindowManager
                 'cursor': 'default'
             }
         })
+
+        /**
+         * This is the bottom DOM element. Use this to set a wallpaper or attach elements underneath the windows
+         * @type {HTMLElement}
+         * @readonly
+         */
         this.overlay = html({
             parent: this.win, styles: {
                 'user-select': 'none',

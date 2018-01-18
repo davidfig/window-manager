@@ -614,6 +614,11 @@ class Window extends Events
 
     _createWindow()
     {
+        /**
+         * This is the top-level DOM element
+         * @type {HTMLElement}
+         * @readonly
+         */
         this.win = html({
             parent: this.wm.win, styles: {
                 'display': 'none',
@@ -643,6 +648,11 @@ class Window extends Events
         })
         this._createTitlebar()
 
+        /**
+         * This is the content DOM element. Use this to add content to the Window.
+         * @type {HTMLElement}
+         * @readonly
+         */
         this.content = html({
             parent: this.winBox, type: 'section', styles: {
                 'display': 'block',

@@ -9,7 +9,7 @@
  * @property {boolean} [maximizable=true]
  * @property {boolean} [minimizable=true]
  * @property {boolean} [closable=true]
- * @property {boolean} [noSnap] don't snap this window or use this window as a snap target (edges plugin)
+ * @property {boolean} [noSnap] don't snap this window or use this window as a snap target
  * @property {boolean} [titlebar=true]
  * @property {string} [titlebarHeight=36px]
  * @property {boolean} [titleCenter]
