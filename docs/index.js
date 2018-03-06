@@ -3802,23 +3802,32 @@ class Window extends Events
     /**
      * closes the window (can be reopened with open)
      */
-    close()
+    close(noAnimate)
     {
         if (!this._closed)
         {
             this._closed = true
-            const ease = this.ease.add(this.win, { scale: 0 })
-            ease.on('complete', () =>
+            if (noAnimate)
             {
+                this.win.style.transform = 'scale(0)'
                 this.win.style.display = 'none'
-                this.emit('close', this);
-            })
+            }
+            else
+            {
+                const ease = this.ease.add(this.win, { scale: 0 })
+                ease.on('complete', () =>
+                {
+                    this.win.style.display = 'none'
+                    this.emit('close', this);
+                })
+            }
         }
     }
 
     /**
-     * @type {boolean}
      * is window closed?
+     * @type {boolean}
+     * @readonly
      */
     get closed()
     {
