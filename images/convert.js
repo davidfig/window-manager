@@ -9,12 +9,15 @@ const names = {
     'minimize.png': 'backgroundMinimizeButton',
     'maximize.png': 'backgroundMaximizeButton',
     'close.png': 'backgroundCloseButton',
-    'restore.png': 'backgroundRestoreButton'
+    'restore.png': 'backgroundRestoreButton',
+    'resize.png': 'backgroundResize'
 }
 
-for (let i = 2; i < args.length; i++)
+let converted = 0
+
+for (let key in names)
 {
-    console.log('Converting ' + args[i] + '...')
+    console.log('Converting ' + key + '...')
 
     const image = new Canvas.Image()
     image.onload = () =>
@@ -22,9 +25,13 @@ for (let i = 2; i < args.length; i++)
         const canvas = new Canvas(20, 20)
         const context = canvas.getContext('2d')
         context.drawImage(image, 0, 0)
-        s += names[args[i]] + ': \'url(' + canvas.toDataURL() + ')\',\n'
+        s += names[key] + ': \'url(' + canvas.toDataURL() + ')\',\n'
+        converted++
+        if (converted === Object.keys(names).length)
+        {
+            console.log('Writing png-data.text...')
+            fs.writeFileSync('png-data.txt', s)
+        }
     }
-    image.src = args[i]
+    image.src = 'images/' + key
 }
-
-fs.writeFileSync('png-data.txt', s)

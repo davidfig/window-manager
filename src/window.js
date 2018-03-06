@@ -132,6 +132,16 @@ class Window extends Events
     }
 
     /**
+     * is window closed?
+     * @type {boolean}
+     * @readonly
+     */
+    get closed()
+    {
+        return this._closed
+    }
+
+    /**
      * left coordinate
      * @type {number}
      */

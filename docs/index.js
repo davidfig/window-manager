@@ -3817,6 +3817,15 @@ class Window extends Events
     }
 
     /**
+     * @type {boolean}
+     * is window closed?
+     */
+    get closed()
+    {
+        return this._closed
+    }
+
+    /**
      * left coordinate
      * @type {number}
      */
