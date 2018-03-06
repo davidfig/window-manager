@@ -4114,6 +4114,7 @@ class Window extends Events
         {
             data.height = this.options.height
         }
+        data.closed = this._closed
         return data
     }
 
@@ -4167,6 +4168,10 @@ class Window extends Events
         else
         {
             this.win.style.height = 'auto'
+        }
+        if (data.closed)
+        {
+            this.close(true)
         }
     }
 
