@@ -76,6 +76,10 @@ class Window extends Events
                 this.win.style.transform = 'scale(0)'
                 this.ease.add(this.win, { scale: 1 })
             }
+            else
+            {
+                this.win.style.transform = ''
+            }
             this._closed = false
             if (!noFocus)
             {
@@ -487,6 +491,10 @@ class Window extends Events
         if (data.closed)
         {
             this.close(true)
+        }
+        else if (this.closed)
+        {
+            this.open(true, true)
         }
     }
 
