@@ -10,7 +10,6 @@ let id = 0
 /**
  * Window class returned by WindowManager.createWindow()
  * @extends EventEmitter
- * @hideconstructor
  * @fires open
  * @fires focus
  * @fires blur
@@ -33,15 +32,15 @@ let id = 0
 class Window extends Events
 {
     /**
-     * @param {WindowManager} wm
-     * @param {object} options
+     * @param {WindowManager} [wm]
+     * @param {object} [options]
      */
     constructor(wm, options)
     {
         super()
         this.wm = wm
 
-        this.options = options
+        this.options = options || {}
 
         this.id = exists(this.options.id) ? this.options.id : id++
 
@@ -661,7 +660,7 @@ class Window extends Events
          * @readonly
          */
         this.win = html({
-            parent: this.wm.win, styles: {
+            parent: (this.wm ? this.wm.win : null), styles: {
                 'display': 'none',
                 'border-radius': this.options.borderRadius,
                 'user-select': 'none',

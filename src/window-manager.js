@@ -89,7 +89,39 @@ class WindowManager
         {
             this.modal = win
         }
-        if (this.plugins['snap'])
+        if (this.plugins['snap'] && !this.options.noSnap)
+        {
+            this.plugins['snap'].addWindow(win)
+        }
+        return win
+    }
+
+    /**
+     * Attach an existing window to the WindowManager
+     * Note: WindowManager.createWindow is the preferred way to create windows to ensure that all the global options
+     * are applied to the Window. If you use this function, then Window needs to be initialized with WindowOptions.
+     * @param {Window} win
+     * @returns {Window} the window
+     */
+    attachWindow(win)
+    {
+        win.on('open', this._open, this)
+        win.on('focus', this._focus, this)
+        win.on('blur', this._blur, this)
+        win.on('close', this._close, this)
+        this.win.appendChild(win.win)
+        win.wm = this
+        win.ease.options.duration = this.options.animateTime
+        win.ease.options.ease = this.options.ease
+        win.win.addEventListener('mousemove', (e) => this._move(e))
+        win.win.addEventListener('touchmove', (e) => this._move(e))
+        win.win.addEventListener('mouseup', (e) => this._up(e))
+        win.win.addEventListener('touchend', (e) => this._up(e))
+        if (win.modal)
+        {
+            this.modal = win
+        }
+        if (this.plugins['snap'] && !this.options.noSnap)
         {
             this.plugins['snap'].addWindow(win)
         }
@@ -110,7 +142,10 @@ class WindowManager
         this.plugins['snap'] = new Snap(this, options)
         for (let win of this.windows)
         {
-            this.plugins['snap'].addWindow(win)
+            if (!win.options.noSnap)
+            {
+                this.plugins['snap'].addWindow(win)
+            }
         }
     }
 
@@ -336,5 +371,8 @@ class WindowManager
         return !this.modal || this.modal === win
     }
 }
+
+WindowManager.Window = Window
+WindowManager.WindowOptions = WindowOptions
 
 module.exports = WindowManager
