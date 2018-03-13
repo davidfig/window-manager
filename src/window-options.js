@@ -17,6 +17,7 @@
  * @property {string} [minHeight=60px]
  * @property {string} [borderRadius=4px]
  * @property {number} [minimizeSize=50]
+ * @property {string} [modalBackground=rgba(0,0,0,0.6)]
  * @property {string} [shadow='0 0 12px 1px rgba(0, 0, 0, 0.6)']
  * @property {number} [animateTime=250]
  * @property {(string|function)} [ease] easing name (see {@link https://www.npmjs.com/package/penner} for list or function)
@@ -39,6 +40,7 @@ const WindowOptions = {
 
     borderRadius: '4px',
     minimizeSize: 50,
+    modalBackground: 'rgba(0, 0, 0, 0.6)',
     shadow: '0 0 12px 1px rgba(0, 0, 0, 0.6)',
     movable: true,
     resizable: true,

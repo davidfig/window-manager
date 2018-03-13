@@ -29,7 +29,6 @@ class WindowManager
      */
     constructor(defaultOptions)
     {
-        this._createDom()
         this.windows = []
         this.active = null
         this.modal = null
@@ -49,6 +48,7 @@ class WindowManager
         {
             console.log('%c ☕ simple-window-manager initialized ☕', 'color: #ff00ff')
         }
+        this._createDom()
         this.plugins = []
         if (defaultOptions && defaultOptions['snap'])
         {
@@ -85,11 +85,7 @@ class WindowManager
         win.win.addEventListener('touchmove', (e) => this._move(e))
         win.win.addEventListener('mouseup', (e) => this._up(e))
         win.win.addEventListener('touchend', (e) => this._up(e))
-        if (options.modal)
-        {
-            this.modal = win
-        }
-        if (this.plugins['snap'] && !this.options.noSnap)
+        if (this.plugins['snap'] && !options.noSnap)
         {
             this.plugins['snap'].addWindow(win)
         }
@@ -236,6 +232,7 @@ class WindowManager
             win.close()
         }
         this.windows = []
+        this.modalOverlay.remove()
         this.active = this.modal = null
     }
 
@@ -291,6 +288,25 @@ class WindowManager
         this.overlay.addEventListener('touchmove', (e) => this._move(e))
         this.overlay.addEventListener('mouseup', (e) => this._up(e))
         this.overlay.addEventListener('touchend', (e) => this._up(e))
+
+        this.modalOverlay = html({
+            styles: {
+                'user-select': 'none',
+                'position': 'absolute',
+                'top': 0,
+                'left': 0,
+                'width': '100%',
+                'height': '100%',
+                'overflow': 'hidden',
+                'background': this.options.modalBackground
+            }
+        })
+        this.modalOverlay.addEventListener('mousemove', (e) => { this._move(e); e.preventDefault(); e.stopPropagation() })
+        this.modalOverlay.addEventListener('touchmove', (e) => { this._move(e); e.preventDefault(); e.stopPropagation() })
+        this.modalOverlay.addEventListener('mouseup', (e) => { this._up(e); e.preventDefault(); e.stopPropagation() })
+        this.modalOverlay.addEventListener('touchend', (e) => { this._up(e); e.preventDefault(); e.stopPropagation() })
+        this.modalOverlay.addEventListener('mousedown', (e) => { e.preventDefault(); e.stopPropagation() })
+        this.modalOverlay.addEventListener('touchstart', (e) => { e.preventDefault(); e.stopPropagation() })
     }
 
     _open(win)
@@ -299,6 +315,13 @@ class WindowManager
         if (index === -1)
         {
             this.windows.push(win)
+        }
+        if (win.options.modal)
+        {
+            this._focus(win)
+            this.modal = win
+            this.win.appendChild(this.modalOverlay)
+            this.modalOverlay.style.zIndex = win.z - 1
         }
     }
 
@@ -337,6 +360,7 @@ class WindowManager
     {
         if (this.modal === win)
         {
+            this.modalOverlay.remove()
             this.modal = null
         }
         const index = this.windows.indexOf(win)
