@@ -531,15 +531,25 @@ class Window extends Events
     }
 
     /**
-     * centers window in middle of other window
-     * @param {Window} win
+     * centers window in middle of other window or document.body
+     * @param {Window} [win]
      */
     center(win)
     {
-        this.move(
-            win.x + win.width / 2 - this.width / 2,
-            win.y + win.height / 2 - this.height / 2
-        )
+        if (win)
+        {
+            this.move(
+                win.x + win.width / 2 - this.width / 2,
+                win.y + win.height / 2 - this.height / 2
+            )
+        }
+        else
+        {
+            this.move(
+                window.innerWidth / 2 - this.width / 2,
+                window.innerHeight / 2 - this.height / 2
+            )
+        }
     }
 
     /**

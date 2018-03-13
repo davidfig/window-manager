@@ -4,6 +4,8 @@ const FPS = require('yy-fps')
 const WM = require('../src/window-manager')
 const html = require('../src/html')
 
+const menu = require('./menu')
+
 // create a window manager and change some of the default styles
 const wm = new WM({
     borderRadius: '10px',
@@ -12,6 +14,7 @@ const wm = new WM({
 
 window.onload = () =>
 {
+    // creates test windows
     test()
     test2()
     test3()
@@ -22,9 +25,11 @@ window.onload = () =>
     update()
 }
 
+const top = 10
+
 function test()
 {
-    const test = wm.createWindow({ x: 10, y: 10, title: 'Test Window', resizable: false, maximizable: false, minimizable: false, titleCenter: true, closable: false })
+    const test = wm.createWindow({ x: 10, y: top, title: 'Test Window', resizable: false, maximizable: false, minimizable: false, titleCenter: true, closable: false })
     test.content.style.padding = '1em'
     test.content.innerHTML = 'This is a test window.'
     test.open()
@@ -81,7 +86,7 @@ function test3()
 
 function test4()
 {
-    const test = wm.createWindow({ x: 300, y: 20, title: 'My wife\'s art gallery!' })
+    const test = wm.createWindow({ x: 300, y: top, title: 'My wife\'s art gallery!' })
     test.content.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/-slAp_gVa70" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>'
     test.open()
     test.sendToBack()
@@ -129,7 +134,46 @@ function update()
     fps.frame(false, true)
     requestAnimationFrame(update)
 }
-},{"../src/html":11,"../src/window-manager":13,"yy-fps":10}],2:[function(require,module,exports){
+},{"../src/html":17,"../src/window-manager":19,"./menu":2,"yy-fps":11}],2:[function(require,module,exports){
+const Menu = require('yy-menu')
+const Item = Menu.MenuItem
+
+function menu(wm)
+{
+    const file = new Menu()
+    file.append(new Item({ label: '&New Window', accelerator: 'ctrl+m', click: () => newWindow(wm) }))
+
+    const windows = new Menu()
+    for (let i = 0; i < wm.windows.length; i++)
+    {
+        windows.append(new Item({
+            type: 'checkbox', label: 'Window ' + (i < 10 ? '&' : '') + i, accelerator: i < 10 ? 'ctrl+' + i : null, checked: true, click: (e, item) =>
+            {
+console.log(item.checked)
+                if (item.checked)
+                {
+                    wm.windows[i].open()
+                }
+                else
+                {
+                    wm.windows[i].close()
+                }
+            }
+        }))
+    }
+    const main = new Menu()
+    main.append(new Item({ label: '&File', submenu: file }))
+    main.append(new Item({ label: '&Windows', submenu: windows }))
+    Menu.setApplicationMenu(main)
+}
+
+function newWindow()
+{
+
+}
+
+module.exports = menu
+},{"yy-menu":15}],3:[function(require,module,exports){
 /**
  * Javascript: create click event for both mouse and touch
  * @example
@@ -232,7 +276,7 @@ function clicked(element, callback, options)
 }
 
 module.exports = clicked;
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -488,7 +532,7 @@ var DomEase = function (_EventEmitter) {
 
 module.exports = DomEase;
 
-},{"./ease":4,"eventemitter3":5,"exists":6,"penner":7}],4:[function(require,module,exports){
+},{"./ease":5,"eventemitter3":6,"exists":7,"penner":8}],5:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -845,7 +889,7 @@ var Ease = function (_EventEmitter) {
 
 module.exports = Ease;
 
-},{"eventemitter3":5,"exists":6}],5:[function(require,module,exports){
+},{"eventemitter3":6,"exists":7}],6:[function(require,module,exports){
 'use strict';
 
 var has = Object.prototype.hasOwnProperty
@@ -1183,7 +1227,7 @@ if ('undefined' !== typeof module) {
   module.exports = EventEmitter;
 }
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 module.exports = exists;
 
 module.exports.allExist = allExist;
@@ -1196,7 +1240,7 @@ function allExist (/* vals */) {
   var vals = Array.prototype.slice.call(arguments);
   return vals.every(exists);
 }
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 
 /*
 	Copyright © 2001 Robert Penner
@@ -1464,7 +1508,7 @@ function allExist (/* vals */) {
 
 }).call(this);
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 // TinyColor v1.4.1
 // https://github.com/bgrins/TinyColor
 // Brian Grinstead, MIT License
@@ -2661,7 +2705,7 @@ else {
 
 })(Math);
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 // yy-counter
 // In-browser counter to watch changeable values like counters or FPS
 // David Figatner
@@ -2779,7 +2823,7 @@ module.exports = class Counter
         this.div.innerHTML = s
     }
 }
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -3006,7 +3050,960 @@ module.exports = function () {
     return FPS;
 }();
 
-},{"tinycolor2":8,"yy-counter":9}],11:[function(require,module,exports){
+},{"tinycolor2":9,"yy-counter":10}],12:[function(require,module,exports){
+const Config = {
+
+    /**
+     * application menu container styles
+     * @type {object}
+     */
+    ApplicationContainerStyle: {
+        'z-index': 999999,
+        'position': 'fixed',
+        'top': 0,
+        'left': 0,
+        'user-select': 'none',
+        'font-size': '0.85em'
+    },
+
+    /**
+     * application menu-bar styles
+     * @type {object}
+     */
+    ApplicationMenuStyle: {
+        'position': 'fixed',
+        'display': 'flex',
+        'flex-direction': 'row',
+        'color': 'black',
+        'backgroundColor': 'rgb(230,230,230)',
+        'width': '100vw',
+        'border': 'none',
+        'box-shadow': 'unset',
+        'outline': 'none'
+    },
+
+    /**
+     * application menu entry styles
+     * @type {object}
+     */
+    ApplicationMenuRowStyle: {
+        'padding': '0.25em 0.5em',
+        'margin': 0,
+        'line-height': '1em'
+    },
+
+    /**
+     * lower-level menu window styles
+     * @type {object}
+     */
+    MenuStyle: {
+        'flex-direction': 'column',
+        'position': 'fixed',
+        'user-select': 'none',
+        'color': 'black',
+        'z-index': 999999,
+        'backgroundColor': 'white',
+        'border': '1px solid rgba(0,0,0,0.5)',
+        'boxShadow': '1px 3px 3px rgba(0,0,0,0.25)'
+    },
+
+    /**
+     * lower-level menu row styles
+     * @type {object}
+     */
+    RowStyle: {
+        'display': 'flex',
+        'padding': '0.25em 1.5em 0.25em',
+        'line-height': '1.5em'
+    },
+
+    /**
+     * lower-level menu accelerator styles
+     * @type {object}
+     */
+    AcceleratorStyle: {
+        'opacity': 0.5
+    },
+
+    /**
+     * lower-level menu separator styles
+     * @type {object}
+     */
+    SeparatorStyle: {
+        'border-bottom': '1px solid rgba(0,0,0,0.1)',
+        'margin': '0.5em 0'
+    },
+
+    /**
+     * accelerator key styles
+     * NOTE: accelerator keys must use text-decoration as its used as a toggle in the code
+     * @type {object}
+     */
+    AcceleratorKeyStyle: {
+        'text-decoration': 'underline',
+        'text-decoration-color': 'rgba(0,0,0,0.5)'
+    },
+
+    /**
+     * minimum column width in pixels for checked and arrow in the lower-level menus
+     * @type {number}
+     */
+    MinimumColumnWidth: 20,
+
+    /**
+     * CSS background style for selected MenuItems
+     * NOTE: unselected have 'transparent' style
+     * @type {string}
+     */
+    SelectedBackgroundStyle: 'rgba(0,0,0,0.1)',
+
+    /**
+     * number of pixels to overlap child menus
+     * @type {number}
+     */
+    Overlap: 5,
+
+    /**
+     * time in milliseconds to wait for submenu to open when mouse hovers
+     * @param {number}
+     */
+    SubmenuOpenDelay: 500
+};
+
+module.exports = Config;
+
+},{}],13:[function(require,module,exports){
+module.exports = function (options) {
+    options = options || {};
+    const object = document.createElement(options.type || 'div');
+    if (options.parent) {
+        options.parent.appendChild(object);
+    }
+    if (options.styles) {
+        for (let style in options.styles) {
+            object.style[style] = options.styles[style];
+        }
+    }
+    if (options.html) {
+        object.innerHTML = options.html;
+    }
+    return object;
+};
+
+},{}],14:[function(require,module,exports){
+/**
+ * Handles all keyboard input for the menu and user-registered keys
+ */
+const LocalAccelerator = {
+
+    init: function () {
+        if (!LocalAccelerator.menuKeys) {
+            LocalAccelerator.menuKeys = {};
+            LocalAccelerator.keys = {};
+            document.body.addEventListener('keydown', e => LocalAccelerator.keydown(LocalAccelerator, e));
+            document.body.addEventListener('keyup', e => LocalAccelerator.keyup(LocalAccelerator, e));
+        }
+    },
+
+    /**
+     * clear all user-registered keys
+     */
+    clearKeys: function () {
+        LocalAccelerator.keys = {};
+    },
+
+    /**
+     * Register a shortcut key for use by an open menu
+     * @param {KeyCodes} letter
+     * @param {MenuItem} menuItem
+     * @param {boolean} applicationMenu
+     * @private
+     */
+    registerMenuShortcut: function (letter, menuItem) {
+        if (letter) {
+            const keyCode = (menuItem.menu.applicationMenu ? 'alt+' : '') + letter;
+            LocalAccelerator.menuKeys[LocalAccelerator.prepareKey(keyCode)] = e => {
+                menuItem.handleClick(e);
+                e.stopPropagation();
+                e.preventDefault();
+            };
+        }
+    },
+
+    /**
+     * Register special shortcut keys for menu
+     * @param {MenuItem} menuItem
+     * @private
+     */
+    registerMenuSpecial: function (menu) {
+        LocalAccelerator.menuKeys['escape'] = () => menu.closeAll();
+        LocalAccelerator.menuKeys['enter'] = e => menu.enter(e);
+        LocalAccelerator.menuKeys['space'] = e => menu.enter(e);
+        LocalAccelerator.menuKeys['arrowright'] = e => menu.move(e, 'right');
+        LocalAccelerator.menuKeys['arrowleft'] = e => menu.move(e, 'left');
+        LocalAccelerator.menuKeys['arrowup'] = e => menu.move(e, 'up');
+        LocalAccelerator.menuKeys['arrowdown'] = e => menu.move(e, 'down');
+    },
+
+    /**
+     * special key registration for alt
+     * @param {function} pressed
+     * @param {function} released
+     * @private
+     */
+    registerAlt: function (pressed, released) {
+        LocalAccelerator.alt = { pressed, released };
+    },
+
+    /**
+     * Removes menu shortcuts
+     * @private
+     */
+    unregisterMenuShortcuts: function () {
+        LocalAccelerator.menuKeys = {};
+    },
+
+    /**
+     * Keycodes definition. In the form of modifier[+modifier...]+key
+     * <p>For example: ctrl+shift+e</p>
+     * <p>KeyCodes are case insensitive (i.e., shift+a is the same as Shift+A). And spaces are removed</p>
+     * <p>You can assign more than one key to the same shortcut by using a | between the keys (e.g., 'shift+a | ctrl+a')</p>
+     * <pre>
+     * Modifiers:
+     *    ctrl, alt, shift, meta, (ctrl aliases: command, control, commandorcontrol)
+     * </pre>
+     * <pre>
+     * Keys:
+     *    escape, 0-9, minus, equal, backspace, tab, a-z, backetleft, bracketright, semicolon, quote,
+     *    backquote, backslash, comma, period, slash, numpadmultiply, space, capslock, f1-f24, pause,
+     *    scrolllock, printscreen, home, arrowup, arrowleft, arrowright, arrowdown, pageup, pagedown,
+     *    end, insert, delete, enter, shiftleft, shiftright, ctrlleft, ctrlright, altleft, altright, shiftleft,
+     *    shiftright, numlock, numpad...
+     * </pre>
+     * For OS-specific codes and a more detailed explanation see {@link https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code}. Also note that 'Digit' and 'Key' are removed from the code to make it easier to type.
+     *
+     * @typedef {string} LocalAccelerator~KeyCodes
+     */
+
+    /**
+     * translate a user-provided keycode
+     * @param {KeyCodes} keyCode
+     * @return {KeyCodes} formatted and sorted keyCode
+     * @private
+     */
+    prepareKey: function (keyCode) {
+        const keys = [];
+        let split;
+        keyCode += '';
+        if (keyCode.length > 1 && keyCode.indexOf('|') !== -1) {
+            split = keyCode.split('|');
+        } else {
+            split = [keyCode];
+        }
+        for (let code of split) {
+            let key = '';
+            let modifiers = [];
+            code = code.toLowerCase().replace(' ', '');
+            if (code.indexOf('+') !== -1) {
+                const split = code.split('+');
+                for (let i = 0; i < split.length - 1; i++) {
+                    let modifier = split[i];
+                    modifier = modifier.replace('commandorcontrol', 'ctrl');
+                    modifier = modifier.replace('command', 'ctrl');
+                    modifier = modifier.replace('control', 'ctrl');
+                    modifiers.push(modifier);
+                }
+                modifiers = modifiers.sort((a, b) => {
+                    return a[0] > b[0] ? 1 : a[0] < b[0] ? -1 : 0;
+                });
+                for (let part of modifiers) {
+                    key += part + '+';
+                }
+                key += split[split.length - 1];
+            } else {
+                key = code;
+            }
+            keys.push(key);
+        }
+        return keys;
+    },
+
+    /**
+     * Make the KeyCode pretty for printing on the menu
+     * @param {KeyCode} keyCode
+     * @return {string}
+     * @private
+     */
+    prettifyKey: function (keyCode) {
+        let key = '';
+        const codes = LocalAccelerator.prepareKey(keyCode);
+        for (let i = 0; i < codes.length; i++) {
+            const keyCode = codes[i];
+            if (keyCode.indexOf('+') !== -1) {
+                const split = keyCode.toLowerCase().split('+');
+                for (let i = 0; i < split.length - 1; i++) {
+                    let modifier = split[i];
+                    key += modifier[0].toUpperCase() + modifier.substr(1) + '+';
+                }
+                key += split[split.length - 1].toUpperCase();
+            } else {
+                key = keyCode.toUpperCase();
+            }
+            if (i !== codes.length - 1) {
+                key += ' or ';
+            }
+        }
+        return key;
+    },
+
+    /**
+     * register a key as a global accelerator
+     * @param {KeyCodes} keyCode (e.g., Ctrl+shift+E)
+     * @param {function} callback
+     */
+    register: function (keyCode, callback) {
+        const keys = LocalAccelerator.prepareKey(keyCode);
+        for (let key of keys) {
+            LocalAccelerator.keys[key] = e => {
+                callback(e);
+                e.preventDefault();
+                e.stopPropagation();
+            };
+        }
+    },
+
+    keyup: function (accelerator, e) {
+        if (LocalAccelerator.alt && (e.code === 'AltLeft' || e.code === 'AltRight')) {
+            LocalAccelerator.alt.released();
+            LocalAccelerator.alt.isPressed = false;
+        }
+    },
+
+    keydown: function (accelerator, e) {
+        if (LocalAccelerator.alt && !LocalAccelerator.alt.isPressed && (e.code === 'AltLeft' || e.code === 'AltRight')) {
+            LocalAccelerator.alt.pressed();
+            LocalAccelerator.alt.isPressed = true;
+            e.preventDefault();
+        }
+        const modifiers = [];
+        if (e.altKey) {
+            modifiers.push('alt');
+        }
+        if (e.ctrlKey) {
+            modifiers.push('ctrl');
+        }
+        if (e.metaKey) {
+            modifiers.push('meta');
+        }
+        if (e.shiftKey) {
+            modifiers.push('shift');
+        }
+        let keyCode = '';
+        for (let modifier of modifiers) {
+            keyCode += modifier + '+';
+        }
+        let translate = e.code.toLowerCase();
+        translate = translate.replace('digit', '');
+        translate = translate.replace('key', '');
+        keyCode += translate;
+        if (LocalAccelerator.menuKeys[keyCode]) {
+            LocalAccelerator.menuKeys[keyCode](e, LocalAccelerator);
+        } else if (LocalAccelerator.keys[keyCode]) {
+            LocalAccelerator.keys[keyCode](e, LocalAccelerator);
+        }
+    }
+};
+
+module.exports = LocalAccelerator;
+
+},{}],15:[function(require,module,exports){
+const Config = require('./config');
+const MenuItem = require('./menuItem');
+const LocalAccelerator = require('./localAccelerator');
+const html = require('./html');
+
+let _application;
+
+class Menu {
+    /**
+     * creates a menu bar
+     * @param {object} [options]
+     * @param {object} [options.styles] additional CSS styles for menu
+     */
+    constructor(options) {
+        options = options || {};
+        this.div = document.createElement('div');
+        this.styles = options.styles;
+        this.children = [];
+        this.applyConfig(Config.MenuStyle);
+        this.div.tabIndex = -1;
+    }
+
+    /**
+     * append a MenuItem to the Menu
+     * @param {MenuItem} menuItem
+     */
+    append(menuItem) {
+        if (menuItem.submenu) {
+            menuItem.submenu.menu = this;
+        }
+        menuItem.menu = this;
+        this.div.appendChild(menuItem.div);
+        if (menuItem.type !== 'separator') {
+            this.children.push(menuItem);
+        }
+    }
+
+    /**
+     * inserts a MenuItem into the Menu
+     * @param {number} pos
+     * @param {MenuItem} menuItem
+     */
+    insert(pos, menuItem) {
+        if (pos >= this.div.childNodes.length) {
+            this.append(menuItem);
+        } else {
+            if (menuItem.submenu) {
+                menuItem.submenu.menu = this;
+            }
+            menuItem.menu = this;
+            this.div.insertBefore(menuItem.div, this.div.childNodes[pos]);
+            if (menuItem.type !== 'separator') {
+                this.children.splice(pos, 0, menuItem);
+            }
+        }
+    }
+
+    hide() {
+        let current = this.menu.showing;
+        while (current && current.submenu) {
+            current.div.style.backgroundColor = 'transparent';
+            current.submenu.div.remove();
+            let next = current.submenu.showing;
+            if (next) {
+                current.submenu.showing.div.style.backgroundColor = 'transparent';
+                current.submenu.showing = null;
+            }
+            current = next;
+        }
+    }
+
+    show(menuItem) {
+        Menu.LocalAccelerator.unregisterMenuShortcuts();
+        if (this.menu && this.menu.showing === menuItem) {
+            this.hide();
+            this.menu.showing = null;
+            this.div.remove();
+            this.menu.showAccelerators();
+        } else {
+            if (this.menu) {
+                if (this.menu.showing && this.menu.children.indexOf(menuItem) !== -1) {
+                    this.hide();
+                }
+                this.menu.showing = menuItem;
+                this.menu.hideAccelerators();
+            }
+            const div = menuItem.div;
+            const parent = this.menu.div;
+            if (this.menu.applicationMenu) {
+                this.div.style.left = div.offsetLeft + 'px';
+                this.div.style.top = div.offsetTop + div.offsetHeight + 'px';
+            } else {
+                this.div.style.left = parent.offsetLeft + parent.offsetWidth - Config.Overlap + 'px';
+                this.div.style.top = parent.offsetTop + div.offsetTop - Config.Overlap + 'px';
+            }
+            this.attached = menuItem;
+            this.showAccelerators();
+            this.getApplicationDiv().appendChild(this.div);
+            let label = 0,
+                accelerator = 0,
+                arrow = 0,
+                checked = 0;
+            for (let child of this.children) {
+                child.check.style.width = 'auto';
+                child.label.style.width = 'auto';
+                child.accelerator.style.width = 'auto';
+                child.arrow.style.width = 'auto';
+                if (child.type === 'checkbox') {
+                    checked = Config.MinimumColumnWidth;
+                }
+                if (child.submenu) {
+                    arrow = Config.MinimumColumnWidth;
+                }
+            }
+            for (let child of this.children) {
+                const childLabel = child.label.offsetWidth * 2;
+                label = childLabel > label ? childLabel : label;
+                const childAccelerator = child.accelerator.offsetWidth;
+                accelerator = childAccelerator > accelerator ? childAccelerator : accelerator;
+                if (child.submenu) {
+                    arrow = child.arrow.offsetWidth;
+                }
+            }
+            for (let child of this.children) {
+                child.check.style.width = checked + 'px';
+                child.label.style.width = label + 'px';
+                child.accelerator.style.width = accelerator + 'px';
+                child.arrow.style.width = arrow + 'px';
+            }
+            if (this.div.offsetLeft + this.div.offsetWidth > window.innerWidth) {
+                this.div.style.left = window.innerWidth - this.div.offsetWidth + 'px';
+            }
+            if (this.div.offsetTop + this.div.offsetHeight > window.innerHeight) {
+                this.div.style.top = window.innerHeight - this.div.offsetHeight + 'px';
+            }
+        }
+    }
+
+    applyConfig(base) {
+        const styles = {};
+        for (let style in base) {
+            styles[style] = base[style];
+        }
+        if (this.styles) {
+            for (let style in this.styles) {
+                styles[style] = this.styles[style];
+            }
+        }
+        for (let style in styles) {
+            this.div.style[style] = styles[style];
+        }
+    }
+
+    showAccelerators() {
+        for (let child of this.children) {
+            child.showShortcut();
+            if (child.type !== 'separator') {
+                const index = child.text.indexOf('&');
+                if (index !== -1) {
+                    Menu.LocalAccelerator.registerMenuShortcut(child.text[index + 1], child);
+                }
+            }
+        }
+        if (!this.applicationMenu) {
+            Menu.LocalAccelerator.registerMenuSpecial(this);
+        }
+    }
+
+    hideAccelerators() {
+        for (let child of this.children) {
+            child.hideShortcut();
+        }
+    }
+
+    closeAll() {
+        Menu.LocalAccelerator.unregisterMenuShortcuts();
+        let application = _application.menu;
+        if (application.showing) {
+            let menu = application;
+            while (menu.showing) {
+                menu = menu.showing.submenu;
+            }
+            while (menu && !menu.applicationMenu) {
+                if (menu.showing) {
+                    menu.showing.div.style.backgroundColor = 'transparent';
+                    menu.showing = null;
+                }
+                menu.div.remove();
+                menu = menu.menu;
+            }
+            if (menu) {
+                menu.showing.div.style.background = 'transparent';
+                menu.showing = null;
+                menu.hideAccelerators();
+            }
+        }
+    }
+
+    getApplicationDiv() {
+        return _application;
+    }
+
+    /**
+     * move selector to the next child pane
+     * @param {string} direction (left or right)
+     * @private
+     */
+    moveChild(direction) {
+        let index;
+        if (direction === 'left') {
+            const parent = this.selector.menu.menu;
+            index = parent.children.indexOf(parent.showing);
+            index--;
+            index = index < 0 ? parent.children.length - 1 : index;
+            parent.children[index].handleClick();
+        } else {
+            let parent = this.selector.menu.menu;
+            let selector = parent.showing;
+            while (!parent.applicationMenu) {
+                selector.handleClick();
+                selector.div.style.backgroundColor = 'transparent';
+                parent = parent.menu;
+                selector = parent.showing;
+            }
+            index = parent.children.indexOf(selector);
+            index++;
+            index = index === parent.children.length ? 0 : index;
+            parent.children[index].handleClick();
+        }
+        this.selector = null;
+    }
+
+    /**
+     * move selector right and left
+     * @param {MouseEvent} e
+     * @param {string} direction
+     * @private
+     */
+    horizontalSelector(e, direction) {
+        if (direction === 'right') {
+            if (this.selector.submenu) {
+                this.selector.handleClick(e);
+                this.selector.submenu.selector = this.selector.submenu.children[0];
+                this.selector.submenu.selector.div.style.backgroundColor = Config.SelectedBackgroundStyle;
+                this.selector = null;
+            } else {
+                this.moveChild(direction);
+            }
+        } else if (direction === 'left') {
+            if (!this.selector.menu.menu.applicationMenu) {
+                this.selector.menu.attached.handleClick(e);
+                this.selector.menu.menu.selector = this.selector.menu.attached;
+                this.selector = null;
+            } else {
+                this.moveChild(direction);
+            }
+        }
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
+    /**
+     * move the selector in the menu
+     * @param {KeyboardEvent} e
+     * @param {string} direction (left, right, up, down)
+     * @private
+     */
+    move(e, direction) {
+        if (this.selector) {
+            this.selector.div.style.backgroundColor = 'transparent';
+            let index = this.children.indexOf(this.selector);
+            if (direction === 'down') {
+                index++;
+                index = index === this.children.length ? 0 : index;
+            } else if (direction === 'up') {
+                index--;
+                index = index < 0 ? this.children.length - 1 : index;
+            } else {
+                return this.horizontalSelector(e, direction);
+            }
+            this.selector = this.children[index];
+        } else {
+            if (direction === 'up') {
+                this.selector = this.children[this.children.length - 1];
+            } else {
+                this.selector = this.children[0];
+            }
+        }
+        this.selector.div.style.backgroundColor = Config.SelectedBackgroundStyle;
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    /**
+     * click the selector with keyboard
+     * @private
+     */
+    enter(e) {
+        if (this.selector) {
+            this.selector.handleClick(e);
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }
+
+    /**
+     * array containing the menu's items
+     * @property {MenuItems[]} items
+     * @readonly
+     */
+    get items() {
+        return this.children;
+    }
+
+    /**
+     * show application menu accelerators when alt is pressed
+     * @private
+     */
+    showApplicationAccelerators() {
+        this.hideAccelerators();
+        LocalAccelerator.registerAlt(() => {
+            if (!this.showing) {
+                this.showAccelerators();
+            }
+        }, () => {
+            this.hideAccelerators();
+        });
+    }
+
+    /**
+     * sets active application Menu (and removes any existing application menus)
+     * @param {Menu} menu
+     */
+    static setApplicationMenu(menu) {
+        LocalAccelerator.init();
+        if (_application) {
+            _application.remove();
+        }
+        _application = html({ parent: document.body, styles: Config.ApplicationContainerStyle });
+        _application.menu = menu;
+        menu.applyConfig(Config.ApplicationMenuStyle);
+        for (let child of menu.children) {
+            child.applyConfig(Config.ApplicationMenuRowStyle);
+            if (child.arrow) {
+                child.arrow.style.display = 'none';
+            }
+            menu.div.appendChild(child.div);
+        }
+
+        _application.appendChild(menu.div);
+        menu.applicationMenu = true;
+        menu.div.tabIndex = -1;
+
+        // don't let menu bar focus unless windows are open (this fixes a focus bug)
+        menu.div.addEventListener('focus', () => {
+            if (!menu.showing) {
+                menu.div.blur();
+            }
+        });
+
+        // close all windows if menu is no longer the focus
+        menu.div.addEventListener('blur', () => {
+            if (menu.showing) {
+                menu.closeAll();
+            }
+        });
+        menu.showApplicationAccelerators();
+    }
+
+    /**
+     * localAccelerator definition
+     * @type {Accelerator}
+     */
+    static get LocalAccelerator() {
+        return LocalAccelerator;
+    }
+
+    /**
+     * use this to change the default Config settings across all menus
+     * @type {Config}
+     */
+    static get Config() {
+        return Config;
+    }
+
+    /**
+     * MenuItem definition
+     * @type {MenuItem}
+     */
+    static get MenuItem() {
+        return MenuItem;
+    }
+}
+
+module.exports = Menu;
+
+},{"./config":12,"./html":13,"./localAccelerator":14,"./menuItem":16}],16:[function(require,module,exports){
+const html = require('./html');
+const Config = require('./config');
+const localAccelerator = require('./localAccelerator');
+
+class MenuItem {
+    /**
+     * @param {object} options
+     * @param {string} [options.label] label for menu entry may include accelerator by placing & before letter)
+     * @param {string} [options.type] separator, checkbox, or undefined
+     * @param {object} [options.styles] additional CSS styles to apply to this MenuItem
+     * @param {string} [options.accelerator] see Accelerator for inputs (e.g., ctrl+shift+A)
+     * @param {MenuItem} [options.submenu] attaches a submenu (and changes type to submenu)
+     * @param {boolean} [options.checked] check the checkbox
+     */
+    constructor(options) {
+        localAccelerator.init();
+        options = options || {};
+        this.styles = options.styles;
+        this.div = html();
+        this.type = options.type;
+        this.click = options.click;
+        if (this.type === 'separator') {
+            this.applyConfig(Config.SeparatorStyle);
+        } else {
+            this._checked = options.checked;
+            this.createChecked(options.checked);
+            this.text = options.label || '&nbsp;&nbsp;&nbsp;';
+            this.createShortcut();
+            this.createAccelerator(options.accelerator);
+            this.createSubmenu(options.submenu);
+            if (options.submenu) {
+                this.submenu = options.submenu;
+                this.submenu.applyConfig(Config.MenuStyle);
+            }
+            this.applyConfig(Config.RowStyle);
+            this.div.addEventListener('mousedown', e => this.handleClick(e));
+            this.div.addEventListener('touchstart', e => this.handleClick(e));
+            this.div.addEventListener('mouseenter', () => this.mouseenter());
+            this.div.addEventListener('mouseleave', () => this.mouseleave());
+        }
+    }
+
+    /**
+     * The click callback
+     * @callback MenuItem~ClickCallback
+     * @param {InputEvent} e
+     */
+
+    mouseenter() {
+        if (!this.submenu || this.menu.showing !== this) {
+            this.div.style.backgroundColor = Config.SelectedBackgroundStyle;
+            if (this.submenu && !this.menu.applicationMenu) {
+                this.submenuTimeout = setTimeout(() => {
+                    this.submenuTimeout = null;
+                    this.submenu.show(this);
+                }, Config.SubmenuOpenDelay);
+            }
+        }
+    }
+
+    mouseleave() {
+        if (!this.submenu || this.menu.showing !== this) {
+            if (this.submenuTimeout) {
+                clearTimeout(this.submenuTimeout);
+                this.submenuTimeout = null;
+            }
+            this.div.style.backgroundColor = 'transparent';
+        }
+    }
+
+    applyConfig(base) {
+        const styles = {};
+        for (let style in base) {
+            styles[style] = base[style];
+        }
+        if (this.styles) {
+            for (let style in this.styles) {
+                styles[style] = this.styles[style];
+            }
+        }
+        for (let style in styles) {
+            this.div.style[style] = styles[style];
+        }
+    }
+
+    createChecked(checked) {
+        this.check = html({ parent: this.div, html: checked ? '&#10004;' : '' });
+    }
+
+    createShortcut() {
+        if (this.type !== 'separator') {
+            const text = this.text;
+            this.label = html({ parent: this.div });
+            let current = html({ parent: this.label, type: 'span' });
+            if (text.indexOf('&') !== -1) {
+                let i = 0;
+                do {
+                    const letter = text[i];
+                    if (letter === '&') {
+                        i++;
+                        this.shortcutSpan = html({ parent: this.label, type: 'span', html: text[i], styles: Config.AcceleratorKeyStyle });
+                        current = html({ parent: this.label, type: 'span' });
+                    } else {
+                        current.innerHTML += letter;
+                    }
+                    i++;
+                } while (i < text.length);
+            } else {
+                this.label.innerHTML = text;
+            }
+        }
+    }
+
+    showShortcut() {
+        if (this.shortcutSpan) {
+            this.shortcutSpan.style.textDecoration = 'underline';
+        }
+    }
+
+    hideShortcut() {
+        if (this.shortcutSpan) {
+            this.shortcutSpan.style.textDecoration = 'none';
+        }
+    }
+
+    createAccelerator(accelerator) {
+        this.accelerator = html({ parent: this.div, html: accelerator ? localAccelerator.prettifyKey(accelerator) : '', styles: Config.AcceleratorStyle });
+        if (accelerator) {
+            localAccelerator.register(accelerator, e => this.click(e));
+        }
+    }
+
+    createSubmenu(submenu) {
+        this.arrow = html({ parent: this.div, html: submenu ? '&#9658;' : '' });
+    }
+
+    closeAll() {
+        let menu = this.menu;
+        localAccelerator.unregisterMenuShortcuts();
+        while (menu && !menu.applicationMenu) {
+            if (menu.showing) {
+                menu.showing.div.style.backgroundColor = 'transparent';
+                menu.showing = null;
+            }
+            menu.div.remove();
+            menu = menu.menu;
+        }
+        if (menu.showing) {
+            menu.showing.div.style.background = 'transparent';
+            menu.showing = null;
+            menu.hideAccelerators();
+        }
+    }
+
+    handleClick(e) {
+        if (this.submenu) {
+            if (this.submenuTimeout) {
+                clearTimeout(this.submenuTimeout);
+                this.submenuTimeout = null;
+            }
+            this.submenu.show(this);
+            this.div.style.backgroundColor = Config.SelectedBackgroundStyle;
+            if (typeof e.keyCode !== 'undefined' && this.menu.applicationMenu && document.activeElement !== this.menu.div) {
+                this.menu.div.focus();
+            }
+            e.preventDefault();
+        } else if (this.type === 'checkbox') {
+            this.checked = !this.checked;
+            this.closeAll();
+        } else {
+            this.closeAll();
+        }
+
+        if (this.click) {
+            this.click(e, this);
+        }
+    }
+
+    get checked() {
+        return this._checked;
+    }
+    set checked(value) {
+        this._checked = value;
+        this.check.innerHTML = this._checked ? '&#10004;' : '';
+    }
+}
+
+module.exports = MenuItem;
+
+},{"./config":12,"./html":13,"./localAccelerator":14}],17:[function(require,module,exports){
 module.exports = function (options)
 {
     options = options || {}
@@ -3028,7 +4025,7 @@ module.exports = function (options)
     }
     return object
 }
-},{}],12:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 const exists = require('exists')
 
 const html = require('./html')
@@ -3271,7 +4268,7 @@ module.exports = class Snap
         this.horizontal.style.display = this.vertical.style.display = 'none'
     }
 }
-},{"./html":11,"exists":6}],13:[function(require,module,exports){
+},{"./html":17,"exists":7}],19:[function(require,module,exports){
 const exists = require('exists')
 
 const html = require('./html')
@@ -3612,7 +4609,7 @@ class WindowManager
 }
 
 module.exports = WindowManager
-},{"./html":11,"./snap":12,"./window":15,"./window-options":14,"exists":6}],14:[function(require,module,exports){
+},{"./html":17,"./snap":18,"./window":21,"./window-options":20,"exists":7}],20:[function(require,module,exports){
 /**
  * @typedef {object} Window~WindowOptions
  * @property {number} [x=0]
@@ -3682,7 +4679,7 @@ const WindowOptions = {
 }
 
 module.exports = WindowOptions
-},{}],15:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 const Events = require('eventemitter3')
 const clicked = require('clicked')
 const Ease = require('dom-ease')
@@ -4216,15 +5213,25 @@ class Window extends Events
     }
 
     /**
-     * centers window in middle of other window
-     * @param {Window} win
+     * centers window in middle of other window or document.body
+     * @param {Window} [win]
      */
     center(win)
     {
-        this.move(
-            win.x + win.width / 2 - this.width / 2,
-            win.y + win.height / 2 - this.height / 2
-        )
+        if (win)
+        {
+            this.move(
+                win.x + win.width / 2 - this.width / 2,
+                win.y + win.height / 2 - this.height / 2
+            )
+        }
+        else
+        {
+            this.move(
+                window.innerWidth / 2 - this.width / 2,
+                window.innerHeight / 2 - this.height / 2
+            )
+        }
     }
 
     /**
@@ -4642,4 +5649,4 @@ class Window extends Events
 }
 
 module.exports = Window
-},{"./html":11,"clicked":2,"dom-ease":3,"eventemitter3":5,"exists":6}]},{},[1]);
+},{"./html":17,"clicked":3,"dom-ease":4,"eventemitter3":6,"exists":7}]},{},[1]);
