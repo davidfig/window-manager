@@ -670,8 +670,8 @@ class Window extends Events
                 'min-height': this.options.minHeight,
                 'box-shadow': this.options.shadow,
                 'background-color': this.options.backgroundColorWindow,
-                'left': this.options.x,
-                'top': this.options.y,
+                'left': this.options.x + 'px',
+                'top': this.options.y + 'px',
                 'width': isNaN(this.options.width) ? this.options.width : this.options.width + 'px',
                 'height': isNaN(this.options.height) ? this.options.height : this.options.height + 'px'
             }

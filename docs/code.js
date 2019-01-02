@@ -21,6 +21,7 @@ window.onload = () =>
     test5()
     test6()
     test7()
+    // menu(wm)
     update()
 }
 

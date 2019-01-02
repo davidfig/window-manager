@@ -12,7 +12,6 @@ function menu(wm)
         windows.append(new Item({
             type: 'checkbox', label: 'Window ' + (i < 10 ? '&' : '') + i, accelerator: i < 10 ? 'ctrl+' + i : null, checked: true, click: (e, item) =>
             {
-console.log(item.checked)
                 if (item.checked)
                 {
                     wm.windows[i].open()
@@ -24,13 +23,28 @@ console.log(item.checked)
             }
         }))
     }
+    const about = new Menu()
+    about.append(new Item({ label: 'simple-&window-manager', click: () => aboutWM()}))
+    about.append(new Item({ label: 'yy-menu', click: () => aboutMenu() }))
+
     const main = new Menu()
     main.append(new Item({ label: '&File', submenu: file }))
     main.append(new Item({ label: '&Windows', submenu: windows }))
+    main.append(new Item({ label: 'About', submenu: about }))
     Menu.setApplicationMenu(main)
 }
 
 function newWindow()
+{
+
+}
+
+function aboutWM()
+{
+
+}
+
+function aboutMenu()
 {
 
 }
