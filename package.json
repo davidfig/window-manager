@@ -1,6 +1,6 @@
 {
   "name": "simple-window-manager",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A javascript-only Window Manager",
   "main": "src/window-manager.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "transpile": "./node_modules/.bin/babel src/ --out-dir dist --source-maps inline",
     "docs": "jsdoc -c .jsdoc.json",
     "build-demo": "browserify docs/code.js -o docs/index.js",
-    "prepublishOnly": "npm run transpile && npm run build-demo && npm run docs"
+    "prepublishOnly": "yarn run transpile && yarn run build-demo && yarn run docs"
   },
   "repository": {
     "type": "git",
