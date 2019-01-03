@@ -29,7 +29,7 @@ const top = 10
 
 function test()
 {
-    const test = wm.createWindow({ x: 10, y: top, title: 'Test Window', resizable: false, maximizable: false, minimizable: false, titleCenter: true, closable: false })
+    const test = wm.createWindow({ x: 10, y: top, titlebar: false, title: 'Test Window', resizable: false, maximizable: false, minimizable: false, titleCenter: true, closable: false })
     test.content.style.padding = '1em'
     test.content.innerHTML = 'This is a test window.'
     test.open()
@@ -87,7 +87,7 @@ function test3()
 function test4()
 {
     const test = wm.createWindow({ x: 300, y: top, title: 'My wife\'s art gallery!' })
-    test.content.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/-slAp_gVa70" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe>'
+    test.content.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/-slAp_gVa70" frameborder="0" allow="encrypted-media" allowfullscreen></iframe>'
     test.open()
     test.sendToBack()
 }

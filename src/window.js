@@ -99,7 +99,10 @@ class Window extends Events
                 this.minimize()
             }
             this.active = true
-            this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarActive
+            if (this.options.titlebar)
+            {
+                this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarActive
+            }
             this.emit('focus', this)
         }
     }
@@ -112,7 +115,10 @@ class Window extends Events
         if (this.wm.modal !== this)
         {
             this.active = false
-            this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarInactive
+            if (this.options.titlebar)
+            {
+                this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarInactive
+            }
             this.emit('blur', this)
         }
     }
@@ -738,50 +744,53 @@ class Window extends Events
 
     _createTitlebar()
     {
-        this.winTitlebar = html({
-            parent: this.winBox, type: 'header', styles: {
+        if (this.options.titlebar)
+        {
+            this.winTitlebar = html({
+                parent: this.winBox, type: 'header', styles: {
+                    'user-select': 'none',
+                    'display': 'flex',
+                    'flex-direction': 'row',
+                    'align-items': 'center',
+                    'justify-content': 'center',
+                    'height': this.options.titlebarHeight,
+                    'min-height': this.options.titlebarHeight,
+                    'border': 0,
+                    'padding': '0 8px',
+                    'overflow': 'hidden',
+                }
+            })
+            const winTitleStyles = {
                 'user-select': 'none',
+                'flex': 1,
                 'display': 'flex',
                 'flex-direction': 'row',
                 'align-items': 'center',
-                'justify-content': 'center',
-                'height': this.options.titlebarHeight,
-                'min-height': this.options.titlebarHeight,
-                'border': 0,
-                'padding': '0 8px',
-                'overflow': 'hidden',
+                'user-select': 'none',
+                'cursor': 'default',
+                'padding': 0,
+                'margin': 0,
+                'font-size': '16px',
+                'font-weight': 400,
+                'color': this.options.foregroundColorTitle
             }
-        })
-        const winTitleStyles = {
-            'user-select': 'none',
-            'flex': 1,
-            'display': 'flex',
-            'flex-direction': 'row',
-            'align-items': 'center',
-            'user-select': 'none',
-            'cursor': 'default',
-            'padding': 0,
-            'margin': 0,
-            'font-size': '16px',
-            'font-weight': 400,
-            'color': this.options.foregroundColorTitle
-        }
-        if (this.options.titleCenter)
-        {
-            winTitleStyles['justify-content'] = 'center'
-        }
-        else
-        {
-            winTitleStyles['padding-left'] = '8px'
+            if (this.options.titleCenter)
+            {
+                winTitleStyles['justify-content'] = 'center'
+            }
+            else
+            {
+                winTitleStyles['padding-left'] = '8px'
 
-        }
-        this.winTitle = html({ parent: this.winTitlebar, type: 'span', html: this.options.title, styles: winTitleStyles })
-        this._createButtons()
+            }
+            this.winTitle = html({ parent: this.winTitlebar, type: 'span', html: this.options.title, styles: winTitleStyles })
+            this._createButtons()
 
-        if (this.options.movable)
-        {
-            this.winTitlebar.addEventListener('mousedown', (e) => this._downTitlebar(e))
-            this.winTitlebar.addEventListener('touchstart', (e) => this._downTitlebar(e))
+            if (this.options.movable)
+            {
+                this.winTitlebar.addEventListener('mousedown', (e) => this._downTitlebar(e))
+                this.winTitlebar.addEventListener('touchstart', (e) => this._downTitlebar(e))
+            }
         }
     }
 
