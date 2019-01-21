@@ -20,7 +20,6 @@ window.onload = () =>
     test3()
     test4()
     test5()
-    test6()
     test7()
     // menu(wm)
     update()
@@ -104,19 +103,6 @@ function test5()
     let data
     save.onclick = () => data = wm.save()
     load.onclick = () => { if (data) wm.load(data) }
-}
-
-function test6()
-{
-    const test = wm.createWindow({ x: 800, y: 350, width: 250, height: 350, title: 'One of my early games' })
-    const game = html({ parent: test.content, type: 'button', html: 'play game', styles: { 'margin-top': '50%', 'margin-left': '50%', transform: 'translate(-50%, 0)' } })
-    game.onclick = () =>
-    {
-        test.content.style.overflow = 'hidden'
-        test.content.innerHTML = ''
-        test.content.innerHTML = '<iframe width="100%", height="100%" src="https://yopeyopey.com/games/gotpaws/"></iframe>'
-    }
-    test.open()
 }
 
 function test7()
