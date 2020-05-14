@@ -46,10 +46,6 @@
             "title": "simple-window-manager API Documentation",
             "description": "Documentation for simple-window-manager library",
             "keyword": "docs, documentation, html5, javascript, jsdoc, window manager"
-        },
-        "matomo": {
-            "url": "https://analytics.yopeyopey.com/piwik/",
-            "id": 14
         }
     }
 }

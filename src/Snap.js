@@ -1,16 +1,14 @@
-const exists = require('exists')
-
-const html = require('./html')
+import { html } from './html'
 
 const DEFAULT_COLOR = '#a8f0f4'
 const DEFAULT_SIZE = 10
 
-module.exports = class Snap
+export class Snap
 {
     /**
      * add edge snapping plugin
      * @param {WindowManager} wm
-     * @param {object} options
+     * @param {object} [options]
      * @param {boolean} [options.screen=true] snap to screen edges
      * @param {boolean} [options.windows=true] snap to window edges
      * @param {number} [options.snap=20] distance to edge before snapping and width/height of snap bars
@@ -18,13 +16,12 @@ module.exports = class Snap
      * @param {number} [options.spacing=5] spacing distance between window and edges
      * @private
      */
-    constructor(wm, options)
+    constructor(wm, options = {})
     {
-        options = !exists(options) || typeof options !== 'object' ? {} : options
         this.wm = wm
         this.snap = options.snap || 20
-        this.screen = exists(options.screen) ? options.screen : true
-        this.windows = exists(options.windows) ? options.windows : true
+        this.screen = typeof options.screen === 'undefined' ? options.screen : true
+        this.windows = typeof options.windows === 'undefind' ? options.windows : true
         const backgroundColor = options.color || DEFAULT_COLOR
         this.size = options.size || DEFAULT_SIZE
         this.spacing = options.spacing || 5

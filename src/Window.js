@@ -1,9 +1,7 @@
-const Events = require('eventemitter3')
-const clicked = require('clicked')
-const Ease = require('dom-ease')
-const exists = require('exists')
+import Events from 'eventemitter3'
+import { clicked } from 'clicked'
 
-const html = require('./html')
+import { html } from './html'
 
 let id = 0
 
@@ -29,20 +27,18 @@ let id = 0
  * @fires resize-width
  * @fires resize-height
  */
-class Window extends Events
+export class Window extends Events
 {
     /**
      * @param {WindowManager} [wm]
      * @param {object} [options]
      */
-    constructor(wm, options)
+    constructor(wm, options={})
     {
         super()
         this.wm = wm
-
-        this.options = options || {}
-
-        this.id = exists(this.options.id) ? this.options.id : id++
+        this.options = options
+        this.id = typeof this.options.id === 'undefined' ? id++ : this.options.id
 
         this._createWindow()
         this._listeners()
@@ -55,30 +51,19 @@ class Window extends Events
         this._restore = null
         this._moving = null
         this._resizing = null
-
-        this.ease = new Ease({ duration: this.options.animateTime, ease: this.options.ease })
     }
 
     /**
      * open the window
      * @param {boolean} [noFocus] do not focus window when opened
-     * @param {boolean} [noAnimate] do not animate window when opened
      */
-    open(noFocus, noAnimate)
+    open(noFocus)
     {
         if (this._closed)
         {
             this.emit('open', this)
             this.win.style.display = 'block'
-            if (!noAnimate)
-            {
-                this.win.style.transform = 'scale(0)'
-                this.ease.add(this.win, { scale: 1 })
-            }
-            else
-            {
-                this.win.style.transform = ''
-            }
+            // this.win.style.transform = ''
             this._closed = false
             if (!noFocus)
             {
@@ -92,7 +77,7 @@ class Window extends Events
      */
     focus()
     {
-        if (this.wm._checkModal(this))
+        if (this.wm.checkModal(this))
         {
             if (this.minimized)
             {
@@ -126,25 +111,13 @@ class Window extends Events
     /**
      * closes the window (can be reopened with open)
      */
-    close(noAnimate)
+    close()
     {
         if (!this._closed)
         {
             this._closed = true
-            if (noAnimate)
-            {
-                this.win.style.transform = 'scale(0)'
-                this.win.style.display = 'none'
-            }
-            else
-            {
-                const ease = this.ease.add(this.win, { scale: 0 })
-                ease.on('complete', () =>
-                {
-                    this.win.style.display = 'none'
-                    this.emit('close', this);
-                })
-            }
+            this.win.style.transform = 'scale(0)'
+            this.win.style.display = 'none'
         }
     }
 
@@ -166,12 +139,17 @@ class Window extends Events
     set x(value)
     {
         this.options.x = value
-        this.win.style.left = value + 'px'
         this.emit('move-x', this)
+        this._buildTransform()
         if (this.minimized)
         {
             this._lastMinimized.left = value
         }
+    }
+
+    _buildTransform()
+    {
+        this.win.style.transform = `translate(${this.options.x}px,${this.options.y}px)`
     }
 
     /**
@@ -182,7 +160,7 @@ class Window extends Events
     set y(value)
     {
         this.options.y = value
-        this.win.style.top = value + 'px'
+        this._buildTransform()
         this.emit('move-y', this)
         if (this.minimized)
         {
@@ -248,43 +226,33 @@ class Window extends Events
      */
     move(x, y)
     {
-        this.x = x
-        this.y = y
+        this.options.x = x
+        this.options.y = y
+        this.emit('move-x', this)
+        this.emit('move-y', this)
+        this._buildTransform()
+        if (this.minimized)
+        {
+            this._lastMinimized.left = x
+            this._lastMinimized.top = y
+        }
     }
 
     /**
      * minimize window
-     * @param {boolean} noAnimate
      */
-    minimize(noAnimate)
+    minimize()
     {
-        if (this.wm._checkModal(this) && this.options.minimizable && !this.transitioning)
+        if (this.wm.checkModal(this) && this.options.minimizable && !this.transitioning)
         {
             if (this.minimized)
             {
-                if (noAnimate)
-                {
-                    this.win.style.transform = ''
-                    const x = this.minimized.x, y = this.minimized.y
-                    this.minimized = false
-                    this.move(x, y)
-                    this.emit('minimize-restore', this)
-                    this.overlay.style.display = 'none'
-                }
-                else
-                {
-                    this.transitioning = true
-                    const ease = this.ease.add(this.win, { scaleX: 1, scaleY: 1, left: this.minimized.x, top: this.minimized.y })
-                    ease.on('complete', () =>
-                    {
-                        const x = this.minimized.x, y = this.minimized.y
-                        this.minimized = false
-                        this.move(x, y)
-                        this.emit('minimize-restore', this)
-                        this.transitioning = false
-                        this.overlay.style.display = 'none'
-                    })
-                }
+                this.win.style.transform = ''
+                const x = this.minimized.x, y = this.minimized.y
+                this.minimized = false
+                this.move(x, y)
+                this.emit('minimize-restore', this)
+                this.overlay.style.display = 'none'
             }
             else
             {
@@ -295,30 +263,13 @@ class Window extends Events
                 const desired = this.options.minimizeSize
                 const scaleX = desired / this.width
                 const scaleY = desired / this.height
-                if (noAnimate)
-                {
-                    this.win.style.transform = 'scale(1) scaleX(' + scaleX + ') scaleY(' + scaleY + ')'
-                    this.win.style.left = left + 'px'
-                    this.win.style.top = top + 'px'
-                    this.minimized = { x, y, scaleX, scaleY }
-                    this.emit('minimize', this)
-                    this.overlay.style.display = 'block'
-                    this._lastMinimized = { left, top }
-                }
-                else
-                {
-                    this.transitioning = true
-                    const ease = this.ease.add(this.win, { left, top, scaleX, scaleY })
-                    ease.on('complete', () =>
-                    {
-                        this.minimized = { x, y, scaleX, scaleY }
-                        this.emit('minimize', this)
-                        this.transitioning = false
-                        this.overlay.style.display = 'block'
-                        this._lastMinimized = { left, top }
-                        this.move(left, top)
-                    })
-                }
+                // this.win.style.transform = 'scale(1) scaleX(' + scaleX + ') scaleY(' + scaleY + ')'
+                // this.win.style.left = left + 'px'
+                // this.win.style.top = top + 'px'
+                this.minimized = { x, y, scaleX, scaleY }
+                this.emit('minimize', this)
+                this.overlay.style.display = 'block'
+                this._lastMinimized = { left, top }
             }
         }
     }
@@ -326,65 +277,29 @@ class Window extends Events
     /**
      * maximize the window
      */
-    maximize(noAnimate)
+    maximize()
     {
-        if (this.wm._checkModal(this) && this.options.maximizable && !this.transitioning)
+        if (this.wm.checkModal(this) && this.options.maximizable && !this.transitioning)
         {
             if (this.maximized)
             {
-                if (noAnimate)
-                {
-                    this.x = this.maximized.x
-                    this.y = this.maximized.y
-                    this.width = this.maximized.width
-                    this.height = this.maximized.height
-                    this.maximized = null
-                    this.emit('restore', this)
-                }
-                else
-                {
-                    this.transitioning = true
-                    const ease = this.ease.add(this.win, { left: this.maximized.x, top: this.maximized.y, width: this.maximized.width, height: this.maximized.height })
-                    ease.on('complete', () =>
-                    {
-                        this.x = this.maximized.x
-                        this.y = this.maximized.y
-                        this.width = this.maximized.width
-                        this.height = this.maximized.height
-                        this.maximized = null
-                        this.transitioning = false
-                        this.emit('restore', this)
-                    })
-                }
+                this.x = this.maximized.x
+                this.y = this.maximized.y
+                this.width = this.maximized.width
+                this.height = this.maximized.height
+                this.maximized = null
+                this.emit('restore', this)
                 this.buttons.maximize.style.backgroundImage = this.options.backgroundMaximizeButton
             }
             else
             {
                 const x = this.x, y = this.y, width = this.win.offsetWidth, height = this.win.offsetHeight
-                if (noAnimate)
-                {
-                    this.maximized = { x, y, width, height }
-                    this.x = 0
-                    this.y = 0
-                    this.width = this.wm.overlay.offsetWidth + 'px'
-                    this.height = this.wm.overlay.offsetHeight + 'px'
-                    this.emit('maximize', this)
-                }
-                else
-                {
-                    this.transitioning = true
-                    const ease = this.ease.add(this.win, { left: 0, top: 0, width: this.wm.overlay.offsetWidth, height: this.wm.overlay.offsetHeight })
-                    ease.on('complete', () =>
-                    {
-                        this.x = 0
-                        this.y = 0
-                        this.width = this.wm.overlay.offsetWidth + 'px'
-                        this.height = this.wm.overlay.offsetHeight + 'px'
-                        this.maximized = { x, y, width, height }
-                        this.transitioning = false
-                    })
-                    this.emit('maximize', this)
-                }
+                this.maximized = { x, y, width, height }
+                this.x = 0
+                this.y = 0
+                this.width = this.wm.overlay.offsetWidth + 'px'
+                this.height = this.wm.overlay.offsetHeight + 'px'
+                this.emit('maximize', this)
                 this.buttons.maximize.style.backgroundImage = this.options.backgroundRestoreButton
             }
         }
@@ -430,11 +345,11 @@ class Window extends Events
         }
         data.x = this.x
         data.y = this.y
-        if (exists(this.options.width))
+        if (typeof this.options.width !== 'undefined')
         {
             data.width = this.options.width
         }
-        if (exists(this.options.height))
+        if (typeof this.options.height !== 'undefined')
         {
             data.height = this.options.height
         }
@@ -477,7 +392,7 @@ class Window extends Events
         }
         this.x = data.x
         this.y = data.y
-        if (exists(data.width))
+        if (typeof data.width !== 'undefined')
         {
             this.width = data.width
         }
@@ -485,7 +400,7 @@ class Window extends Events
         {
             this.win.style.width = 'auto'
         }
-        if (exists(data.height))
+        if (typeof data.height !== 'undefined')
         {
             this.height = data.height
         }
@@ -676,8 +591,6 @@ class Window extends Events
                 'min-height': this.options.minHeight,
                 'box-shadow': this.options.shadow,
                 'background-color': this.options.backgroundColorWindow,
-                'left': this.options.x + 'px',
-                'top': this.options.y + 'px',
                 'width': isNaN(this.options.width) ? this.options.width : this.options.width + 'px',
                 'height': isNaN(this.options.height) ? this.options.height : this.options.height + 'px'
             }
@@ -726,6 +639,7 @@ class Window extends Events
         })
         this.overlay.addEventListener('mousedown', (e) => { this._downTitlebar(e); e.stopPropagation() })
         this.overlay.addEventListener('touchstart', (e) => { this._downTitlebar(e); e.stopPropagation() })
+        this._buildTransform()
     }
 
     _downTitlebar(e)
@@ -871,7 +785,7 @@ class Window extends Events
         })
         const down = (e) =>
         {
-            if (this.wm._checkModal(this))
+            if (this.wm.checkModal(this))
             {
                 const event = this._convertMoveEvent(e)
                 const width = this.width || this.win.offsetWidth
@@ -890,7 +804,7 @@ class Window extends Events
 
     _move(e)
     {
-        if (this.wm._checkModal(this))
+        if (this.wm.checkModal(this))
         {
             const event = this._convertMoveEvent(e)
 
@@ -973,5 +887,3 @@ class Window extends Events
     get z() { return parseInt(this.win.style.zIndex) }
     set z(value) { this.win.style.zIndex = value }
 }
-
-module.exports = Window

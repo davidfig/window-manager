@@ -1,7 +1,7 @@
-const Menu = require('yy-menu')
+import Menu from 'yy-menu'
 const Item = Menu.MenuItem
 
-function menu(wm)
+export function menu(wm)
 {
     const file = new Menu()
     file.append(new Item({ label: '&New Window', accelerator: 'ctrl+m', click: () => newWindow(wm) }))
@@ -48,5 +48,3 @@ function aboutMenu()
 {
 
 }
-
-module.exports = menu

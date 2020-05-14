@@ -4,8 +4,7 @@
   "description": "A javascript-only Window Manager",
   "main": "src/window-manager.js",
   "scripts": {
-    "test": "budo docs/code.js:index.js --dir docs --live",
-    "transpile": "./node_modules/.bin/babel src/ --out-dir dist --source-maps inline",
+    "start": "parcel docs/src/index.html",
     "docs": "jsdoc -c .jsdoc.json",
     "build-demo": "browserify docs/code.js -o docs/index.js",
     "prepublishOnly": "yarn run transpile && yarn run build-demo && yarn run docs"
@@ -21,16 +20,12 @@
   "author": "David Figatner (david@yopeyopey.com)",
   "license": "MIT",
   "dependencies": {
-    "clicked": "^1.3.0",
-    "dom-ease": "^0.7.1",
-    "eventemitter3": "^3.0.0",
-    "exists": "^1.0.1"
+    "clicked": "^3.2.2",
+    "eventemitter3": "^3.0.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "canvas": "^1.6.9",
     "jsdoc": "^3.5.5",
+    "parcel": "^2.0.0-alpha.3.2",
     "yy-fps": "^0.6.0",
     "yy-jsdoc-template": "^1.3.0",
     "yy-menu": "^1.6.1"

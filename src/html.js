@@ -1,6 +1,14 @@
-module.exports = function (options)
+/**
+ * shortcut to create an html element
+ * @param {object} options
+ * @param {type} [options.string=div]
+ * @param {object} [options.styles]
+ * @param {HTMLElement} [options.parent]
+ * @param {string} [options.html]
+ * @returns {HTMLElement}
+ */
+export function html(options={})
 {
-    options = options || {}
     const object = document.createElement(options.type || 'div')
     if (options.parent)
     {
@@ -8,10 +16,7 @@ module.exports = function (options)
     }
     if (options.styles)
     {
-        for (let style in options.styles)
-        {
-            object.style[style] = options.styles[style]
-        }
+        Object.assign(object.style, options.styles)
     }
     if (options.html)
     {

@@ -1,12 +1,12 @@
-const FPS = require('yy-fps')
+import FPS from 'yy-fps'
 
-const WM = require('../src/window-manager')
-const html = require('../src/html')
+import { WindowManager } from '../../src/WindowManager'
+import { html } from '../../src/html'
 
-const menu = require('./menu')
+// import menu from '../menu'
 
 // create a window manager and change some of the default styles
-const wm = new WM({
+const wm = new WindowManager({
     borderRadius: '10px',
     snap: { screen: true, windows: true, spacing: 5 }
 })

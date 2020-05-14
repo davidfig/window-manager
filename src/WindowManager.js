@@ -1,9 +1,7 @@
-const exists = require('exists')
-
-const html = require('./html')
-const Window = require('./window')
-const WindowOptions = require('./window-options')
-const Snap = require('./snap')
+import { html } from './html'
+import { Window } from './Window'
+import { windowOptions } from './windowOptions'
+import { Snap } from './Snap'
 
 /**
  * Creates a windowing system to create and manage windows
@@ -12,10 +10,10 @@ const Snap = require('./snap')
  * @example
  * var wm = new WindowManager();
  *
- * wm.createWindow({ x: 20, y: 20, width: 200 });
- * wm.content.innerHTML = 'Hello there!';
+ * wm.createWindow({ x: 20, y: 20, width: 200 })
+ * wm.content.innerHTML = 'Hello there!'
  */
-class WindowManager
+export class WindowManager
 {
     /**
      * @param {Window~WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
@@ -32,18 +30,7 @@ class WindowManager
         this.windows = []
         this.active = null
         this.modal = null
-        this.options = {}
-        for (let key in WindowOptions)
-        {
-            this.options[key] = WindowOptions[key]
-        }
-        if (defaultOptions)
-        {
-            for (let key in defaultOptions)
-            {
-                this.options[key] = defaultOptions[key]
-            }
-        }
+        this.options = Object.assign({}, windowOptions, defaultOptions)
         if (!defaultOptions || !defaultOptions.quiet)
         {
             console.log('%c ☕ simple-window-manager initialized ☕', 'color: #ff00ff')
@@ -66,17 +53,9 @@ class WindowManager
      * @param {string|number} [options.id] if not provide, id will be assigned in order of creation (0, 1, 2...)
      * @returns {Window} the created window
      */
-    createWindow(options)
+    createWindow(options={})
     {
-        options = options || {}
-        for (let key in this.options)
-        {
-            if (!exists(options[key]))
-            {
-                options[key] = this.options[key]
-            }
-        }
-        const win = new Window(this, options);
+        const win = new Window(this, Object.assign({}, windowOptions, options))
         win.on('open', this._open, this)
         win.on('focus', this._focus, this)
         win.on('blur', this._blur, this)
@@ -107,8 +86,6 @@ class WindowManager
         win.on('close', this._close, this)
         this.win.appendChild(win.win)
         win.wm = this
-        win.ease.options.duration = this.options.animateTime
-        win.ease.options.ease = this.options.ease
         win.win.addEventListener('mousemove', (e) => this._move(e))
         win.win.addEventListener('touchmove', (e) => this._move(e))
         win.win.addEventListener('mouseup', (e) => this._up(e))
@@ -390,13 +367,8 @@ class WindowManager
         }
     }
 
-    _checkModal(win)
+    checkModal(win)
     {
         return !this.modal || this.modal === win
     }
 }
-
-WindowManager.Window = Window
-WindowManager.WindowOptions = WindowOptions
-
-module.exports = WindowManager
