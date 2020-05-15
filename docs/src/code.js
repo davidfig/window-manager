@@ -3,13 +3,13 @@ import FPS from 'yy-fps'
 import { WindowManager } from '../../src/WindowManager'
 import { html } from '../../src/html'
 
-// import menu from '../menu'
+// import { menu } from './menu'
 
 // create a window manager and change some of the default styles
-const wm = new WindowManager({
-    borderRadius: '10px',
-    snap: { screen: true, windows: true, spacing: 5 }
-})
+const wm = new WindowManager()
+wm.snap({ screen: true, windows: true, spacing: 0 })
+wm.localAccelerator()
+wm.menu()
 
 window.onload = () =>
 {
@@ -86,7 +86,7 @@ function test3()
 function test4()
 {
     const test = wm.createWindow({ x: 300, y: top, title: 'My wife\'s art gallery!' })
-    test.content.innerHTML = '<iframe width="560" height="315" src="https://www.youtube.com/embed/-slAp_gVa70" frameborder="0" allow="encrypted-media" allowfullscreen></iframe>'
+    test.content.innerHTML = '<iframe width="560" height="315" src="https://yuanru.gallery" frameborder="0" allow="encrypted-media" allowfullscreen></iframe>'
     test.open()
     test.sendToBack()
 }
@@ -111,7 +111,7 @@ function test7()
     test.open()
 }
 
-const wallpaper = html({ parent: wm.overlay, styles: { 'text-align': 'center', 'margin-top': '50%', color: 'white' } })
+const wallpaper = html({ parent: wm.overlay, styles: { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white' } })
 wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'
 
 const fps = new FPS()

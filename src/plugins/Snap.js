@@ -1,7 +1,16 @@
-import { html } from './html'
+import { html } from '../html'
 
 const DEFAULT_COLOR = '#a8f0f4'
 const DEFAULT_SIZE = 10
+
+const SnapOptionsDefault = {
+    screen: true,
+    windows: true,
+    snap: 20,
+    color: DEFAULT_COLOR,
+    spacing: 5,
+    indicator: DEFAULT_SIZE
+}
 
 export class Snap
 {
@@ -11,37 +20,33 @@ export class Snap
      * @param {object} [options]
      * @param {boolean} [options.screen=true] snap to screen edges
      * @param {boolean} [options.windows=true] snap to window edges
-     * @param {number} [options.snap=20] distance to edge before snapping and width/height of snap bars
+     * @param {number} [options.snap=20] distance to edge in pixels before snapping and width/height of snap bars
      * @param {string} [options.color=#a8f0f4] color for snap bars
      * @param {number} [options.spacing=5] spacing distance between window and edges
+     * @param {number} [options.indicator=10] size in pixels of snapping indicator (the indicator is actually twice the size of what is shown)
      * @private
      */
-    constructor(wm, options = {})
+    constructor(wm, options={})
     {
         this.wm = wm
-        this.snap = options.snap || 20
-        this.screen = typeof options.screen === 'undefined' ? options.screen : true
-        this.windows = typeof options.windows === 'undefind' ? options.windows : true
-        const backgroundColor = options.color || DEFAULT_COLOR
-        this.size = options.size || DEFAULT_SIZE
-        this.spacing = options.spacing || 5
+        this.options = Object.assign({}, SnapOptionsDefault, options)
         this.highlights = html({ parent: this.wm.overlay, styles: { 'position': 'absolute' } })
         this.horizontal = html({
             parent: this.highlights, styles: {
                 display: 'none',
                 position: 'absolute',
-                height: this.size + 'px',
-                borderRadius: this.size + 'px',
-                backgroundColor
+                height: `${this.options.indicator}px`,
+                borderRadius: `${this.options.indicator}px`,
+                backgroundColor: this.options.color
             }
         })
         this.vertical = html({
             parent: this.highlights, styles: {
                 display: 'none',
                 position: 'absolute',
-                width: this.size + 'px',
-                borderRadius: this.size + 'px',
-                backgroundColor
+                width: `${this.options.indicator}px`,
+                borderRadius: `${this.options.indicator}px`,
+                backgroundColor: this.options.color
             }
         })
         this.horizontal
@@ -64,24 +69,24 @@ export class Snap
     {
         const width = document.body.clientWidth
         const height = document.body.clientHeight
-        if (rect.left - this.snap <= width && rect.right + this.snap >= 0)
+        if (rect.left - this.options.snap <= width && rect.right + this.options.snap >= 0)
         {
-            if (Math.abs(rect.top - 0) <= this.snap)
+            if (Math.abs(rect.top - 0) <= this.options.snap)
             {
                 horizontal.push({ distance: Math.abs(rect.top - 0), left: 0, width, top: 0, side: 'top' })
             }
-            else if (Math.abs(rect.bottom - height) <= this.snap)
+            else if (Math.abs(rect.bottom - height) <= this.options.snap)
             {
                 horizontal.push({ distance: Math.abs(rect.bottom - height), left: 0, width, top: height, side: 'bottom' })
             }
         }
-        if (rect.top - this.snap <= height && rect.bottom + this.snap >= 0)
+        if (rect.top - this.options.snap <= height && rect.bottom + this.options.snap >= 0)
         {
-            if (Math.abs(rect.left - 0) <= this.snap)
+            if (Math.abs(rect.left - 0) <= this.options.snap)
             {
                 vertical.push({ distance: Math.abs(rect.left - 0), top: 0, height, left: 0, side: 'left' })
             }
-            else if (Math.abs(rect.right - width) <= this.snap)
+            else if (Math.abs(rect.right - width) <= this.options.snap)
             {
                 vertical.push({ distance: Math.abs(rect.right - width), top: 0, height, left: width, side: 'right' })
             }
@@ -95,55 +100,55 @@ export class Snap
             if (!win.options.noSnap && win !== original)
             {
                 const rect2 = win.win.getBoundingClientRect()
-                if (rect.left - this.snap <= rect2.right && rect.right + this.snap >= rect2.left)
+                if (rect.left - this.options.snap <= rect2.right && rect.right + this.options.snap >= rect2.left)
                 {
-                    if (Math.abs(rect.top - rect2.bottom) <= this.snap)
+                    if (Math.abs(rect.top - rect2.bottom) <= this.options.snap)
                     {
                         horizontal.push({ distance: Math.abs(rect.top - rect2.bottom), left: rect2.left, width: rect2.width, top: rect2.bottom, side: 'top' })
-                        if (Math.abs(rect.left - rect2.left) <= this.snap)
+                        if (Math.abs(rect.left - rect2.left) <= this.options.snap)
                         {
                             vertical.push({ distance: Math.abs(rect.left - rect2.left), top: rect2.top, height: rect2.height, left: rect2.left, side: 'left', noSpacing: true })
                         }
-                        else if (Math.abs(rect.right - rect2.right) <= this.snap)
+                        else if (Math.abs(rect.right - rect2.right) <= this.options.snap)
                         {
                             vertical.push({ distance: Math.abs(rect.right - rect2.right), top: rect2.top, height: rect2.height, left: rect2.right, side: 'right', noSpacing: true })
                         }
                     }
-                    else if (Math.abs(rect.bottom - rect2.top) <= this.snap)
+                    else if (Math.abs(rect.bottom - rect2.top) <= this.options.snap)
                     {
                         horizontal.push({ distance: Math.abs(rect.bottom - rect2.top), left: rect2.left, width: rect2.width, top: rect2.top, side: 'bottom' })
-                        if (Math.abs(rect.left - rect2.left) <= this.snap)
+                        if (Math.abs(rect.left - rect2.left) <= this.options.snap)
                         {
                             vertical.push({ distance: Math.abs(rect.left - rect2.left), top: rect2.top, height: rect2.height, left: rect2.left, side: 'left', noSpacing: true })
                         }
-                        else if (Math.abs(rect.right - rect2.right) <= this.snap)
+                        else if (Math.abs(rect.right - rect2.right) <= this.options.snap)
                         {
                             vertical.push({ distance: Math.abs(rect.right - rect2.right), top: rect2.top, height: rect2.height, left: rect2.right, side: 'right', noSpacing: true })
                         }
                     }
                 }
-                if (rect.top - this.snap <= rect2.bottom && rect.bottom + this.snap >= rect2.top)
+                if (rect.top - this.options.snap <= rect2.bottom && rect.bottom + this.options.snap >= rect2.top)
                 {
-                    if (Math.abs(rect.left - rect2.right) <= this.snap)
+                    if (Math.abs(rect.left - rect2.right) <= this.options.snap)
                     {
                         vertical.push({ distance: Math.abs(rect.left - rect2.right), top: rect2.top, height: rect2.height, left: rect2.right, side: 'left' })
-                        if (Math.abs(rect.top - rect2.top) <= this.snap)
+                        if (Math.abs(rect.top - rect2.top) <= this.options.snap)
                         {
                             horizontal.push({ distance: Math.abs(rect.top - rect2.top), left: rect2.left, width: rect2.width, top: rect2.top, side: 'top', noSpacing: true })
                         }
-                        else if (Math.abs(rect.bottom - rect2.bottom) <= this.snap)
+                        else if (Math.abs(rect.bottom - rect2.bottom) <= this.options.snap)
                         {
                             horizontal.push({ distance: Math.abs(rect.bottom - rect2.bottom), left: rect2.left, width: rect2.width, top: rect2.bottom, side: 'bottom', noSpacing: true })
                         }
                     }
-                    else if (Math.abs(rect.right - rect2.left) <= this.snap)
+                    else if (Math.abs(rect.right - rect2.left) <= this.options.snap)
                     {
                         vertical.push({ distance: Math.abs(rect.right - rect2.left), top: rect2.top, height: rect2.height, left: rect2.left, side: 'right' })
-                        if (Math.abs(rect.top - rect2.top) <= this.snap)
+                        if (Math.abs(rect.top - rect2.top) <= this.options.snap)
                         {
                             horizontal.push({ distance: Math.abs(rect.top - rect2.top), left: rect2.left, width: rect2.width, top: rect2.top, side: 'top', noSpacing: true })
                         }
-                        else if (Math.abs(rect.bottom - rect2.bottom) <= this.snap)
+                        else if (Math.abs(rect.bottom - rect2.bottom) <= this.options.snap)
                         {
                             horizontal.push({ distance: Math.abs(rect.bottom - rect2.bottom), left: rect2.left, width: rect2.width, top: rect2.bottom, side: 'bottom', noSpacing: true })
                         }
@@ -164,11 +169,11 @@ export class Snap
         const horizontal = []
         const vertical = []
         const rect = win.win.getBoundingClientRect()
-        if (this.screen)
+        if (this.options.screen)
         {
             this.screenMove(rect, horizontal, vertical)
         }
-        if (this.windows)
+        if (this.options.windows)
         {
             this.windowsMove(win, rect, horizontal, vertical)
         }
@@ -177,10 +182,9 @@ export class Snap
             horizontal.sort((a, b) => { return a.distance - b.distance })
             const find = horizontal[0]
             this.horizontal.style.display = 'block'
-            this.horizontal.style.left = find.left + 'px'
             this.horizontal.style.width = find.width + 'px'
-            this.horizontal.style.top = find.top - this.size / 2 + 'px'
-            this.horizontal.y = find.top
+            this.horizontal.y = find.top - this.options.indicator / 2
+            this.horizontal.style.transform = `translate(${find.left}px,${this.horizontal.y}px)`
             this.horizontal.side = find.side
             this.horizontal.noSpacing = find.noSpacing
         }
@@ -189,10 +193,9 @@ export class Snap
             vertical.sort((a, b) => { return a.distance - b.distance })
             const find = vertical[0]
             this.vertical.style.display  = 'block'
-            this.vertical.style.top = find.top + 'px'
             this.vertical.style.height = find.height + 'px'
-            this.vertical.style.left = find.left - this.size / 2 + 'px'
-            this.vertical.x = find.left
+            this.vertical.x = find.left - this.options.indicator / 2
+            this.vertical.style.transform = `translate(${this.vertical.x}px,${find.top}px)`
             this.vertical.side = find.side
             this.vertical.noSpacing = find.noSpacing
         }
@@ -206,31 +209,31 @@ export class Snap
         }
         if (this.horizontal.style.display === 'block')
         {
-            const spacing = this.horizontal.noSpacing ? 0 : this.spacing
+            const spacing = this.horizontal.noSpacing ? 0 : this.options.spacing
             const adjust = win.minimized ? (win.height - win.height * win.minimized.scaleY) / 2 : 0
             switch (this.horizontal.side)
             {
                 case 'top':
-                    win.y = this.horizontal.y - adjust + spacing
+                    win.y = this.horizontal.y - adjust + spacing - this.options.indicator / 4
                     break
 
                 case 'bottom':
-                    win.bottom = this.horizontal.y + adjust - spacing
+                    win.bottom = Math.floor(this.horizontal.y + adjust - spacing - this.options.indicator / 4)
                     break
             }
         }
         if (this.vertical.style.display === 'block')
         {
-            const spacing = this.vertical.noSpacing ? 0 : this.spacing
+            const spacing = this.vertical.noSpacing ? 0 : this.options.spacing
             const adjust = win.minimized ? (win.width - win.width * win.minimized.scaleX) / 2 : 0
             switch (this.vertical.side)
             {
                 case 'left':
-                    win.x = this.vertical.x - adjust + spacing
+                    win.x = this.vertical.x - adjust + spacing - this.options.indicator / 4
                     break
 
                 case 'right':
-                    win.right = this.vertical.x + adjust - spacing
+                    win.right = Math.floor(this.vertical.x + adjust - spacing - this.options.indicator / 4)
                     break
             }
         }

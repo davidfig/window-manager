@@ -6,6 +6,7 @@
   "scripts": {
     "start": "parcel docs/src/index.html",
     "docs": "jsdoc -c .jsdoc.json",
+    "build-images": "node images/import",
     "build-demo": "browserify docs/code.js -o docs/index.js",
     "prepublishOnly": "yarn run transpile && yarn run build-demo && yarn run docs"
   },
@@ -24,6 +25,7 @@
     "eventemitter3": "^3.0.0"
   },
   "devDependencies": {
+    "fs-extra": "^9.0.0",
     "jsdoc": "^3.5.5",
     "parcel": "^2.0.0-alpha.3.2",
     "yy-fps": "^0.6.0",

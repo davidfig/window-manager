@@ -1,7 +1,10 @@
 import { html } from './html'
 import { Window } from './Window'
 import { windowOptions } from './windowOptions'
-import { Snap } from './Snap'
+import { Snap } from './plugins/Snap'
+import { LocalAccelerator } from './plugins/LocalAccelerator'
+import { Menu } from './plugins/Menu'
+export { Window } from './Window'
 
 /**
  * Creates a windowing system to create and manage windows
@@ -16,30 +19,27 @@ import { Snap } from './Snap'
 export class WindowManager
 {
     /**
+     * @param {object} [options]
+     * @param {boolean} [options.quiet] suppress the simple-window-manager console message
+     * @param {object} [options]
+     * @param {SnapOptions} [options.snap] turn on edge snapping
      * @param {Window~WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
-     * @param {boolean} [defaultOptions.quiet] suppress the simple-window-manager console message
-     * @param {object} [defaultOptions.snap] turn on edge snapping
-     * @param {boolean} [defaultOptions.snap.screen=true] snap to edge of screen
-     * @param {boolean} [defaultOptions.snap.windows=true] snap to windows
-     * @param {number} [defaultOptions.snap.snap=20] distance to edge before snapping and width/height of snap bars
-     * @param {string} [defaultOptions.snap.color=#a8f0f4] color for snap bars
-     * @param {number} [defaultOptions.snap.spacing=5] spacing distance between window and edges
      */
-    constructor(defaultOptions)
+    constructor(options={}, defaultOptions={})
     {
         this.windows = []
         this.active = null
         this.modal = null
-        this.options = Object.assign({}, windowOptions, defaultOptions)
-        if (!defaultOptions || !defaultOptions.quiet)
+        this.defaultOptions = Object.assign({}, windowOptions, defaultOptions)
+        if (!options.quiet)
         {
             console.log('%c ☕ simple-window-manager initialized ☕', 'color: #ff00ff')
         }
         this._createDom()
         this.plugins = []
-        if (defaultOptions && defaultOptions['snap'])
+        if (options.snap)
         {
-            this.snap(defaultOptions['snap'])
+            this.snap(options.snap)
         }
     }
 
@@ -50,12 +50,12 @@ export class WindowManager
      * @param {number} [options.x] position
      * @param {number} [options.y] position
      * @param {boolean} [options.modal]
-     * @param {string|number} [options.id] if not provide, id will be assigned in order of creation (0, 1, 2...)
+     * @param {(number|*)} [options.id] if not provide, id will be assigned in order of creation (0, 1, 2...)
      * @returns {Window} the created window
      */
     createWindow(options={})
     {
-        const win = new Window(this, Object.assign({}, windowOptions, options))
+        const win = new Window(this, Object.assign({}, this.defaultOptions, options))
         win.on('open', this._open, this)
         win.on('focus', this._focus, this)
         win.on('blur', this._blur, this)
@@ -73,7 +73,7 @@ export class WindowManager
 
     /**
      * Attach an existing window to the WindowManager
-     * Note: WindowManager.createWindow is the preferred way to create windows to ensure that all the global options
+     * Note: WindowManager.createWindow is the preferred way to create windows to ensure that all the defaultOptions
      * are applied to the Window. If you use this function, then Window needs to be initialized with WindowOptions.
      * @param {Window} win
      * @returns {Window} the window
@@ -94,7 +94,7 @@ export class WindowManager
         {
             this.modal = win
         }
-        if (this.plugins['snap'] && !this.options.noSnap)
+        if (this.plugins['snap'] && !this.defaultOptions.noSnap)
         {
             this.plugins['snap'].addWindow(win)
         }
@@ -103,12 +103,7 @@ export class WindowManager
 
     /**
      * add edge snapping plugin
-     * @param {object} options
-     * @param {boolean} [options.screen=true] snap to screen edges
-     * @param {boolean} [options.windows=true] snap to window edges
-     * @param {number} [options.snap=20] distance to edge before snapping
-     * @param {string} [options.color=#a8f0f4] color for snap bars
-     * @param {number} [options.spacing=0] spacing distance between window and edges
+     * @param {SnapOptions} options
      */
     snap(options)
     {
@@ -120,6 +115,35 @@ export class WindowManager
                 this.plugins['snap'].addWindow(win)
             }
         }
+    }
+
+    /**
+     * adds an application menu
+     * @param {MenuOptions} options
+     */
+    menu(options)
+    {
+        this.plugins['menu'] = new Menu(this, options)
+        this.win.appendChild(this.plugins['menu'].div)
+    }
+
+    /**
+     * add a local accelerator (keyboard event handler for menu and WindowsManager)
+     * @param {LocalAcceleratorOptions} options
+     */
+    localAccelerator(options)
+    {
+        this.plugins['localAccelerator'] = new LocalAccelerator(this, options)
+    }
+
+    /**
+     *
+     * @param {string} name
+     * @returns {(Menu|LocalAccelerator|Snap)}
+     */
+    getPlugin(name)
+    {
+        return this.plugins[name]
     }
 
     /**
@@ -275,7 +299,7 @@ export class WindowManager
                 'width': '100%',
                 'height': '100%',
                 'overflow': 'hidden',
-                'background': this.options.modalBackground
+                'background': this.defaultOptions.modalBackground
             }
         })
         this.modalOverlay.addEventListener('mousemove', (e) => { this._move(e); e.preventDefault(); e.stopPropagation() })
@@ -372,3 +396,12 @@ export class WindowManager
         return !this.modal || this.modal === win
     }
 }
+
+/**
+ * @typedef {object} SnapOptions
+ * @property {boolean} [screen=true] snap to screen edges
+ * @property {boolean} [windows=true] snap to window edges
+ * @property {number} [snap=20] distance to edge before snapping
+ * @property {string} [color=#a8f0f4] color for snap bars
+ * @property {number} [spacing=0] spacing distance between window and edges
+ */

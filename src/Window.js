@@ -14,8 +14,6 @@ let id = 0
  * @fires close
  * @fires maximize
  * @fires maximize-restore
- * @fires minimize
- * @fires minimize-restore
  * @fires move
  * @fires move-start
  * @fires move-end
@@ -45,7 +43,6 @@ export class Window extends Events
 
         this.active = false
         this.maximized = false
-        this.minimized = false
 
         this._closed = true
         this._restore = null
@@ -79,10 +76,6 @@ export class Window extends Events
     {
         if (this.wm.checkModal(this))
         {
-            if (this.minimized)
-            {
-                this.minimize()
-            }
             this.active = true
             if (this.options.titlebar)
             {
@@ -116,7 +109,6 @@ export class Window extends Events
         if (!this._closed)
         {
             this._closed = true
-            this.win.style.transform = 'scale(0)'
             this.win.style.display = 'none'
         }
     }
@@ -141,10 +133,6 @@ export class Window extends Events
         this.options.x = value
         this.emit('move-x', this)
         this._buildTransform()
-        if (this.minimized)
-        {
-            this._lastMinimized.left = value
-        }
     }
 
     _buildTransform()
@@ -162,10 +150,6 @@ export class Window extends Events
         this.options.y = value
         this._buildTransform()
         this.emit('move-y', this)
-        if (this.minimized)
-        {
-            this._lastMinimized.top = value
-        }
     }
 
     /**
@@ -177,7 +161,7 @@ export class Window extends Events
     {
         if (value)
         {
-            this.win.style.width = value + 'px'
+            this.win.style.width = `${value}px`
             this.options.width = this.win.offsetWidth
         }
         else
@@ -197,7 +181,7 @@ export class Window extends Events
     {
         if (value)
         {
-            this.win.style.height = value + 'px'
+            this.win.style.height = `${value}px`
             this.options.height = this.win.offsetHeight
         }
         else
@@ -231,47 +215,6 @@ export class Window extends Events
         this.emit('move-x', this)
         this.emit('move-y', this)
         this._buildTransform()
-        if (this.minimized)
-        {
-            this._lastMinimized.left = x
-            this._lastMinimized.top = y
-        }
-    }
-
-    /**
-     * minimize window
-     */
-    minimize()
-    {
-        if (this.wm.checkModal(this) && this.options.minimizable && !this.transitioning)
-        {
-            if (this.minimized)
-            {
-                this.win.style.transform = ''
-                const x = this.minimized.x, y = this.minimized.y
-                this.minimized = false
-                this.move(x, y)
-                this.emit('minimize-restore', this)
-                this.overlay.style.display = 'none'
-            }
-            else
-            {
-                const x = this.x
-                const y = this.y
-                const left = this._lastMinimized ? this._lastMinimized.left : this.x
-                const top = this._lastMinimized ? this._lastMinimized.top : this.y
-                const desired = this.options.minimizeSize
-                const scaleX = desired / this.width
-                const scaleY = desired / this.height
-                // this.win.style.transform = 'scale(1) scaleX(' + scaleX + ') scaleY(' + scaleY + ')'
-                // this.win.style.left = left + 'px'
-                // this.win.style.top = top + 'px'
-                this.minimized = { x, y, scaleX, scaleY }
-                this.emit('minimize', this)
-                this.overlay.style.display = 'block'
-                this._lastMinimized = { left, top }
-            }
-        }
     }
 
     /**
@@ -289,7 +232,7 @@ export class Window extends Events
                 this.height = this.maximized.height
                 this.maximized = null
                 this.emit('restore', this)
-                this.buttons.maximize.style.backgroundImage = this.options.backgroundMaximizeButton
+                this.buttons.maximize.innerHTML = this.options.maximizeButton
             }
             else
             {
@@ -300,7 +243,7 @@ export class Window extends Events
                 this.width = this.wm.overlay.offsetWidth + 'px'
                 this.height = this.wm.overlay.offsetHeight + 'px'
                 this.emit('maximize', this)
-                this.buttons.maximize.style.backgroundImage = this.options.backgroundRestoreButton
+                this.buttons.maximize.innerHTML = this.options.restoreButton
             }
         }
     }
@@ -333,16 +276,6 @@ export class Window extends Events
         {
             data.maximized = { left: maximized.left, top: maximized.top, width: maximized.width, height: maximized.height }
         }
-        const minimized = this.minimized
-        if (minimized)
-        {
-            data.minimized = { x: this.minimized.x, y: this.minimized.y, scaleX: this.minimized.scaleX, scaleY: this.minimized.scaleY }
-        }
-        const lastMinimized = this._lastMinimized
-        if (lastMinimized)
-        {
-            data.lastMinimized = { left: lastMinimized.left, top: lastMinimized.top }
-        }
         data.x = this.x
         data.y = this.y
         if (typeof this.options.width !== 'undefined')
@@ -373,22 +306,6 @@ export class Window extends Events
         else if (this.maximized)
         {
             this.maximize(true)
-        }
-        if (data.minimized)
-        {
-            if (!this.minimized)
-            {
-                this.minimize(true)
-            }
-            this.minimized = data.minimized
-        }
-        else if (this.minimized)
-        {
-            this.minimize(true)
-        }
-        if (data.lastMinimized)
-        {
-            this._lastMinimized = data.lastMinimized
         }
         this.x = data.x
         this.y = data.y
@@ -481,12 +398,6 @@ export class Window extends Events
     /**
      * Fires when window is restored to normal after being maximized
      * @event Window#maximize-restore
-     * @type {Window}
-     */
-
-    /**
-     * Fires when window is restored to normal after being minimized
-     * @event Window#minimize-restore
      * @type {Window}
      */
 
@@ -593,7 +504,8 @@ export class Window extends Events
                 'background-color': this.options.backgroundColorWindow,
                 'width': isNaN(this.options.width) ? this.options.width : this.options.width + 'px',
                 'height': isNaN(this.options.height) ? this.options.height : this.options.height + 'px'
-            }
+            },
+            className: this.options.classNames.win
         })
 
         this.winBox = html({
@@ -603,7 +515,8 @@ export class Window extends Events
                 'width': '100%',
                 'height': '100%',
                 'min-height': this.options.minHeight
-            }
+            },
+            className: this.options.classNames.winBox
         })
         this._createTitlebar()
 
@@ -619,7 +532,8 @@ export class Window extends Events
                 'min-height': this.minHeight,
                 'overflow-x': 'hidden',
                 'overflow-y': 'auto'
-            }
+            },
+            className: this.options.classNames.content
         })
 
         if (this.options.resizable)
@@ -635,7 +549,8 @@ export class Window extends Events
                 'top': 0,
                 'width': '100%',
                 'height': '100%'
-            }
+            },
+            className: this.options.classNames.overlay
         })
         this.overlay.addEventListener('mousedown', (e) => { this._downTitlebar(e); e.stopPropagation() })
         this.overlay.addEventListener('touchstart', (e) => { this._downTitlebar(e); e.stopPropagation() })
@@ -672,7 +587,8 @@ export class Window extends Events
                     'border': 0,
                     'padding': '0 8px',
                     'overflow': 'hidden',
-                }
+                },
+                className: this.options.classNames.titlebar
             })
             const winTitleStyles = {
                 'user-select': 'none',
@@ -697,7 +613,7 @@ export class Window extends Events
                 winTitleStyles['padding-left'] = '8px'
 
             }
-            this.winTitle = html({ parent: this.winTitlebar, type: 'span', html: this.options.title, styles: winTitleStyles })
+            this.winTitle = html({ parent: this.winTitlebar, type: 'span', html: this.options.title, styles: winTitleStyles, className: this.options.classNames.winTitle })
             this._createButtons()
 
             if (this.options.movable)
@@ -716,13 +632,14 @@ export class Window extends Events
                 'flex-direction': 'row',
                 'align-items': 'center',
                 'padding-left': '10px'
-            }
+            },
+            className: this.options.classNames.winButtonGroup
         })
         const button = {
             'display': 'inline-block',
             'border': 0,
             'margin': 0,
-            'margin-left': '5px',
+            'margin-left': '15px',
             'padding': 0,
             'width': '12px',
             'height': '12px',
@@ -734,22 +651,14 @@ export class Window extends Events
             'outline': 0
         }
         this.buttons = {}
-        if (this.options.minimizable)
-        {
-            button.backgroundImage = this.options.backgroundMinimizeButton
-            this.buttons.minimize = html({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
-            clicked(this.buttons.minimize, () => this.minimize())
-        }
         if (this.options.maximizable)
         {
-            button.backgroundImage = this.options.backgroundMaximizeButton
-            this.buttons.maximize = html({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
+            this.buttons.maximize = html({ parent: this.winButtonGroup, html: this.options.maximizeButton, type: 'button', styles: button, className: this.options.maximize })
             clicked(this.buttons.maximize, () => this.maximize())
         }
         if (this.options.closable)
         {
-            button.backgroundImage = this.options.backgroundCloseButton
-            this.buttons.close = html({ parent: this.winButtonGroup, html: '&nbsp;', type: 'button', styles: button })
+            this.buttons.close = html({ parent: this.winButtonGroup, html: this.options.closeButton, type: 'button', styles: button, className: this.options.close })
             clicked(this.buttons.close, () => this.close())
         }
         for (let key in this.buttons)
@@ -769,7 +678,7 @@ export class Window extends Events
     _createResize()
     {
         this.resizeEdge = html({
-            parent: this.winBox, type: 'button', html: '&nbsp', styles: {
+            parent: this.winBox, type: 'button', html: this.options.backgroundResize, styles: {
                 'position': 'absolute',
                 'bottom': 0,
                 'right': '4px',
@@ -778,10 +687,11 @@ export class Window extends Events
                 'padding': 0,
                 'cursor': 'se-resize',
                 'user-select': 'none',
-                'background': this.options.backgroundResize,
                 'height': '15px',
-                'width': '10px'
-            }
+                'width': '10px',
+                'background': 'none'
+            },
+            className: this.options.classNames.resizeEdge
         })
         const down = (e) =>
         {
@@ -815,10 +725,6 @@ export class Window extends Events
             }
             if (this._moving)
             {
-                if (this.minimized)
-                {
-                    this._moved = true
-                }
                 this.move(
                     event.pageX - this._moving.x,
                     event.pageY - this._moving.y
@@ -844,13 +750,6 @@ export class Window extends Events
     {
         if (this._moving)
         {
-            if (this.minimized)
-            {
-                if (!this._moved)
-                {
-                    this.minimize()
-                }
-            }
             this._stopMove()
         }
         this._resizing && this._stopResize()
