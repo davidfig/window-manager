@@ -8,8 +8,6 @@ import { html } from '../../src/html'
 // create a window manager and change some of the default styles
 const wm = new WindowManager()
 wm.snap({ screen: true, windows: true, spacing: 0 })
-wm.localAccelerator()
-wm.menu()
 
 window.onload = () =>
 {
@@ -57,7 +55,10 @@ function test3()
     html({ parent: test.content, html: 'OK. It isn\'t that fancy, but it shows off some of the functionality of this library.<br><br>Please excuse the mess. I do NOT keep my desktop this messy, but I thought it made for a good demo.' })
     const div = html({ parent: test.content, styles: { textAlign: 'center', marginTop: '1em' } })
     const button = html({ parent: div, type: 'button', html: 'open modal window' })
-    button.onclick = () =>
+
+    let x = 0
+    let y = 0
+    function createModal()
     {
         // create a modal window
         const modal = wm.createWindow({
@@ -69,17 +70,21 @@ function test3()
         })
         const div = html({ parent: modal.content, styles: { 'margin': '0.5em' } })
         html({ parent: div, html: 'This needs to be closed before using other windows.' })
-        const buttonDiv = html({ parent: div, styles: { 'text-align': 'center', margin: '1em' } })
+        const buttonDiv = html({ parent: div, styles: { 'text-align': 'center', margin: '1em', display: 'flex' } })
+        const buttonAdd = html({ parent: buttonDiv, type: 'button', html: 'open child modal' })
         const button = html({ parent: buttonDiv, type: 'button', html: 'close modal' })
-        button.onclick = () =>
-        {
-            modal.close()
-        }
+        button.onclick = () => modal.close()
+        buttonAdd.onclick = () => createModal()
         modal.open()
 
         // center window in test
         modal.center(test)
+        modal.move(modal.x + x, modal.y + y)
+        x += 20
+        y += 20
     }
+
+    button.onclick = () => createModal(div)
     test.open()
 }
 

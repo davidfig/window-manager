@@ -48,6 +48,7 @@ export class Window extends Events
         this._restore = null
         this._moving = null
         this._resizing = null
+        this._attachedToScreen = { vertical: '', horziontal: '' }
     }
 
     /**
@@ -60,7 +61,6 @@ export class Window extends Events
         {
             this.emit('open', this)
             this.win.style.display = 'block'
-            // this.win.style.transform = ''
             this._closed = false
             if (!noFocus)
             {
@@ -74,15 +74,12 @@ export class Window extends Events
      */
     focus()
     {
-        if (this.wm.checkModal(this))
+        this.active = true
+        if (this.options.titlebar)
         {
-            this.active = true
-            if (this.options.titlebar)
-            {
-                this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarActive
-            }
-            this.emit('focus', this)
+            this.winTitlebar.style.backgroundColor = this.options.colors.backgroundTitlebarActive
         }
+        this.emit('focus', this)
     }
 
     /**
@@ -90,15 +87,12 @@ export class Window extends Events
      */
     blur()
     {
-        if (this.wm.modal !== this)
+        this.active = false
+        if (this.options.titlebar)
         {
-            this.active = false
-            if (this.options.titlebar)
-            {
-                this.winTitlebar.style.backgroundColor = this.options.backgroundColorTitlebarInactive
-            }
-            this.emit('blur', this)
+            this.winTitlebar.style.backgroundColor = this.options.colors.backgroundTitlebarInactive
         }
+        this.emit('blur', this)
     }
 
     /**
@@ -110,6 +104,7 @@ export class Window extends Events
         {
             this._closed = true
             this.win.style.display = 'none'
+            this.emit('close', this)
         }
     }
 
@@ -130,9 +125,12 @@ export class Window extends Events
     get x() { return this.options.x }
     set x(value)
     {
-        this.options.x = value
-        this.emit('move-x', this)
-        this._buildTransform()
+        if (value !== this.options.x)
+        {
+            this.options.x = value
+            this.emit('move-x', this)
+            this._buildTransform()
+        }
     }
 
     _buildTransform()
@@ -147,9 +145,12 @@ export class Window extends Events
     get y() { return this.options.y }
     set y(value)
     {
-        this.options.y = value
-        this._buildTransform()
-        this.emit('move-y', this)
+        if (value !== this.options.y)
+        {
+            this.options.y = value
+            this._buildTransform()
+            this.emit('move-y', this)
+        }
     }
 
     /**
@@ -159,17 +160,20 @@ export class Window extends Events
     get width() { return this.options.width || this.win.offsetWidth }
     set width(value)
     {
-        if (value)
+        if (value !== this.options.width)
         {
-            this.win.style.width = `${value}px`
-            this.options.width = this.win.offsetWidth
+            if (value)
+            {
+                this.win.style.width = `${value}px`
+                this.options.width = this.win.offsetWidth
+            }
+            else
+            {
+                this.win.style.width = 'auto'
+                this.options.width = ''
+            }
+            this.emit('resize-width', this)
         }
-        else
-        {
-            this.win.style.width = 'auto'
-            this.options.width = ''
-        }
-        this.emit('resize-width', this)
     }
 
     /**
@@ -179,17 +183,20 @@ export class Window extends Events
     get height() { return this.options.height || this.win.offsetHeight }
     set height(value)
     {
-        if (value)
+        if (value !== this.options.height)
         {
-            this.win.style.height = `${value}px`
-            this.options.height = this.win.offsetHeight
+            if (value)
+            {
+                this.win.style.height = `${value}px`
+                this.options.height = this.win.offsetHeight
+            }
+            else
+            {
+                this.win.style.height = 'auto'
+                this.options.height = ''
+            }
+            this.emit('resize-height', this)
         }
-        else
-        {
-            this.win.style.height = 'auto'
-            this.options.height = ''
-        }
-        this.emit('resize-height', this)
     }
 
     /**
@@ -210,10 +217,31 @@ export class Window extends Events
      */
     move(x, y)
     {
-        this.options.x = x
-        this.options.y = y
-        this.emit('move-x', this)
-        this.emit('move-y', this)
+        const keepInside = this.keepInside
+        if (keepInside)
+        {
+            const bounds = this.bounds
+            if (keepInside === true || keepInside === 'horizontal')
+            {
+                x = x + this.width > bounds.right ? bounds.right - this.width : x
+                x = x < bounds.left ? bounds.left : x
+            }
+            if (keepInside === true || keepInside === 'vertical')
+            {
+                y = y + this.height > bounds.bottom ? bounds.bottom - this.height : y
+                y = y < bounds.top ? bounds.top : y
+            }
+        }
+        if (x !== this.options.x)
+        {
+            this.options.x = x
+            this.emit('move-x', this)
+        }
+        if (y !== this.options.y)
+        {
+            this.options.y = y
+            this.emit('move-y', this)
+        }
         this._buildTransform()
     }
 
@@ -222,7 +250,7 @@ export class Window extends Events
      */
     maximize()
     {
-        if (this.wm.checkModal(this) && this.options.maximizable && !this.transitioning)
+        if (this.options.maximizable)
         {
             if (this.maximized)
             {
@@ -501,7 +529,7 @@ export class Window extends Events
                 'min-width': this.options.minWidth,
                 'min-height': this.options.minHeight,
                 'box-shadow': this.options.shadow,
-                'background-color': this.options.backgroundColorWindow,
+                'background-color': this.options.colors.backgroundWindow,
                 'width': isNaN(this.options.width) ? this.options.width : this.options.width + 'px',
                 'height': isNaN(this.options.height) ? this.options.height : this.options.height + 'px'
             },
@@ -559,16 +587,13 @@ export class Window extends Events
 
     _downTitlebar(e)
     {
-        if (!this.transitioning)
-        {
-            const event = this._convertMoveEvent(e)
-            this._moving = {
-                x: event.pageX - this.x,
-                y: event.pageY - this.y
-            }
-            this.emit('move-start', this)
-            this._moved = false
+        const event = this._convertMoveEvent(e)
+        this._moving = {
+            x: event.pageX - this.x,
+            y: event.pageY - this.y
         }
+        this.emit('move-start', this)
+        this._moved = false
     }
 
     _createTitlebar()
@@ -602,7 +627,7 @@ export class Window extends Events
                 'margin': 0,
                 'font-size': '16px',
                 'font-weight': 400,
-                'color': this.options.foregroundColorTitle
+                'color': this.options.colors.foregroundTitle
             }
             if (this.options.titleCenter)
             {
@@ -647,7 +672,7 @@ export class Window extends Events
             'background-size': 'cover',
             'background-repeat': 'no-repeat',
             'opacity': .7,
-            'color': this.options.foregroundColorButton,
+            'color': this.options.colors.foregroundButton,
             'outline': 0
         }
         this.buttons = {}
@@ -695,18 +720,15 @@ export class Window extends Events
         })
         const down = (e) =>
         {
-            if (this.wm.checkModal(this))
-            {
-                const event = this._convertMoveEvent(e)
-                const width = this.width || this.win.offsetWidth
-                const height = this.height || this.win.offsetHeight
-                this._resizing = {
-                    width: width - event.pageX,
-                    height: height - event.pageY
-                }
-                this.emit('resize-start')
-                e.preventDefault()
+            const event = this._convertMoveEvent(e)
+            const width = this.width || this.win.offsetWidth
+            const height = this.height || this.win.offsetHeight
+            this._resizing = {
+                width: width - event.pageX,
+                height: height - event.pageY
             }
+            this.emit('resize-start')
+            e.preventDefault()
         }
         this.resizeEdge.addEventListener('mousedown', down)
         this.resizeEdge.addEventListener('touchstart', down)
@@ -714,35 +736,29 @@ export class Window extends Events
 
     _move(e)
     {
-        if (this.wm.checkModal(this))
+        const event = this._convertMoveEvent(e)
+
+        if (!this._isTouchEvent(e) && e.which !== 1)
         {
-            const event = this._convertMoveEvent(e)
+            this._moving && this._stopMove()
+            this._resizing && this._stopResize()
+        }
+        if (this._moving)
+        {
+            this.move(event.pageX - this._moving.x, event.pageY - this._moving.y)
+            this.emit('move', this)
+            e.preventDefault()
+        }
 
-            if (!this._isTouchEvent(e) && e.which !== 1)
-            {
-                this._moving && this._stopMove()
-                this._resizing && this._stopResize()
-            }
-            if (this._moving)
-            {
-                this.move(
-                    event.pageX - this._moving.x,
-                    event.pageY - this._moving.y
-                )
-                this.emit('move', this)
-                e.preventDefault()
-            }
-
-            if (this._resizing)
-            {
-                this.resize(
-                    event.pageX + this._resizing.width,
-                    event.pageY + this._resizing.height
-                )
-                this.maximized = null
-                this.emit('resize', this)
-                e.preventDefault()
-            }
+        if (this._resizing)
+        {
+            this.resize(
+                event.pageX + this._resizing.width,
+                event.pageY + this._resizing.height
+            )
+            this.maximized = null
+            this.emit('resize', this)
+            e.preventDefault()
         }
     }
 
@@ -781,6 +797,39 @@ export class Window extends Events
     _convertMoveEvent(e)
     {
         return this._isTouchEvent(e) ? e.changedTouches[0] : e
+    }
+
+    /**
+     * attaches window to a side of the screen
+     * @param {('horizontal'|'vertical')} direction
+     * @param {('left'|'right'|'top'|'bottom')} location
+     */
+    attachToScreen(direction, location)
+    {
+        this._attachedToScreen[direction] = location
+    }
+
+    /**
+     * @param {Bounds} bounds
+     * @param {(boolean|'horizontal'|'vertical')} keepInside
+     */
+    resize(bounds, keepInside)
+    {
+        this.bounds = bounds
+        this.keepInside = keepInside
+        let x = this.x
+        let y = this.y
+        x = this._attachedToScreen.horziontal === 'right' ? bounds.right - this.width : x
+        x = this._attachedToScreen.horizontal === 'left' ? bounds.left : x
+        y = this._attachedToScreen.vertical === 'bottom' ? bounds.bottom - this.height : y
+        y = this._attachedToScreen.vertical === 'top' ? bounds.top : y
+        this.move(x, y)
+    }
+
+    /** @returns {boolean} */
+    isModal()
+    {
+        return this.options.modal
     }
 
     get z() { return parseInt(this.win.style.zIndex) }

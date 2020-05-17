@@ -1,4 +1,4 @@
-import { html } from '../html'
+import { html } from './html'
 
 const DEFAULT_COLOR = '#a8f0f4'
 const DEFAULT_SIZE = 10
@@ -24,7 +24,6 @@ export class Snap
      * @param {string} [options.color=#a8f0f4] color for snap bars
      * @param {number} [options.spacing=5] spacing distance between window and edges
      * @param {number} [options.indicator=10] size in pixels of snapping indicator (the indicator is actually twice the size of what is shown)
-     * @private
      */
     constructor(wm, options={})
     {
@@ -73,22 +72,22 @@ export class Snap
         {
             if (Math.abs(rect.top - 0) <= this.options.snap)
             {
-                horizontal.push({ distance: Math.abs(rect.top - 0), left: 0, width, top: 0, side: 'top' })
+                horizontal.push({ distance: Math.abs(rect.top - 0), left: 0, width, top: 0, side: 'top', screen: true })
             }
             else if (Math.abs(rect.bottom - height) <= this.options.snap)
             {
-                horizontal.push({ distance: Math.abs(rect.bottom - height), left: 0, width, top: height, side: 'bottom' })
+                horizontal.push({ distance: Math.abs(rect.bottom - height), left: 0, width, top: height, side: 'bottom', screen: true })
             }
         }
         if (rect.top - this.options.snap <= height && rect.bottom + this.options.snap >= 0)
         {
             if (Math.abs(rect.left - 0) <= this.options.snap)
             {
-                vertical.push({ distance: Math.abs(rect.left - 0), top: 0, height, left: 0, side: 'left' })
+                vertical.push({ distance: Math.abs(rect.left - 0), top: 0, height, left: 0, side: 'left', screen: true })
             }
             else if (Math.abs(rect.right - width) <= this.options.snap)
             {
-                vertical.push({ distance: Math.abs(rect.right - width), top: 0, height, left: width, side: 'right' })
+                vertical.push({ distance: Math.abs(rect.right - width), top: 0, height, left: width, side: 'right', screen: true })
             }
         }
     }
@@ -187,6 +186,7 @@ export class Snap
             this.horizontal.style.transform = `translate(${find.left}px,${this.horizontal.y}px)`
             this.horizontal.side = find.side
             this.horizontal.noSpacing = find.noSpacing
+            this.horizontal.screen = find.screen
         }
         if (vertical.length)
         {
@@ -198,6 +198,7 @@ export class Snap
             this.vertical.style.transform = `translate(${this.vertical.x}px,${find.top}px)`
             this.vertical.side = find.side
             this.vertical.noSpacing = find.noSpacing
+            this.vertical.screen = find.screen
         }
     }
 
@@ -214,13 +215,14 @@ export class Snap
             switch (this.horizontal.side)
             {
                 case 'top':
-                    win.y = this.horizontal.y - adjust + spacing - this.options.indicator / 4
+                    win.y = this.horizontal.y - adjust + spacing + this.options.indicator / 2
                     break
 
                 case 'bottom':
-                    win.bottom = Math.floor(this.horizontal.y + adjust - spacing - this.options.indicator / 4)
+                    win.bottom = Math.floor(this.horizontal.y + adjust - spacing + this.options.indicator / 2)
                     break
             }
+            win.attachToScreen('vertical', this.horizontal.screen ? this.horizontal.side : '')
         }
         if (this.vertical.style.display === 'block')
         {
@@ -229,13 +231,14 @@ export class Snap
             switch (this.vertical.side)
             {
                 case 'left':
-                    win.x = this.vertical.x - adjust + spacing - this.options.indicator / 4
+                    win.x = this.vertical.x - adjust + spacing + this.options.indicator / 2
                     break
 
                 case 'right':
-                    win.right = Math.floor(this.vertical.x + adjust - spacing - this.options.indicator / 4)
+                    win.right = Math.floor(this.vertical.x + adjust - spacing + this.options.indicator / 2)
                     break
             }
+            win.attachToScreen('horziontal', this.vertical.screen ? this.vertical.side : '')
         }
         this.horizontal.style.display = this.vertical.style.display = 'none'
     }

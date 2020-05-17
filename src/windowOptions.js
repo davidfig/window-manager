@@ -1,7 +1,7 @@
 import { close, maximize, restore, resize } from './images'
 
 /**
- * @typedef {object} Window~WindowOptions
+ * @typedef {object} WindowOptions
  * @property {number} [x=0]
  * @property {number} [y=0]
  * @property {number} [width]
@@ -18,14 +18,15 @@ import { close, maximize, restore, resize } from './images'
  * @property {string} [minWidth=200px]
  * @property {string} [minHeight=60px]
  * @property {string} [borderRadius=4px]
- * @property {string} [modalBackground=rgba(0,0,0,0.6)]
  * @property {string} [shadow='0 0 12px 1px rgba(0, 0, 0, 0.6)']
  * @property {number} [animateTime=250]
- * @property {string} [backgroundColorWindow=#fefefe]
- * @property {string} [backgroundColorTitlebarActive=#365d98]
- * @property {string} [backgroundColorTitlebarInactive=#888888]
- * @property {string} [foregroundColorButton=#ffffff]
- * @property {string} [foregroundColorTitle=#ffffff]
+ * @property {object} [colors]
+ * @property {string} [colors.backgroundModal=rgba(0,0,0,0.6)]
+ * @property {string} [colors.backgroundWindow=#fefefe]
+ * @property {string} [colors.backgroundTitlebarActive=#365d98]
+ * @property {string} [colors.backgroundTitlebarInactive=#888888]
+ * @property {string} [colors.foregroundButton=#ffffff]
+ * @property {string} [colors.foregroundTitle=#ffffff]
  * @property {string} [maximizeButton=...]
  * @property {string} [closeButton=...]
  * @property {string} [resize=...]
@@ -51,7 +52,6 @@ export const windowOptions = {
     minHeight: '60px',
 
     borderRadius: 0,
-    modalBackground: 'rgba(0, 0, 0, 0.6)',
     shadow: 'none',
     movable: true,
     resizable: true,
@@ -61,15 +61,18 @@ export const windowOptions = {
     titlebar: true,
     titlebarHeight: '2rem',
 
-    backgroundColorWindow: '#fefefe',
-    backgroundColorTitlebarActive: '#365d98',
-    backgroundColorTitlebarInactive: '#888888',
-    foregroundColorButton: '#ffffff',
-    foregroundColorTitle: '#ffffff',
+    colors: {
+        backgroundModal: 'rgba(0, 0, 0, 0.6)',
+        backgroundWindow: '#fefefe',
+        backgroundTitlebarActive: '#365d98',
+        backgroundTitlebarInactive: '#888888',
+        foregroundButton: '#ffffff',
+        foregroundTitle: '#ffffff',
+    },
 
     closeButton: close,
     maximizeButton: maximize,
     restoreButton: restore,
 
-    backgroundResize: resize,
+    backgroundResize: resize
 }

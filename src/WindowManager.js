@@ -1,10 +1,15 @@
 import { html } from './html'
 import { Window } from './Window'
 import { windowOptions } from './windowOptions'
-import { Snap } from './plugins/Snap'
-import { LocalAccelerator } from './plugins/LocalAccelerator'
-import { Menu } from './plugins/Menu'
+import { Snap } from './Snap'
 export { Window } from './Window'
+
+const windowManagerOptions = {
+    parent: document.body,
+    quiet: false,
+    keepInside: true,
+    snap: true
+}
 
 /**
  * Creates a windowing system to create and manage windows
@@ -20,27 +25,28 @@ export class WindowManager
 {
     /**
      * @param {object} [options]
+     * @param {HTMLElement} [options.parent=document.body]
      * @param {boolean} [options.quiet] suppress the simple-window-manager console message
-     * @param {object} [options]
-     * @param {SnapOptions} [options.snap] turn on edge snapping
-     * @param {Window~WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
+     * @param {(boolean|SnapOptions)} [options.snap] turn on edge and/or screen snapping
+     * @param {(boolean|'horizontal'|'vertical')} [options.keepInside=true] keep windows inside the parent in a certain direction
+     * @param {WindowOptions} [defaultOptions] default WindowOptions used when createWindow is called
      */
     constructor(options={}, defaultOptions={})
     {
         this.windows = []
         this.active = null
-        this.modal = null
+        this.options = Object.assign({}, windowManagerOptions, options)
         this.defaultOptions = Object.assign({}, windowOptions, defaultOptions)
-        if (!options.quiet)
+        if (!this.options.quiet)
         {
             console.log('%c ☕ simple-window-manager initialized ☕', 'color: #ff00ff')
         }
-        this._createDom()
-        this.plugins = []
-        if (options.snap)
+        this._createDom(options.parent || document.body)
+        if (this.options.snap)
         {
-            this.snap(options.snap)
+            this.snap(this.options.snap === true ? {} : this.options.snap)
         }
+        window.addEventListener('resize', () => this.resize())
     }
 
     /**
@@ -64,10 +70,11 @@ export class WindowManager
         win.win.addEventListener('touchmove', (e) => this._move(e))
         win.win.addEventListener('mouseup', (e) => this._up(e))
         win.win.addEventListener('touchend', (e) => this._up(e))
-        if (this.plugins['snap'] && !options.noSnap)
+        if (this._snap && !options.noSnap)
         {
-            this.plugins['snap'].addWindow(win)
+            this._snap.addWindow(win)
         }
+        win.resize(this.bounds, this.options.keepInside)
         return win
     }
 
@@ -90,72 +97,26 @@ export class WindowManager
         win.win.addEventListener('touchmove', (e) => this._move(e))
         win.win.addEventListener('mouseup', (e) => this._up(e))
         win.win.addEventListener('touchend', (e) => this._up(e))
-        if (win.modal)
+        if (this._snap && !this.defaultOptions.noSnap)
         {
-            this.modal = win
-        }
-        if (this.plugins['snap'] && !this.defaultOptions.noSnap)
-        {
-            this.plugins['snap'].addWindow(win)
+            this._snap.addWindow(win)
         }
         return win
     }
 
     /**
-     * add edge snapping plugin
+     * enable edge and/or screen snapping
      * @param {SnapOptions} options
      */
     snap(options)
     {
-        this.plugins['snap'] = new Snap(this, options)
+        this._snap = new Snap(this, options)
         for (let win of this.windows)
         {
             if (!win.options.noSnap)
             {
-                this.plugins['snap'].addWindow(win)
+                this._snap.addWindow(win)
             }
-        }
-    }
-
-    /**
-     * adds an application menu
-     * @param {MenuOptions} options
-     */
-    menu(options)
-    {
-        this.plugins['menu'] = new Menu(this, options)
-        this.win.appendChild(this.plugins['menu'].div)
-    }
-
-    /**
-     * add a local accelerator (keyboard event handler for menu and WindowsManager)
-     * @param {LocalAcceleratorOptions} options
-     */
-    localAccelerator(options)
-    {
-        this.plugins['localAccelerator'] = new LocalAccelerator(this, options)
-    }
-
-    /**
-     *
-     * @param {string} name
-     * @returns {(Menu|LocalAccelerator|Snap)}
-     */
-    getPlugin(name)
-    {
-        return this.plugins[name]
-    }
-
-    /**
-     * remove plugin
-     * @param {string} name of plugin
-     */
-    removePlugin(name)
-    {
-        if (this.plugins[name])
-        {
-            this.plugins[name].stop()
-            delete this.plugins[name]
         }
     }
 
@@ -233,8 +194,7 @@ export class WindowManager
             win.close()
         }
         this.windows = []
-        this.modalOverlay.remove()
-        this.active = this.modal = null
+        this.active = null
     }
 
     /**
@@ -251,7 +211,10 @@ export class WindowManager
         }
     }
 
-    _createDom()
+    /**
+     * @param {HTMLElement} parent
+     */
+    _createDom(parent)
     {
         /**
          * This is the top-level DOM element
@@ -259,7 +222,7 @@ export class WindowManager
          * @readonly
          */
         this.win = html({
-            parent: document.body, styles: {
+            parent, styles: {
                 'user-select': 'none',
                 'width': '100%',
                 'height': '100%',
@@ -299,7 +262,7 @@ export class WindowManager
                 'width': '100%',
                 'height': '100%',
                 'overflow': 'hidden',
-                'background': this.defaultOptions.modalBackground
+                'background': this.defaultOptions.colors.backgroundModal
             }
         })
         this.modalOverlay.addEventListener('mousemove', (e) => { this._move(e); e.preventDefault(); e.stopPropagation() })
@@ -320,7 +283,6 @@ export class WindowManager
         if (win.options.modal)
         {
             this._focus(win)
-            this.modal = win
             this.win.appendChild(this.modalOverlay)
             this.modalOverlay.style.zIndex = win.z - 1
         }
@@ -357,12 +319,34 @@ export class WindowManager
         }
     }
 
+    /**
+     * @param {number} zIndex
+     * @returns {(null|Window)}
+     */
+    _findWindowUsingZIndex(zIndex)
+    {
+        for (const key in this.windows)
+        {
+            if (this.windows[key].z === zIndex)
+            {
+                return this.windows[key]
+            }
+        }
+        return null
+    }
+
     _close(win)
     {
-        if (this.modal === win)
+        if (win.isModal())
         {
             this.modalOverlay.remove()
-            this.modal = null
+            const next = this._findWindowUsingZIndex(win.z - 1)
+            if (next && next.isModal())
+            {
+                this.win.appendChild(this.modalOverlay)
+                this.modalOverlay.style.zIndex = next.z - 1
+                this._focus(next)
+            }
         }
         const index = this.windows.indexOf(win)
         if (index !== -1)
@@ -377,7 +361,7 @@ export class WindowManager
 
     _move(e)
     {
-        for (let key in this.windows)
+        for (const key in this.windows)
         {
             this.windows[key]._move(e)
         }
@@ -385,7 +369,7 @@ export class WindowManager
 
     _up(e)
     {
-        for (let key in this.windows)
+        for (const key in this.windows)
         {
             this.windows[key]._up(e)
         }
@@ -394,6 +378,26 @@ export class WindowManager
     checkModal(win)
     {
         return !this.modal || this.modal === win
+    }
+
+    /** @type {Bounds} */
+    get bounds()
+    {
+        return {
+            top: this.win.offsetTop,
+            bottom: this.win.offsetTop + this.win.offsetHeight,
+            left: this.win.offsetLeft,
+            right: this.win.offsetLeft + this.win.offsetWidth
+        }
+    }
+
+    resize()
+    {
+        const bounds = this.bounds
+        for (const key in this.windows)
+        {
+            this.windows[key].resize(bounds, this.options.keepInside)
+        }
     }
 }
 
@@ -404,4 +408,12 @@ export class WindowManager
  * @property {number} [snap=20] distance to edge before snapping
  * @property {string} [color=#a8f0f4] color for snap bars
  * @property {number} [spacing=0] spacing distance between window and edges
+ */
+
+/**
+ * @typedef {object} Bounds
+ * @property {number} left
+ * @property {number} right
+ * @property {number} top
+ * @property {number} bottom
  */
