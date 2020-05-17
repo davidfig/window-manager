@@ -59,13 +59,13 @@ export class Window extends Events
     {
         if (this._closed)
         {
-            this.emit('open', this)
             this.win.style.display = 'block'
             this._closed = false
             if (!noFocus)
             {
                 this.focus()
             }
+            this.emit('open', this)
         }
     }
 
@@ -829,9 +829,15 @@ export class Window extends Events
     /** @returns {boolean} */
     isModal()
     {
-        return this.options.modal
+        return !this._closed && this.options.modal
     }
 
-    get z() { return parseInt(this.win.style.zIndex) }
-    set z(value) { this.win.style.zIndex = value }
+    get z()
+    {
+        return parseInt(this.win.style.zIndex)
+    }
+    set z(value)
+    {
+        this.win.style.zIndex = value
+    }
 }

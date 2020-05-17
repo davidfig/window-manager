@@ -75,6 +75,10 @@ export class WindowManager
             this._snap.addWindow(win)
         }
         win.resize(this.bounds, this.options.keepInside)
+        if (win.options.openOnCreate)
+        {
+            win.open()
+        }
         return win
     }
 
@@ -204,10 +208,25 @@ export class WindowManager
      */
     _reorder()
     {
-        let i = 0
-        for (; i < this.windows.length; i++)
+        const modals = []
+        for (const win of this.windows)
         {
-            this.windows[i].z = i
+            if (win.isModal())
+            {
+                modals.push(win)
+            }
+        }
+        let i = 0
+        for (const win of this.windows)
+        {
+            if (!modals.includes(win))
+            {
+                win.z = i++
+            }
+        }
+        for (const win of modals)
+        {
+            win.z = i++
         }
     }
 
@@ -254,6 +273,7 @@ export class WindowManager
         this.overlay.addEventListener('touchend', (e) => this._up(e))
 
         this.modalOverlay = html({
+            parent: this.win,
             styles: {
                 'user-select': 'none',
                 'position': 'absolute',
@@ -276,15 +296,17 @@ export class WindowManager
     _open(win)
     {
         const index = this.windows.indexOf(win)
-        if (index === -1)
+        if (index !== -1)
         {
-            this.windows.push(win)
+            this.windows.splice(index, 1)
         }
+        this.windows.push(win)
+console.log(this.windows.length)
+        this._reorder()
         if (win.options.modal)
         {
-            this._focus(win)
-            this.win.appendChild(this.modalOverlay)
             this.modalOverlay.style.zIndex = win.z - 1
+console.log(win.z)
         }
     }
 
@@ -308,7 +330,7 @@ export class WindowManager
         }
         this._reorder()
 
-        this.active = win
+        this.active = this.windows[this.windows.length - 1]
     }
 
     _blur(win)

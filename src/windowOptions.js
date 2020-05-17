@@ -6,6 +6,8 @@ import { close, maximize, restore, resize } from './images'
  * @property {number} [y=0]
  * @property {number} [width]
  * @property {number} [height]
+ * @property {boolean} [modal]
+ * @property {boolean} [openOnCreate=true]
  * @property {string} [className]
  * @property {boolean} [movable=true]
  * @property {boolean} [resizable=true]
@@ -34,6 +36,10 @@ import { close, maximize, restore, resize } from './images'
 export const windowOptions = {
     x: 0,
     y: 0,
+    width: undefined,
+    height: undefined,
+    modal: false,
+    openOnCreate: true,
 
     classNames: {
         win: '',
