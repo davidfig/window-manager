@@ -40,8 +40,8 @@
             "outputSourceFiles": true
         },
         "applicationName": "simple-window-manager",
-        "footer"        : "by YOPEY YOPEY LLC (yopeyopey.com)",
-        "copyright"     : "Copyright © 2018 YOPEY YOPEY LLC.",
+        "footer"        : "by David Figatner (david@yopeyopey.com)",
+        "copyright"     : "Copyright © 2020 YOPEY YOPEY LLC.",
         "meta": {
             "title": "simple-window-manager API Documentation",
             "description": "Documentation for simple-window-manager library",

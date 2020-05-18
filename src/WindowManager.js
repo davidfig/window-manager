@@ -51,7 +51,7 @@ export class WindowManager
 
     /**
      * Create a window
-     * @param {Window~WindowOptions} [options]
+     * @param {WindowOptions} [options]
      * @param {string} [options.title]
      * @param {number} [options.x] position
      * @param {number} [options.y] position
@@ -273,7 +273,7 @@ export class WindowManager
                 'width': '100%',
                 'height': '100%',
                 'overflow': 'hidden',
-                'background': this.defaultOptions.colors.backgroundModal
+                'background': this.defaultOptions.backgroundModal
             }
         })
         this.modalOverlay.addEventListener('mousemove', (e) => { this._move(e); e.preventDefault(); e.stopPropagation() })

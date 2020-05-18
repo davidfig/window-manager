@@ -308,81 +308,91 @@
 </div>
     <div class="main">
         
-        <h1 class="page-title" data-filename="index.html">Index</h1>
+        <h1 class="page-title" data-filename="src_windowOptions.js.html">Source: src/windowOptions.js</h1>
         
         
 
 
     
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-    
-
-
-
-
     <section>
-        <article class="readme content-size"><h1>simple-window-manager</h1>
-<p>A javascript-only Window Manager</p>
-<h2>version 2</h2>
-<ul>
-<li>the API has changed from v1 to v2</li>
-<li>rollup is used to compile the libraries, so there is no longer a default export: see sample code below</li>
-<li>animations are deprecated for now since they felt slow--I'm open to putting them back in</li>
-<li>finally moved away from <code>style.left</code> and <code>style.top</code> to <code>transform: translate(x, y)</code> (should have done this sooner)</li>
-<li>snapping working much better; screen snapping now optionally responds to window resize</li>
-<li>minimize has been removed since it does the same thing as close (unless we add a taskbar)</li>
-</ul>
-<h2>features</h2>
-<ul>
-<li>basic windowing experience (works great with electron to run multiple windows under one process)</li>
-<li>create normal and modal windows</li>
-<li>optionally snap windows to screen edges and/or other windows</li>
-<li>takes advantage of all the features of the DOM, including undefined width and/or height to automatically adjust size of window based on content</li>
-<li>windows may be resized, maximized, and minimized</li>
-<li>minimize works by minimizing to a small square that can be moved independently. Clicking it restores to its original size and location. Minimizing again moves the small square back to the last minimized location.</li>
-<li>can save and load windowing state (e.g., using localStorage or json files using Electron)</li>
-<li>emits events (using eventemitter3)</li>
-<li>uses javascript animations instead of CSS</li>
-</ul>
-<h2>rationale</h2>
-<p>I used <a target="_blank" href="https://github.com/rlamana/Ventus">Ventus</a> to build internal tools and editors, but I wanted a more configurable solution with a better event model that didn't rely on CSS.</p>
-<h2>live example</h2>
-<p><a target="_blank" href="https://davidfig.github.io/window-manager/">https://davidfig.github.io/window-manager/</a></p>
-<h2>installation</h2>
-<pre><code>npm i simple-window-manager
-</code></pre>
-<h2>API documentation</h2>
-<p><a target="_blank" href="https://davidfig.github.io/window-manager/jsdoc/">https://davidfig.github.io/window-manager/jsdoc/</a></p>
-<h2>sample code</h2>
-<pre class="prettyprint source lang-js"><code>    import { WindowManager } from 'simple-window-manager'
-    // or const WindowManager = require('simple-window-manager').WindowManager
+        <header>
+            <div class="header content-size">
+                <h2>src/windowOptions.js</h2>
+            </div>
+        </header>
+        <article>
+            <pre id="source-code" class="prettyprint source "><code>import { close, maximize, restore, resize } from './images'
 
-    // this is the window manager with one of the default options changed
-    const wm = new WindowManager({ backgroundWindow: 'green' });
+/**
+ * @typedef {object} WindowOptions
+ * @property {number} [x=0]
+ * @property {number} [y=0]
+ * @property {number} [width]
+ * @property {number} [height]
+ * @property {boolean} [modal]
+ * @property {boolean} [openOnCreate=true]
+ * @property {boolean} [movable=true]
+ * @property {boolean} [resizable=true]
+ * @property {boolean} [maximizable=true]
+ * @property {boolean} [closable=true]
+ * @property {boolean} [noSnap] don't snap this window or use this window as a snap target
+ * @property {boolean} [titlebar=true]
+ * @property {string} [titlebarHeight=36px]
+ * @property {boolean} [titleCenter]
+ * @property {string} [minWidth=200px]
+ * @property {string} [minHeight=60px]
+ * @property {string} [borderRadius=4px]
+ * @property {object} [styles]
+ * @property {string} [shadow='0 0 12px 1px rgba(0, 0, 0, 0.6)']
+ * @property {number} [animateTime=250]
+ * @property {string} [backgroundModal=rgba(0,0,0,0.6)]
+ * @property {string} [backgroundWindow=#fefefe]
+ * @property {string} [backgroundTitlebarActive=#365d98]
+ * @property {string} [backgroundTitlebarInactive=#888888]
+ * @property {string} [foregroundButton=#ffffff]
+ * @property {string} [foregroundTitle=#ffffff]
+ * @property {string} [maximizeButton=...]
+ * @property {string} [closeButton=...]
+ * @property {string} [resize=...]
+ */
+export const windowOptions = {
+    x: 0,
+    y: 0,
+    width: undefined,
+    height: undefined,
+    modal: false,
+    openOnCreate: true,
 
-    // enable window snapping to screen edges and other windows when moving
-    wm.snap()
+    classNames: {},
 
-    // create a window    
-    const window = wm.createWindow({ width: 500, height: 500, title: 'Test Window' })
+    minWidth: '200px',
+    minHeight: '60px',
+    borderRadius: 0,
+    styles: {},
 
-    // set content of window
-    window.content.style.margin = '10px'
-    window.content.innerHTML = 'This is a nifty window.'
-</code></pre>
-<h2>License</h2>
-<p>MIT License<br>
-(c) 2020 <a target="_blank" href="https://yopeyopey.com/">YOPEY YOPEY LLC</a> by <a href="david@yopeyopey.com">David Figatner</a></p></article>
+    shadow: 'none',
+    movable: true,
+    resizable: true,
+    maximizable: true,
+    closable: true,
+
+    titlebar: true,
+    titlebarHeight: '2rem',
+
+    backgroundModal: 'rgba(0, 0, 0, 0.6)',
+    backgroundWindow: '#fefefe',
+    backgroundTitlebarActive: '#365d98',
+    backgroundTitlebarInactive: '#888888',
+    foregroundButton: '#ffffff',
+    foregroundTitle: '#ffffff',
+
+    closeButton: close,
+    maximizeButton: maximize,
+    restoreButton: restore,
+
+    backgroundResize: resize
+}</code></pre>
+        </article>
     </section>
 
 
@@ -394,7 +404,7 @@
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon May 18 2020 18:22:39 GMT+0800 (Taipei Standard Time)
+                Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon May 18 2020 18:22:39 GMT+0800 (Taipei Standard Time)
             </div>
         </footer>
     </div>

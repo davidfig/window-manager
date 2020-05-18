@@ -308,81 +308,265 @@
 </div>
     <div class="main">
         
-        <h1 class="page-title" data-filename="index.html">Index</h1>
+        <h1 class="page-title" data-filename="src_Snap.js.html">Source: src/Snap.js</h1>
         
         
 
 
     
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-    
-
-
-
-
     <section>
-        <article class="readme content-size"><h1>simple-window-manager</h1>
-<p>A javascript-only Window Manager</p>
-<h2>version 2</h2>
-<ul>
-<li>the API has changed from v1 to v2</li>
-<li>rollup is used to compile the libraries, so there is no longer a default export: see sample code below</li>
-<li>animations are deprecated for now since they felt slow--I'm open to putting them back in</li>
-<li>finally moved away from <code>style.left</code> and <code>style.top</code> to <code>transform: translate(x, y)</code> (should have done this sooner)</li>
-<li>snapping working much better; screen snapping now optionally responds to window resize</li>
-<li>minimize has been removed since it does the same thing as close (unless we add a taskbar)</li>
-</ul>
-<h2>features</h2>
-<ul>
-<li>basic windowing experience (works great with electron to run multiple windows under one process)</li>
-<li>create normal and modal windows</li>
-<li>optionally snap windows to screen edges and/or other windows</li>
-<li>takes advantage of all the features of the DOM, including undefined width and/or height to automatically adjust size of window based on content</li>
-<li>windows may be resized, maximized, and minimized</li>
-<li>minimize works by minimizing to a small square that can be moved independently. Clicking it restores to its original size and location. Minimizing again moves the small square back to the last minimized location.</li>
-<li>can save and load windowing state (e.g., using localStorage or json files using Electron)</li>
-<li>emits events (using eventemitter3)</li>
-<li>uses javascript animations instead of CSS</li>
-</ul>
-<h2>rationale</h2>
-<p>I used <a target="_blank" href="https://github.com/rlamana/Ventus">Ventus</a> to build internal tools and editors, but I wanted a more configurable solution with a better event model that didn't rely on CSS.</p>
-<h2>live example</h2>
-<p><a target="_blank" href="https://davidfig.github.io/window-manager/">https://davidfig.github.io/window-manager/</a></p>
-<h2>installation</h2>
-<pre><code>npm i simple-window-manager
-</code></pre>
-<h2>API documentation</h2>
-<p><a target="_blank" href="https://davidfig.github.io/window-manager/jsdoc/">https://davidfig.github.io/window-manager/jsdoc/</a></p>
-<h2>sample code</h2>
-<pre class="prettyprint source lang-js"><code>    import { WindowManager } from 'simple-window-manager'
-    // or const WindowManager = require('simple-window-manager').WindowManager
+        <header>
+            <div class="header content-size">
+                <h2>src/Snap.js</h2>
+            </div>
+        </header>
+        <article>
+            <pre id="source-code" class="prettyprint source "><code>import { html } from './html'
 
-    // this is the window manager with one of the default options changed
-    const wm = new WindowManager({ backgroundWindow: 'green' });
+const DEFAULT_COLOR = '#a8f0f4'
+const DEFAULT_SIZE = 10
 
-    // enable window snapping to screen edges and other windows when moving
-    wm.snap()
+const SnapOptionsDefault = {
+    screen: true,
+    windows: true,
+    snap: 20,
+    color: DEFAULT_COLOR,
+    spacing: 5,
+    indicator: DEFAULT_SIZE
+}
 
-    // create a window    
-    const window = wm.createWindow({ width: 500, height: 500, title: 'Test Window' })
+export class Snap
+{
+    /**
+     * add edge snapping plugin
+     * @param {WindowManager} wm
+     * @param {object} [options]
+     * @param {boolean} [options.screen=true] snap to screen edges
+     * @param {boolean} [options.windows=true] snap to window edges
+     * @param {number} [options.snap=20] distance to edge in pixels before snapping and width/height of snap bars
+     * @param {string} [options.color=#a8f0f4] color for snap bars
+     * @param {number} [options.spacing=5] spacing distance between window and edges
+     * @param {number} [options.indicator=10] size in pixels of snapping indicator (the indicator is actually twice the size of what is shown)
+     */
+    constructor(wm, options={})
+    {
+        this.wm = wm
+        this.options = Object.assign({}, SnapOptionsDefault, options)
+        this.highlights = html({ parent: this.wm.overlay, styles: { 'position': 'absolute' } })
+        this.horizontal = html({
+            parent: this.highlights, styles: {
+                display: 'none',
+                position: 'absolute',
+                height: `${this.options.indicator}px`,
+                borderRadius: `${this.options.indicator}px`,
+                backgroundColor: this.options.color
+            }
+        })
+        this.vertical = html({
+            parent: this.highlights, styles: {
+                display: 'none',
+                position: 'absolute',
+                width: `${this.options.indicator}px`,
+                borderRadius: `${this.options.indicator}px`,
+                backgroundColor: this.options.color
+            }
+        })
+        this.horizontal
+        this.showing = []
+    }
 
-    // set content of window
-    window.content.style.margin = '10px'
-    window.content.innerHTML = 'This is a nifty window.'
-</code></pre>
-<h2>License</h2>
-<p>MIT License<br>
-(c) 2020 <a target="_blank" href="https://yopeyopey.com/">YOPEY YOPEY LLC</a> by <a href="david@yopeyopey.com">David Figatner</a></p></article>
+    stop()
+    {
+        this.highlights.remove()
+        this.stopped = true
+    }
+
+    addWindow(win)
+    {
+        win.on('move', () => this.move(win))
+        win.on('move-end', () => this.moveEnd(win))
+    }
+
+    screenMove(rect, horizontal, vertical)
+    {
+        const width = document.body.clientWidth
+        const height = document.body.clientHeight
+        if (rect.left - this.options.snap &lt;= width &amp;&amp; rect.right + this.options.snap >= 0)
+        {
+            if (Math.abs(rect.top - 0) &lt;= this.options.snap)
+            {
+                horizontal.push({ distance: Math.abs(rect.top - 0), left: 0, width, top: 0, side: 'top', screen: true })
+            }
+            else if (Math.abs(rect.bottom - height) &lt;= this.options.snap)
+            {
+                horizontal.push({ distance: Math.abs(rect.bottom - height), left: 0, width, top: height, side: 'bottom', screen: true })
+            }
+        }
+        if (rect.top - this.options.snap &lt;= height &amp;&amp; rect.bottom + this.options.snap >= 0)
+        {
+            if (Math.abs(rect.left - 0) &lt;= this.options.snap)
+            {
+                vertical.push({ distance: Math.abs(rect.left - 0), top: 0, height, left: 0, side: 'left', screen: true })
+            }
+            else if (Math.abs(rect.right - width) &lt;= this.options.snap)
+            {
+                vertical.push({ distance: Math.abs(rect.right - width), top: 0, height, left: width, side: 'right', screen: true })
+            }
+        }
+    }
+
+    windowsMove(original, rect, horizontal, vertical)
+    {
+        for (let win of this.wm.windows)
+        {
+            if (!win.options.noSnap &amp;&amp; win !== original)
+            {
+                const rect2 = win.win.getBoundingClientRect()
+                if (rect.left - this.options.snap &lt;= rect2.right &amp;&amp; rect.right + this.options.snap >= rect2.left)
+                {
+                    if (Math.abs(rect.top - rect2.bottom) &lt;= this.options.snap)
+                    {
+                        horizontal.push({ distance: Math.abs(rect.top - rect2.bottom), left: rect2.left, width: rect2.width, top: rect2.bottom, side: 'top' })
+                        if (Math.abs(rect.left - rect2.left) &lt;= this.options.snap)
+                        {
+                            vertical.push({ distance: Math.abs(rect.left - rect2.left), top: rect2.top, height: rect2.height, left: rect2.left, side: 'left', noSpacing: true })
+                        }
+                        else if (Math.abs(rect.right - rect2.right) &lt;= this.options.snap)
+                        {
+                            vertical.push({ distance: Math.abs(rect.right - rect2.right), top: rect2.top, height: rect2.height, left: rect2.right, side: 'right', noSpacing: true })
+                        }
+                    }
+                    else if (Math.abs(rect.bottom - rect2.top) &lt;= this.options.snap)
+                    {
+                        horizontal.push({ distance: Math.abs(rect.bottom - rect2.top), left: rect2.left, width: rect2.width, top: rect2.top, side: 'bottom' })
+                        if (Math.abs(rect.left - rect2.left) &lt;= this.options.snap)
+                        {
+                            vertical.push({ distance: Math.abs(rect.left - rect2.left), top: rect2.top, height: rect2.height, left: rect2.left, side: 'left', noSpacing: true })
+                        }
+                        else if (Math.abs(rect.right - rect2.right) &lt;= this.options.snap)
+                        {
+                            vertical.push({ distance: Math.abs(rect.right - rect2.right), top: rect2.top, height: rect2.height, left: rect2.right, side: 'right', noSpacing: true })
+                        }
+                    }
+                }
+                if (rect.top - this.options.snap &lt;= rect2.bottom &amp;&amp; rect.bottom + this.options.snap >= rect2.top)
+                {
+                    if (Math.abs(rect.left - rect2.right) &lt;= this.options.snap)
+                    {
+                        vertical.push({ distance: Math.abs(rect.left - rect2.right), top: rect2.top, height: rect2.height, left: rect2.right, side: 'left' })
+                        if (Math.abs(rect.top - rect2.top) &lt;= this.options.snap)
+                        {
+                            horizontal.push({ distance: Math.abs(rect.top - rect2.top), left: rect2.left, width: rect2.width, top: rect2.top, side: 'top', noSpacing: true })
+                        }
+                        else if (Math.abs(rect.bottom - rect2.bottom) &lt;= this.options.snap)
+                        {
+                            horizontal.push({ distance: Math.abs(rect.bottom - rect2.bottom), left: rect2.left, width: rect2.width, top: rect2.bottom, side: 'bottom', noSpacing: true })
+                        }
+                    }
+                    else if (Math.abs(rect.right - rect2.left) &lt;= this.options.snap)
+                    {
+                        vertical.push({ distance: Math.abs(rect.right - rect2.left), top: rect2.top, height: rect2.height, left: rect2.left, side: 'right' })
+                        if (Math.abs(rect.top - rect2.top) &lt;= this.options.snap)
+                        {
+                            horizontal.push({ distance: Math.abs(rect.top - rect2.top), left: rect2.left, width: rect2.width, top: rect2.top, side: 'top', noSpacing: true })
+                        }
+                        else if (Math.abs(rect.bottom - rect2.bottom) &lt;= this.options.snap)
+                        {
+                            horizontal.push({ distance: Math.abs(rect.bottom - rect2.bottom), left: rect2.left, width: rect2.width, top: rect2.bottom, side: 'bottom', noSpacing: true })
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    move(win)
+    {
+        if (this.stopped || win.options.noSnap || win.isModal())
+        {
+            return
+        }
+        this.horizontal.style.display = 'none'
+        this.vertical.style.display = 'none'
+        const horizontal = []
+        const vertical = []
+        const rect = win.win.getBoundingClientRect()
+        if (this.options.screen)
+        {
+            this.screenMove(rect, horizontal, vertical)
+        }
+        if (this.options.windows)
+        {
+            this.windowsMove(win, rect, horizontal, vertical)
+        }
+        if (horizontal.length)
+        {
+            horizontal.sort((a, b) => { return a.distance - b.distance })
+            const find = horizontal[0]
+            this.horizontal.style.display = 'block'
+            this.horizontal.style.width = find.width + 'px'
+            this.horizontal.y = find.top - this.options.indicator / 2
+            this.horizontal.style.transform = `translate(${find.left}px,${this.horizontal.y}px)`
+            this.horizontal.side = find.side
+            this.horizontal.noSpacing = find.noSpacing
+            this.horizontal.screen = find.screen
+        }
+        if (vertical.length)
+        {
+            vertical.sort((a, b) => { return a.distance - b.distance })
+            const find = vertical[0]
+            this.vertical.style.display  = 'block'
+            this.vertical.style.height = find.height + 'px'
+            this.vertical.x = find.left - this.options.indicator / 2
+            this.vertical.style.transform = `translate(${this.vertical.x}px,${find.top}px)`
+            this.vertical.side = find.side
+            this.vertical.noSpacing = find.noSpacing
+            this.vertical.screen = find.screen
+        }
+    }
+
+    moveEnd(win)
+    {
+        if (this.stopped)
+        {
+            return
+        }
+        if (this.horizontal.style.display === 'block')
+        {
+            const spacing = this.horizontal.noSpacing ? 0 : this.options.spacing
+            const adjust = win.minimized ? (win.height - win.height * win.minimized.scaleY) / 2 : 0
+            switch (this.horizontal.side)
+            {
+                case 'top':
+                    win.y = this.horizontal.y - adjust + spacing + this.options.indicator / 2
+                    break
+
+                case 'bottom':
+                    win.bottom = Math.floor(this.horizontal.y + adjust - spacing + this.options.indicator / 2)
+                    break
+            }
+            win.attachToScreen('vertical', this.horizontal.screen ? this.horizontal.side : '')
+        }
+        if (this.vertical.style.display === 'block')
+        {
+            const spacing = this.vertical.noSpacing ? 0 : this.options.spacing
+            const adjust = win.minimized ? (win.width - win.width * win.minimized.scaleX) / 2 : 0
+            switch (this.vertical.side)
+            {
+                case 'left':
+                    win.x = this.vertical.x - adjust + spacing + this.options.indicator / 2
+                    break
+
+                case 'right':
+                    win.right = Math.floor(this.vertical.x + adjust - spacing + this.options.indicator / 2)
+                    break
+            }
+            win.attachToScreen('horziontal', this.vertical.screen ? this.vertical.side : '')
+        }
+        this.horizontal.style.display = this.vertical.style.display = 'none'
+    }
+}</code></pre>
+        </article>
     </section>
 
 
@@ -394,7 +578,7 @@
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon May 18 2020 18:22:39 GMT+0800 (Taipei Standard Time)
+                Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.4</a> on Mon May 18 2020 18:22:39 GMT+0800 (Taipei Standard Time)
             </div>
         </footer>
     </div>

@@ -183,7 +183,7 @@ class Clicked
     {
         if (this.options.doubleClicked)
         {
-            this.doubleClickedTimeout = setTimeout(() => this.doubleClicked(e), this.options.doubleClickedTime)
+            this.doubleClickedTimeout = setTimeout(() => this.doubleClickedCancel(e), this.options.doubleClickedTime)
         }
         else if (this.options.clicked)
         {
@@ -237,10 +237,13 @@ class Clicked
         this.callback({ event: e, type: 'long-clicked' })
     }
 
-    doubleClicked(e)
+    doubleClickedCancel(e)
     {
         this.doubleClickedTimeout = null
-        this.callback({ event: e, type: 'clicked' })
+        if (this.options.clicked)
+        {
+            this.callback({ event: e, type: 'double-clicked' })
+        }
     }
 
     mousedown(e)

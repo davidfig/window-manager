@@ -37,10 +37,10 @@ function test2()
     const test = wm.createWindow({
         width: 300, height: 150,
         x: 100, y: 100,
-        backgroundColorWindow: 'rgb(255,200,255)',
         titlebarHeight: '22px',
-        backgroundColorTitlebarActive: 'green',
-        backgroundColorTitlebarInactive: 'purple'
+        backgroundTitlebarActive: 'green',
+        backgroundTitlebarInactive: 'purple',
+        backgroundWindow: 'rgb(255,200,255)',
     })
     test.content.style.padding = '0.5em'
     test.content.innerHTML = 'This is a pink test window.<br><br>Check out the fancy title bar for other style tests.<br><br><br>And scrolling!!!'
@@ -90,7 +90,7 @@ function test3()
 
 function test4()
 {
-    const test = wm.createWindow({ x: 300, y: top, title: 'My wife\'s art gallery!' })
+    const test = wm.createWindow({ x: 300, y: top, title: 'My wife\'s art gallery!', maximizable: false })
     test.content.innerHTML = '<iframe width="560" height="315" src="https://yuanru.gallery" frameborder="0" allow="encrypted-media" allowfullscreen></iframe>'
     test.open()
     test.sendToBack()
@@ -111,7 +111,7 @@ function test5()
 
 function test7()
 {
-    const test = wm.createWindow({ x: 700, y: 40, width: 400, height: 300, title: 'API documentation' })
+    const test = wm.createWindow({ x: 700, y: 40, width: 400, height: 300, title: 'API documentation', styles: { overflow: 'hidden' } })
     test.content.innerHTML = '<iframe width="100%" height="100%" src="https://davidfig.github.io/window-manager/jsdoc/"></iframe>'
     test.open()
 }
