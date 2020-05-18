@@ -62,10 +62,10 @@ export class WindowManager
     createWindow(options={})
     {
         const win = new Window(this, Object.assign({}, this.defaultOptions, options))
-        win.on('open', this._open, this)
-        win.on('focus', this._focus, this)
-        win.on('blur', this._blur, this)
-        win.on('close', this._close, this)
+        win.on('open', () => this._open(win))
+        win.on('focus', () => this._focus(win))
+        win.on('blur', () => this._blur(win))
+        win.on('close', () => this._close(win))
         win.win.addEventListener('mousemove', (e) => this._move(e))
         win.win.addEventListener('touchmove', (e) => this._move(e))
         win.win.addEventListener('mouseup', (e) => this._up(e))
@@ -131,6 +131,7 @@ export class WindowManager
     sendToFront(win)
     {
         const index = this.windows.indexOf(win)
+        console.assert(index !== -1, 'sendToFront should find window in this.windows')
         if (index !== this.windows.length - 1)
         {
             this.windows.splice(index, 1)
@@ -146,6 +147,7 @@ export class WindowManager
     sendToBack(win)
     {
         const index = this.windows.indexOf(win)
+        console.assert(index !== -1, 'sendToFront should find window in this.windows')
         if (index !== 0)
         {
             this.windows.splice(index, 1)
@@ -208,25 +210,13 @@ export class WindowManager
      */
     _reorder()
     {
-        const modals = []
-        for (const win of this.windows)
-        {
-            if (win.isModal())
-            {
-                modals.push(win)
-            }
-        }
         let i = 0
         for (const win of this.windows)
         {
-            if (!modals.includes(win))
+            if (!win.isClosed())
             {
                 win.z = i++
             }
-        }
-        for (const win of modals)
-        {
-            win.z = i++
         }
     }
 
@@ -275,6 +265,7 @@ export class WindowManager
         this.modalOverlay = html({
             parent: this.win,
             styles: {
+                'display': 'none',
                 'user-select': 'none',
                 'position': 'absolute',
                 'top': 0,
@@ -295,18 +286,16 @@ export class WindowManager
 
     _open(win)
     {
-        const index = this.windows.indexOf(win)
-        if (index !== -1)
-        {
-            this.windows.splice(index, 1)
-        }
         this.windows.push(win)
-console.log(this.windows.length)
         this._reorder()
         if (win.options.modal)
         {
-            this.modalOverlay.style.zIndex = win.z - 1
-console.log(win.z)
+            this.modalOverlay.style.display = 'block'
+            this.modalOverlay.style.zIndex = win.z
+        }
+        else
+        {
+            this.modalOverlay.style.display = 'none'
         }
     }
 
@@ -316,20 +305,18 @@ console.log(win.z)
         {
             return
         }
-
         if (this.active)
         {
             this.active.blur()
         }
-
         const index = this.windows.indexOf(win)
+        console.assert(index !== -1, 'WindowManager._focus should find window in this.windows')
         if (index !== this.windows.length - 1)
         {
             this.windows.splice(index, 1)
             this.windows.push(win)
         }
         this._reorder()
-
         this.active = this.windows[this.windows.length - 1]
     }
 
@@ -341,44 +328,25 @@ console.log(win.z)
         }
     }
 
-    /**
-     * @param {number} zIndex
-     * @returns {(null|Window)}
-     */
-    _findWindowUsingZIndex(zIndex)
-    {
-        for (const key in this.windows)
-        {
-            if (this.windows[key].z === zIndex)
-            {
-                return this.windows[key]
-            }
-        }
-        return null
-    }
-
     _close(win)
     {
-        if (win.isModal())
+        const index = this.windows.indexOf(win)
+        console.assert(index !== -1, 'WindowManager._close should find window in this.windows')
+        this.windows.splice(index, 1)
+        const next = this.windows[this.windows.length - 1]
+if (next === win) debugger
+        if (win.isModal(true))
         {
-            this.modalOverlay.remove()
-            const next = this._findWindowUsingZIndex(win.z - 1)
             if (next && next.isModal())
             {
-                this.win.appendChild(this.modalOverlay)
-                this.modalOverlay.style.zIndex = next.z - 1
-                this._focus(next)
+                this.modalOverlay.style.zIndex = next.z
+            }
+            else
+            {
+                this.modalOverlay.style.display = 'none'
             }
         }
-        const index = this.windows.indexOf(win)
-        if (index !== -1)
-        {
-            this.windows.splice(index, 1)
-        }
-        if (this.active === win)
-        {
-            this._blur(win)
-        }
+        next.focus()
     }
 
     _move(e)

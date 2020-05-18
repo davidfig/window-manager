@@ -159,7 +159,7 @@ export class Snap
 
     move(win)
     {
-        if (this.stopped || win.options.noSnap)
+        if (this.stopped || win.options.noSnap || win.isModal())
         {
             return
         }

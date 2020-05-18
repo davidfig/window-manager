@@ -3,8 +3,6 @@ import { clicked } from 'clicked'
 
 import { html } from './html'
 
-let id = 0
-
 /**
  * Window class returned by WindowManager.createWindow()
  * @extends EventEmitter
@@ -36,8 +34,7 @@ export class Window extends Events
         super()
         this.wm = wm
         this.options = options
-        this.id = typeof this.options.id === 'undefined' ? id++ : this.options.id
-
+        this.id = typeof this.options.id === 'undefined' ? Window.id++ : this.options.id
         this._createWindow()
         this._listeners()
 
@@ -61,11 +58,11 @@ export class Window extends Events
         {
             this.win.style.display = 'block'
             this._closed = false
+            this.emit('open', this)
             if (!noFocus)
             {
                 this.focus()
             }
-            this.emit('open', this)
         }
     }
 
@@ -826,10 +823,19 @@ export class Window extends Events
         this.move(x, y)
     }
 
-    /** @returns {boolean} */
-    isModal()
+    /**
+     * @param {boolean} [ignoreClosed]
+     * @returns {boolean}
+     */
+    isModal(ignoreClosed)
     {
-        return !this._closed && this.options.modal
+        return (ignoreClosed || !this._closed) && this.options.modal
+    }
+
+    /** @returns {boolean} */
+    isClosed()
+    {
+        return this._closed
     }
 
     get z()
@@ -841,3 +847,5 @@ export class Window extends Events
         this.win.style.zIndex = value
     }
 }
+
+Window.id = 0
