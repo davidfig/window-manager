@@ -1,6 +1,6 @@
 {
   "name": "simple-window-manager",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "A javascript-only Window Manager",
   "main": "public/simple-window-manager.min.js",
   "module": "public/simple-window-manager.es.js",
