@@ -720,8 +720,7 @@ export class Window extends Events
             },
             className: this.options.classNames.resizeEdge
         })
-        const down = (e) =>
-        {
+        const down = e => {
             const event = this._convertMoveEvent(e)
             const width = this.width || this.win.offsetWidth
             const height = this.height || this.win.offsetHeight
@@ -742,8 +741,14 @@ export class Window extends Events
 
         if (!this._isTouchEvent(e) && e.which !== 1)
         {
-            this._moving && this._stopMove()
-            this._resizing && this._stopResize()
+            if (this._moving)
+            {
+                this._stopMove()
+            }
+            if (this._resizing)
+            {
+                this._stopResize()
+            }
         }
         if (this._moving)
         {
@@ -751,7 +756,6 @@ export class Window extends Events
             this.emit('move', this)
             e.preventDefault()
         }
-
         if (this._resizing)
         {
             this.resize(
@@ -770,7 +774,10 @@ export class Window extends Events
         {
             this._stopMove()
         }
-        this._resizing && this._stopResize()
+        if (this._resizing)
+        {
+            this._stopResize()
+        }
     }
 
     _listeners()
@@ -815,7 +822,7 @@ export class Window extends Events
      * @param {Bounds} bounds
      * @param {(boolean|'horizontal'|'vertical')} keepInside
      */
-    resize(bounds, keepInside)
+    resizePlacement(bounds, keepInside)
     {
         this.bounds = bounds
         this.keepInside = keepInside

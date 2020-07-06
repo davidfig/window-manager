@@ -5,7 +5,7 @@
   "main": "public/simple-window-manager.min.js",
   "module": "public/simple-window-manager.es.js",
   "scripts": {
-    "start": "rollup -c docs/rollup.debug.js",
+    "start": "rollup -c docs/rollup.debug.js --watch",
     "docs": "jsdoc -c .jsdoc.json",
     "build-images": "node images/import",
     "build-demo": "rollup -c docs/rollup.config.js",

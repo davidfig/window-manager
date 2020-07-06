@@ -30,8 +30,18 @@ function html(options={})
     return object
 }
 
-function createCommonjsModule(fn, module) {
-	return module = { exports: {} }, fn(module, module.exports), module.exports;
+function createCommonjsModule(fn, basedir, module) {
+	return module = {
+	  path: basedir,
+	  exports: {},
+	  require: function (path, base) {
+      return commonjsRequire(path, (base === undefined || base === null) ? module.path : base);
+    }
+	}, fn(module, module.exports), module.exports;
+}
+
+function commonjsRequire () {
+	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
 }
 
 var eventemitter3 = createCommonjsModule(function (module) {
@@ -1379,8 +1389,8 @@ class Window extends eventemitter3
             },
             className: this.options.classNames.resizeEdge
         });
-        const down = (e) =>
-        {
+        const down = (e) => {
+console.log('hi');
             const event = this._convertMoveEvent(e);
             const width = this.width || this.win.offsetWidth;
             const height = this.height || this.win.offsetHeight;
@@ -1410,7 +1420,6 @@ class Window extends eventemitter3
             this.emit('move', this);
             e.preventDefault();
         }
-
         if (this._resizing)
         {
             this.resize(
@@ -1877,7 +1886,7 @@ class WindowManager
 
     /**
      * Create a window
-     * @param {Window~WindowOptions} [options]
+     * @param {WindowOptions} [options]
      * @param {string} [options.title]
      * @param {number} [options.x] position
      * @param {number} [options.y] position

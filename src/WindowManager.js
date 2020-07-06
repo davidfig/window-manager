@@ -74,7 +74,7 @@ export class WindowManager
         {
             this._snap.addWindow(win)
         }
-        win.resize(this.bounds, this.options.keepInside)
+        win.resizePlacement(this.bounds, this.options.keepInside)
         if (win.options.openOnCreate)
         {
             win.open()
@@ -334,7 +334,6 @@ export class WindowManager
         console.assert(index !== -1, 'WindowManager._close should find window in this.windows')
         this.windows.splice(index, 1)
         const next = this.windows[this.windows.length - 1]
-if (next === win) debugger
         if (win.isModal(true))
         {
             if (next && next.isModal())
@@ -386,7 +385,7 @@ if (next === win) debugger
         const bounds = this.bounds
         for (const key in this.windows)
         {
-            this.windows[key].resize(bounds, this.options.keepInside)
+            this.windows[key].resizePlacement(bounds, this.options.keepInside)
         }
     }
 }
