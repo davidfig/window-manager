@@ -1,6 +1,6 @@
 {
   "name": "simple-window-manager",
-  "version": "2.0.4",
+  "version": "2.0.5",
   "description": "A javascript-only Window Manager",
   "main": "public/simple-window-manager.min.js",
   "module": "public/simple-window-manager.es.js",
@@ -10,7 +10,7 @@
     "build-images": "node images/import",
     "build-demo": "rollup -c docs/rollup.config.js",
     "build": "rollup -c rollup.config.js",
-    "prepublishOnly": "npm run build-demo && npm run docs"
+    "prepublishOnly": "yarn build-demo && yarn build && yarn docs"
   },
   "repository": {
     "type": "git",
