@@ -1389,8 +1389,7 @@ class Window extends eventemitter3
             },
             className: this.options.classNames.resizeEdge
         });
-        const down = (e) => {
-console.log('hi');
+        const down = e => {
             const event = this._convertMoveEvent(e);
             const width = this.width || this.win.offsetWidth;
             const height = this.height || this.win.offsetHeight;
@@ -1411,8 +1410,14 @@ console.log('hi');
 
         if (!this._isTouchEvent(e) && e.which !== 1)
         {
-            this._moving && this._stopMove();
-            this._resizing && this._stopResize();
+            if (this._moving)
+            {
+                this._stopMove();
+            }
+            if (this._resizing)
+            {
+                this._stopResize();
+            }
         }
         if (this._moving)
         {
@@ -1438,7 +1443,10 @@ console.log('hi');
         {
             this._stopMove();
         }
-        this._resizing && this._stopResize();
+        if (this._resizing)
+        {
+            this._stopResize();
+        }
     }
 
     _listeners()
@@ -1483,7 +1491,7 @@ console.log('hi');
      * @param {Bounds} bounds
      * @param {(boolean|'horizontal'|'vertical')} keepInside
      */
-    resize(bounds, keepInside)
+    resizePlacement(bounds, keepInside)
     {
         this.bounds = bounds;
         this.keepInside = keepInside;
@@ -1909,7 +1917,7 @@ class WindowManager
         {
             this._snap.addWindow(win);
         }
-        win.resize(this.bounds, this.options.keepInside);
+        win.resizePlacement(this.bounds, this.options.keepInside);
         if (win.options.openOnCreate)
         {
             win.open();
@@ -2169,7 +2177,6 @@ class WindowManager
         console.assert(index !== -1, 'WindowManager._close should find window in this.windows');
         this.windows.splice(index, 1);
         const next = this.windows[this.windows.length - 1];
-if (next === win) debugger
         if (win.isModal(true))
         {
             if (next && next.isModal())
@@ -2221,7 +2228,7 @@ if (next === win) debugger
         const bounds = this.bounds;
         for (const key in this.windows)
         {
-            this.windows[key].resize(bounds, this.options.keepInside);
+            this.windows[key].resizePlacement(bounds, this.options.keepInside);
         }
     }
 }
