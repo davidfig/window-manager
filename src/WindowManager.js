@@ -334,7 +334,6 @@ export class WindowManager
         console.assert(index !== -1, 'WindowManager._close should find window in this.windows')
         this.windows.splice(index, 1)
         const next = this.windows[this.windows.length - 1]
-if (next === win) debugger
         if (win.isModal(true))
         {
             if (next && next.isModal())

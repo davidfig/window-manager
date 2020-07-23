@@ -8,7 +8,7 @@ const SnapOptionsDefault = {
     windows: true,
     snap: 20,
     color: DEFAULT_COLOR,
-    spacing: 5,
+    spacing: 0,
     indicator: DEFAULT_SIZE
 }
 
@@ -22,7 +22,7 @@ export class Snap
      * @param {boolean} [options.windows=true] snap to window edges
      * @param {number} [options.snap=20] distance to edge in pixels before snapping and width/height of snap bars
      * @param {string} [options.color=#a8f0f4] color for snap bars
-     * @param {number} [options.spacing=5] spacing distance between window and edges
+     * @param {number} [options.spacing=0] spacing distance between window and edges
      * @param {number} [options.indicator=10] size in pixels of snapping indicator (the indicator is actually twice the size of what is shown)
      */
     constructor(wm, options={})
@@ -215,11 +215,11 @@ export class Snap
             switch (this.horizontal.side)
             {
                 case 'top':
-                    win.y = this.horizontal.y - adjust + spacing + this.options.indicator / 2
+                    win.y = this.horizontal.y - adjust + spacing
                     break
 
                 case 'bottom':
-                    win.bottom = Math.floor(this.horizontal.y + adjust - spacing + this.options.indicator / 2)
+                    win.bottom = Math.floor(this.horizontal.y + adjust - spacing)
                     break
             }
             win.attachToScreen('vertical', this.horizontal.screen ? this.horizontal.side : '')
@@ -231,11 +231,11 @@ export class Snap
             switch (this.vertical.side)
             {
                 case 'left':
-                    win.x = this.vertical.x - adjust + spacing + this.options.indicator / 2
+                    win.x = this.vertical.x - adjust + spacing
                     break
 
                 case 'right':
-                    win.right = Math.floor(this.vertical.x + adjust - spacing + this.options.indicator / 2)
+                    win.right = Math.floor(this.vertical.x + adjust - spacing)
                     break
             }
             win.attachToScreen('horziontal', this.vertical.screen ? this.vertical.side : '')
