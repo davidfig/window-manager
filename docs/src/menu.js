@@ -1,16 +1,32 @@
-import Menu from 'yy-menu'
-const Item = Menu.MenuItem
+import { Menu, MenuItem } from '../../src/index'
+
+let _windows
 
 export function menu(wm)
 {
     const file = new Menu()
-    file.append(new Item({ label: '&New Window', accelerator: 'ctrl+m', click: () => newWindow(wm) }))
+    file.append(new MenuItem({ label: '&New Window', accelerator: 'ctrl+m', click: () => newWindow(wm) }))
 
-    const windows = new Menu()
+    _windows = new Menu()
+
+    const about = new Menu()
+    about.append(new MenuItem({ label: 'simple-&window-manager', click: () => aboutWM()}))
+    about.append(new MenuItem({ label: 'yy-menu', click: () => aboutMenu() }))
+
+    const main = new Menu()
+    main.append(new MenuItem({ label: '&File', submenu: file }))
+    main.append(new MenuItem({ label: '&Windows', submenu: _windows }))
+    main.append(new MenuItem({ label: '&About', submenu: about }))
+    Menu.setApplicationMenu(main)
+}
+
+export function menuWindows(wm)
+{
     for (let i = 0; i < wm.windows.length; i++)
     {
-        windows.append(new Item({
-            type: 'checkbox', label: 'Window ' + (i < 10 ? '&' : '') + i, accelerator: i < 10 ? 'ctrl+' + i : null, checked: true, click: (e, item) =>
+        const win = wm.windows[i]
+        _windows.append(new MenuItem({
+            type: 'checkbox', label: win.options.title || 'Window ' + (i < 10 ? '&' : '') + i, accelerator: i < 10 ? 'ctrl+' + i : null, checked: true, click: (e, item) =>
             {
                 if (item.checked)
                 {
@@ -23,15 +39,6 @@ export function menu(wm)
             }
         }))
     }
-    const about = new Menu()
-    about.append(new Item({ label: 'simple-&window-manager', click: () => aboutWM()}))
-    about.append(new Item({ label: 'yy-menu', click: () => aboutMenu() }))
-
-    const main = new Menu()
-    main.append(new Item({ label: '&File', submenu: file }))
-    main.append(new Item({ label: '&Windows', submenu: windows }))
-    main.append(new Item({ label: 'About', submenu: about }))
-    Menu.setApplicationMenu(main)
 }
 
 function newWindow()

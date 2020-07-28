@@ -337,7 +337,7 @@
 </div>
     <div class="main">
         
-        <h1 class="page-title" data-filename="EventEmitter-.html">Class: EventEmitter</h1>
+        <h1 class="page-title" data-filename="Accelerator.html">Class: Accelerator</h1>
         
         
 
@@ -347,8 +347,10 @@
 
 <header>
     <div class="header content-size">
-        <h2>EventEmitter
+        <h2>Accelerator
         </h2>
+        
+            <div class="class-description">Keyboard Accelerator support used by menu (if available) and user-registered keys. Also works for user-defined keys independent of the menu system. Automatically instantiated when used with WindowManager.</div>
         
     </div>
 </header>
@@ -361,10 +363,10 @@
         
 <dt>
     <div class="nameContainer">
-        <h4 class="name" id="EventEmitter">
-            <a class="share-icon" href="#EventEmitter"><span class="glyphicon glyphicon-link"></span></a>
+        <h4 class="name" id="Accelerator">
+            <a class="share-icon" href="#Accelerator"><span class="glyphicon glyphicon-link"></span></a>
             <span class="">
-                new EventEmitter
+                new Accelerator
             </span>
             <span class="signature">()</span>
             
@@ -375,7 +377,7 @@
 
         
         <div class="tag-source">
-            <a href="node_modules_eventemitter3_index.js.html#line92">index.js:92</a>
+            <a href="src_accelerator.js.html#line4">accelerator.js:4</a>
         </div>
         
     </div>
@@ -384,11 +386,6 @@
 </dt>
 <dd>
 
-    
-    <div class="description">
-        Minimal `EventEmitter` interface that is molded against the Node.js
-`EventEmitter` interface.
-    </div>
     
 
     
@@ -450,7 +447,1036 @@
     
 
     
+        <h3 class="subsection-title">Methods</h3>
 
+        <dl class="list-methods">
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="clearKeys">
+            <a class="share-icon" href="#clearKeys"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                clearKeys
+            </span>
+            <span class="signature">()</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line26">accelerator.js:26</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        clear all user-registered keys
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="clearMenuKeys">
+            <a class="share-icon" href="#clearMenuKeys"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                clearMenuKeys
+            </span>
+            <span class="signature">()</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line20">accelerator.js:20</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        clears all menu keys
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="prettifyKey">
+            <a class="share-icon" href="#prettifyKey"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                prettifyKey
+            </span>
+            <span class="signature">(keyCode)</span><span class="type-signature">string</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line162">accelerator.js:162</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Make the KeyCode pretty for printing on the menu
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>keyCode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">KeyCode</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        string
+                        
+                    
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="register">
+            <a class="share-icon" href="#register"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                register
+            </span>
+            <span class="signature">(keyCode, callback)</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line196">accelerator.js:196</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        register a key as a global accelerator
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>keyCode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Accelerator.html#~KeyCodes">Accelerator~KeyCodes</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                (e.g., Ctrl+shift+E)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="registerAlt">
+            <a class="share-icon" href="#registerAlt"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                registerAlt
+            </span>
+            <span class="signature">(pressed, released)</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line71">accelerator.js:71</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        special key registration for alt
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>pressed</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>released</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="registerMenuShortcut">
+            <a class="share-icon" href="#registerMenuShortcut"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                registerMenuShortcut
+            </span>
+            <span class="signature">(letter, menuItem, applicationMenu)</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line37">accelerator.js:37</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Register a shortcut key for use by an open menu
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>letter</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Accelerator.html#~KeyCodes">Accelerator~KeyCodes</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>menuItem</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="MenuItem.html">MenuItem</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>applicationMenu</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="registerMenuSpecial">
+            <a class="share-icon" href="#registerMenuSpecial"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                registerMenuSpecial
+            </span>
+            <span class="signature">(menuItem)</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line55">accelerator.js:55</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Register special shortcut keys for menu
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>menuItem</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="MenuItem.html">MenuItem</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="unregisterMenuShortcuts">
+            <a class="share-icon" href="#unregisterMenuShortcuts"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                unregisterMenuShortcuts
+            </span>
+            <span class="signature">()</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line79">accelerator.js:79</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Removes menu shortcuts
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        <dl class="list-definitions">
+                
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="~KeyCodes">
+            <a class="share-icon" href="#~KeyCodes"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">KeyCodes</span>
+            <span class="type-signature type">string</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Keycodes definition. In the form of modifier[+modifier...]+key
+<p>For example: ctrl+shift+e</p>
+<p>KeyCodes are case insensitive (i.e., shift+a is the same as Shift+A). And spaces are removed</p>
+<p>You can assign more than one key to the same shortcut by using a | between the keys (e.g., 'shift+a | ctrl+a')</p>
+<pre>
+Modifiers:
+   ctrl, alt, shift, meta, (ctrl aliases: command, control, commandorcontrol)
+</pre>
+<pre>
+Keys:
+   escape, 0-9, minus, equal, backspace, tab, a-z, backetleft, bracketright, semicolon, quote,
+   backquote, backslash, comma, period, slash, numpadmultiply, space, capslock, f1-f24, pause,
+   scrolllock, printscreen, home, arrowup, arrowleft, arrowright, arrowdown, pageup, pagedown,
+   end, insert, delete, enter, shiftleft, shiftright, ctrlleft, ctrlright, altleft, altright, shiftleft,
+   shiftright, numlock, numpad...
+</pre>
+For OS-specific codes and a more detailed explanation see <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code">https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code</a>. Also note that 'Digit' and 'Key' are removed from the code to make it easier to type.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+            </dl>
     
 
     

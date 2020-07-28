@@ -1,14 +1,5 @@
 {
     "applicationName": "simple-window-manager",
-    "disqus": "",
-    "googleAnalytics": "",
-    "openGraph": {
-        "title": "",
-        "type": "website",
-        "image": "",
-        "site_name": "",
-        "url": ""
-    },
     "meta": {
         "title": "simple-window-manager",
         "description": "",
@@ -35,6 +26,7 @@
     "plugins": [
         "./node_modules/yy-jsdoc-template/plugins/skip-node_modules.js"
     ],
+    "sourceType": "module",
     "templates": {
         "default": {
             "outputSourceFiles": true

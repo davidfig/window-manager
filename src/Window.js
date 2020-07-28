@@ -1,11 +1,14 @@
 import Events from 'eventemitter3'
 import { clicked } from 'clicked'
 
+import './events'
 import { html } from './html'
+import { Menu } from './Menu/Menu'
 
 /**
  * Window class returned by WindowManager.createWindow()
- * @extends EventEmitter
+ * @param {WindowManager} [wm]
+ * @param {Window~WindowOptions} [options]
  * @fires open
  * @fires focus
  * @fires blur
@@ -25,17 +28,23 @@ import { html } from './html'
  */
 export class Window extends Events
 {
-    /**
-     * @param {WindowManager} [wm]
-     * @param {object} [options]
-     */
-    constructor(wm, options={})
+    constructor(wm, options = {})
     {
         super()
         this.wm = wm
         this.options = options
         this.id = typeof this.options.id === 'undefined' ? Window.id++ : this.options.id
-        this._createWindow()
+
+        this._createWin()
+        this._createWinBox()
+        this._createTitlebar()
+        this._createContent()
+        if (this.options.resizable)
+        {
+            this._createResize()
+        }
+        this._createOverlay()
+        this._buildTransform()
         this._listeners()
 
         this.active = false
@@ -217,16 +226,18 @@ export class Window extends Events
         const keepInside = this.keepInside
         if (keepInside)
         {
-            const bounds = this.bounds
             if (keepInside === true || keepInside === 'horizontal')
             {
-                x = x + this.width > bounds.right ? bounds.right - this.width : x
-                x = x < bounds.left ? bounds.left : x
+                const width = this.wm.win.offsetWidth
+                x = x + this.width > width ? width - this.width : x
+                x = x < 0 ? 0 : x
             }
             if (keepInside === true || keepInside === 'vertical')
             {
-                y = y + this.height > bounds.bottom ? bounds.bottom - this.height : y
-                y = y < bounds.top ? bounds.top : y
+                const height = this.wm.win.offsetHeight
+                y = y + this.height > height ? height - this.height : y
+                const top = Menu.getApplicationHeight()
+                y = y < top ? top : y
             }
         }
         if (x !== this.options.x)
@@ -265,8 +276,8 @@ export class Window extends Events
                 this.maximized = { x, y, width, height }
                 this.x = 0
                 this.y = 0
-                this.width = this.wm.overlay.offsetWidth
-                this.height = this.wm.overlay.offsetHeight
+                this.width = this.wm.wallpaper.offsetWidth
+                this.height = this.wm.wallpaper.offsetHeight
                 this.emit('maximize', this)
                 this.buttons.maximize.innerHTML = this.options.restoreButton
             }
@@ -291,7 +302,7 @@ export class Window extends Events
 
     /**
      * save the state of the window
-     * @return {object} data
+     * @return {Object} data
      */
     save()
     {
@@ -317,7 +328,7 @@ export class Window extends Events
 
     /**
      * return the state of the window
-     * @param {object} data from save()
+     * @param {Object} data from save()
      */
     load(data)
     {
@@ -332,8 +343,7 @@ export class Window extends Events
         {
             this.maximize(true)
         }
-        this.x = data.x
-        this.y = data.y
+        this.move(data.x, data.y)
         if (typeof data.width !== 'undefined')
         {
             this.width = data.width
@@ -414,102 +424,7 @@ export class Window extends Events
         }
     }
 
-    /**
-     * Fires when window is maximized
-     * @event Window#maximize
-     * @type {Window}
-     */
-
-    /**
-     * Fires when window is restored to normal after being maximized
-     * @event Window#maximize-restore
-     * @type {Window}
-     */
-
-    /**
-     * Fires when window opens
-     * @event Window#open
-     * @type {Window}
-     */
-
-    /**
-     * Fires when window gains focus
-     * @event Window#focus
-     * @type {Window}
-     */
-    /**
-     * Fires when window loses focus
-     * @event Window#blur
-     * @type {Window}
-     */
-    /**
-     * Fires when window closes
-     * @event Window#close
-     * @type {Window}
-     */
-
-    /**
-     * Fires when resize starts
-     * @event Window#resize-start
-     * @type {Window}
-     */
-
-    /**
-     * Fires after resize completes
-     * @event Window#resize-end
-     * @type {Window}
-     */
-
-    /**
-     * Fires during resizing
-     * @event Window#resize
-     * @type {Window}
-     */
-
-    /**
-     * Fires when move starts
-     * @event Window#move-start
-     * @type {Window}
-     */
-
-    /**
-     * Fires after move completes
-     * @event Window#move-end
-     * @type {Window}
-     */
-
-    /**
-     * Fires during move
-     * @event Window#move
-     * @type {Window}
-     */
-
-    /**
-     * Fires when width is changed
-     * @event Window#resize-width
-     * @type {Window}
-     */
-
-    /**
-     * Fires when height is changed
-     * @event Window#resize-height
-     * @type {Window}
-     */
-
-    /**
-     * Fires when x position of window is changed
-     * @event Window#move-x
-     * @type {Window}
-     */
-
-
-    /**
-     * Fires when y position of window is changed
-     * @event Window#move-y
-     * @type {Window}
-     */
-
-    _createWindow()
+    _createWin()
     {
         /**
          * This is the top-level DOM element
@@ -517,7 +432,8 @@ export class Window extends Events
          * @readonly
          */
         this.win = html({
-            parent: (this.wm ? this.wm.win : null), styles: {
+            parent: this.wm.win,
+            styles: {
                 'display': 'none',
                 'border-radius': this.options.borderRadius,
                 'user-select': 'none',
@@ -525,67 +441,72 @@ export class Window extends Events
                 'position': 'absolute',
                 'min-width': this.options.minWidth,
                 'min-height': this.options.minHeight,
-                'box-shadow': this.options.shadow,
                 'background-color': this.options.backgroundWindow,
                 'width': isNaN(this.options.width) ? this.options.width : this.options.width + 'px',
                 'height': isNaN(this.options.height) ? this.options.height : this.options.height + 'px',
                 ...this.options.styles
-            },
-            className: this.options.classNames.win
+            }
         })
+    }
 
+    _createWinBox()
+    {
+        /**
+         * This is the container for the titlebar+content
+         * @type {HTMLElement}
+         * @readonly
+         */
         this.winBox = html({
-            parent: this.win, styles: {
+            parent: this.win,
+            styles: {
                 'display': 'flex',
                 'flex-direction': 'column',
                 'width': '100%',
                 'height': '100%',
                 'min-height': this.options.minHeight
-            },
-            className: this.options.classNames.winBox
+            }
         })
-        this._createTitlebar()
+    }
 
+    _createContent()
+    {
         /**
          * This is the content DOM element. Use this to add content to the Window.
          * @type {HTMLElement}
          * @readonly
          */
         this.content = html({
-            parent: this.winBox, type: 'section', styles: {
+            parent: this.winBox,
+            type: 'section',
+            styles: {
                 'display': 'block',
                 'flex': 1,
-                'min-height': this.minHeight,
+                'min-height': this.options.minHeight,
                 'overflow-x': 'hidden',
                 'overflow-y': 'auto'
-            },
-            className: this.options.classNames.content
+            }
         })
+    }
 
-        if (this.options.resizable)
-        {
-            this._createResize()
-        }
-
+    _createOverlay()
+    {
         this.overlay = html({
-            parent: this.win, styles: {
+            parent: this.win,
+            styles: {
                 'display': 'none',
                 'position': 'absolute',
                 'left': 0,
                 'top': 0,
                 'width': '100%',
                 'height': '100%'
-            },
-            className: this.options.classNames.overlay
+            }
         })
         this.overlay.addEventListener('mousedown', (e) => { this._downTitlebar(e); e.stopPropagation() })
         this.overlay.addEventListener('touchstart', (e) => { this._downTitlebar(e); e.stopPropagation() })
-        this._buildTransform()
     }
 
     _downTitlebar(e)
-    {
-        const event = this._convertMoveEvent(e)
+    {        const event = this._convertMoveEvent(e)
         this._moving = {
             x: event.pageX - this.x,
             y: event.pageY - this.y
@@ -610,8 +531,7 @@ export class Window extends Events
                     'border': 0,
                     'padding': '0 8px',
                     'overflow': 'hidden',
-                },
-                className: this.options.classNames.titlebar
+                }
             })
             const winTitleStyles = {
                 'user-select': 'none',
@@ -636,7 +556,7 @@ export class Window extends Events
                 winTitleStyles['padding-left'] = '8px'
 
             }
-            this.winTitle = html({ parent: this.winTitlebar, type: 'span', html: this.options.title, styles: winTitleStyles, className: this.options.classNames.winTitle })
+            this.winTitle = html({ parent: this.winTitlebar, type: 'span', html: this.options.title, styles: winTitleStyles })
             this._createButtons()
 
             if (this.options.movable)
@@ -659,8 +579,7 @@ export class Window extends Events
                 'flex-direction': 'row',
                 'align-items': 'center',
                 'padding-left': '10px'
-            },
-            className: this.options.classNames.winButtonGroup
+            }
         })
         const button = {
             'display': 'inline-block',
@@ -680,12 +599,12 @@ export class Window extends Events
         this.buttons = {}
         if (this.options.maximizable)
         {
-            this.buttons.maximize = html({ parent: this.winButtonGroup, html: this.options.maximizeButton, type: 'button', styles: button, className: this.options.maximize })
+            this.buttons.maximize = html({ parent: this.winButtonGroup, html: this.options.maximizeButton, type: 'button', styles: button })
             clicked(this.buttons.maximize, () => this.maximize())
         }
         if (this.options.closable)
         {
-            this.buttons.close = html({ parent: this.winButtonGroup, html: this.options.closeButton, type: 'button', styles: button, className: this.options.close })
+            this.buttons.close = html({ parent: this.winButtonGroup, html: this.options.closeButton, type: 'button', styles: button })
             clicked(this.buttons.close, () => this.close())
         }
         for (let key in this.buttons)
@@ -717,8 +636,7 @@ export class Window extends Events
                 'height': '15px',
                 'width': '10px',
                 'background': 'none'
-            },
-            className: this.options.classNames.resizeEdge
+            }
         })
         const down = (e) =>
         {
@@ -751,7 +669,6 @@ export class Window extends Events
             this.emit('move', this)
             e.preventDefault()
         }
-
         if (this._resizing)
         {
             this.resize(
@@ -812,10 +729,10 @@ export class Window extends Events
     }
 
     /**
-     * @param {Bounds} bounds
+     * @param {WindowManager~Bounds} bounds
      * @param {(boolean|'horizontal'|'vertical')} keepInside
      */
-    resize(bounds, keepInside)
+    reposition(bounds, keepInside)
     {
         this.bounds = bounds
         this.keepInside = keepInside
@@ -854,3 +771,35 @@ export class Window extends Events
 }
 
 Window.id = 0
+
+/**
+ * @typedef {Object} Window~WindowOptions
+ * @property {number} [x=0]
+ * @property {number} [y=0]
+ * @property {number} [width]
+ * @property {number} [height]
+ * @property {boolean} [modal]
+ * @property {boolean} [openOnCreate=true]
+ * @property {*} [id]
+ * @property {boolean} [movable=true]
+ * @property {boolean} [resizable=true]
+ * @property {boolean} [maximizable=true]
+ * @property {boolean} [closable=true]
+ * @property {boolean} [noSnap] don't snap this window or use this window as a snap target
+ * @property {boolean} [titlebar=true]
+ * @property {string} [titlebarHeight=36px]
+ * @property {boolean} [titleCenter]
+ * @property {string} [minWidth=200px]
+ * @property {string} [minHeight=60px]
+ * @property {string} [borderRadius=4px]
+ * @property {string} [backgroundModal=rgba(0,0,0,0.6)]
+ * @property {string} [backgroundWindow=#fefefe]
+ * @property {string} [backgroundTitlebarActive=#365d98]
+ * @property {string} [backgroundTitlebarInactive=#888888]
+ * @property {string} [foregroundButton=#ffffff]
+ * @property {string} [foregroundTitle=#ffffff]
+ * @property {Object} [styles]
+ * @property {string} [maximizeButton=...] used to replace the graphics for the button
+ * @property {string} [closeButton=...] used to replace the graphics for the button
+ * @property {string} [resize=...] used to replace the graphics for the button
+ */

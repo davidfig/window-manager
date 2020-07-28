@@ -1,16 +1,18 @@
 import FPS from 'yy-fps'
 
-import { WindowManager } from '../../src/WindowManager'
+import { WindowManager } from '../../src/index'
 import { html } from '../../src/html'
 
-// import { menu } from './menu'
+import { menu, menuWindows } from './menu'
 
-// create a window manager and change some of the default styles
-const wm = new WindowManager()
-wm.snap({ screen: true, windows: true, spacing: 0 })
+let wm
 
 window.onload = () =>
 {
+    wm = new WindowManager({ snap: { screen: true, windows: true } })
+
+    menu(wm)
+
     // creates test windows
     test()
     test2()
@@ -18,7 +20,9 @@ window.onload = () =>
     test4()
     test5()
     test7()
-    // menu(wm)
+
+    wallpaper()
+    menuWindows(wm)
     update()
 }
 
@@ -116,8 +120,11 @@ function test7()
     test.open()
 }
 
-const wallpaper = html({ parent: wm.overlay, styles: { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white' } })
-wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'
+function wallpaper()
+{
+    const wallpaper = html({ parent: wm.wallpaper, styles: { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: 'white' } })
+    wallpaper.innerHTML = 'You can also use the background as wallpaper or another window surface.'
+}
 
 const fps = new FPS()
 function update()
