@@ -1537,6 +1537,7 @@ class Menu
  * @fires move-y
  * @fires resize-width
  * @fires resize-height
+ * @fires loaded
  */
 class Window extends eventemitter3
 {
@@ -1855,7 +1856,6 @@ class Window extends eventemitter3
         {
             this.maximize(true);
         }
-        this.move(data.x, data.y);
         if (typeof data.width !== 'undefined')
         {
             this.width = data.width;
@@ -1872,6 +1872,7 @@ class Window extends eventemitter3
         {
             this.win.style.height = 'auto';
         }
+        this.move(data.x, data.y);
         if (data.closed)
         {
             this.close(true);
@@ -1880,6 +1881,7 @@ class Window extends eventemitter3
         {
             this.open(true, true);
         }
+        this.emit('loaded');
     }
 
     /**
