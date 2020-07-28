@@ -25,6 +25,7 @@ import { Menu } from './Menu/Menu'
  * @fires move-y
  * @fires resize-width
  * @fires resize-height
+ * @fires loaded
  */
 export class Window extends Events
 {
@@ -343,7 +344,6 @@ export class Window extends Events
         {
             this.maximize(true)
         }
-        this.move(data.x, data.y)
         if (typeof data.width !== 'undefined')
         {
             this.width = data.width
@@ -360,6 +360,7 @@ export class Window extends Events
         {
             this.win.style.height = 'auto'
         }
+        this.move(data.x, data.y)
         if (data.closed)
         {
             this.close(true)
@@ -368,6 +369,7 @@ export class Window extends Events
         {
             this.open(true, true)
         }
+        this.emit('loaded')
     }
 
     /**
