@@ -311,6 +311,7 @@ export class WindowManager
     {
         if (win.isModal(true))
         {
+            const next = this.windows[this.windows.length - 1]
             if (next && next.isModal())
             {
                 this.modalOverlay.style.zIndex = next.z
