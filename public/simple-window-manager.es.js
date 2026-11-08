@@ -2008,6 +2008,8 @@ class Window extends Events
                 'display': 'block',
                 'flex': 1,
                 'min-height': this.options.minHeight,
+                // leave room under the content for the resize handle, so it can't cover the scrollbar
+                'margin-bottom': this.options.resizable ? '15px' : 0,
                 'overflow-x': 'hidden',
                 'overflow-y': 'auto'
             }
