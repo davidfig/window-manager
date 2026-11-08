@@ -1,4 +1,4 @@
-import FPS from 'yy-fps'
+import { FPS } from 'yy-fps'
 
 import { WindowManager } from '../../src/index'
 import { html } from '../../src/html'
