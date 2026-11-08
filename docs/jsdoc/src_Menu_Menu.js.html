@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>simple-window-manager API Documentation</title>
+    
+    <meta name="description" content="Documentation for simple-window-manager library" />
+    
+        <meta name="keywords" content="docs, documentation, html5, javascript, jsdoc, window manager" />
+        <meta name="keyword" content="docs, documentation, html5, javascript, jsdoc, window manager" />
+    
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Libre+Franklin:400,700" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/main.css">
+
+    
+    <script>
+    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true},"applicationName":"simple-window-manager","footer":"by David Figatner (david@yopeyopey.com)","copyright":"Copyright © 2020 YOPEY YOPEY LLC.","meta":{"title":"simple-window-manager API Documentation","description":"Documentation for simple-window-manager library","keyword":"docs, documentation, html5, javascript, jsdoc, window manager"}};
+    </script>
+    
+
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName"><a href="index.html">simple-window-manager</a></h3>
+    <button id="menuToggle" class="btn btn-link btn-lg menu-toggle">
+        <span class="glyphicon glyphicon-menu-hamburger"></span>
+    </button>
+    <div class="search">
+        <input id="search" type="text" class="form-control input-md" placeholder="Search...">
+    </div>
+    <ul class="list">
+    
+        
+        <li class="item" data-name="Accelerator">
+            <span class="title  ">
+                
+                <a href="Accelerator.html">Accelerator</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="Accelerator~KeyCodes"><a href="Accelerator.html#~KeyCodes">KeyCodes</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="Accelerator#clearKeys"><a href="Accelerator.html#clearKeys">clearKeys</a></li>
+            
+                <li class="parent  " data-name="Accelerator#clearMenuKeys"><a href="Accelerator.html#clearMenuKeys">clearMenuKeys</a></li>
+            
+                <li class="parent  " data-name="Accelerator#prettifyKey"><a href="Accelerator.html#prettifyKey">prettifyKey</a></li>
+            
+                <li class="parent  " data-name="Accelerator#register"><a href="Accelerator.html#register">register</a></li>
+            
+                <li class="parent  " data-name="Accelerator#registerAlt"><a href="Accelerator.html#registerAlt">registerAlt</a></li>
+            
+                <li class="parent  " data-name="Accelerator#registerMenuShortcut"><a href="Accelerator.html#registerMenuShortcut">registerMenuShortcut</a></li>
+            
+                <li class="parent  " data-name="Accelerator#registerMenuSpecial"><a href="Accelerator.html#registerMenuSpecial">registerMenuSpecial</a></li>
+            
+                <li class="parent  " data-name="Accelerator#unregisterMenuShortcuts"><a href="Accelerator.html#unregisterMenuShortcuts">unregisterMenuShortcuts</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        
+    
+        
+        <li class="item" data-name="Menu">
+            <span class="title  ">
+                
+                <a href="Menu.html">Menu</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="Menu#items"><a href="Menu.html#items">items</a></li>
+            
+                <li class="parent " data-name="Menu.config"><a href="Menu.html#.config">config</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="Menu#append"><a href="Menu.html#append">append</a></li>
+            
+                <li class="parent  " data-name="Menu#insert"><a href="Menu.html#insert">insert</a></li>
+            
+                <li class="parent  " data-name="Menu#move"><a href="Menu.html#move">move</a></li>
+            
+                <li class="parent  " data-name="Menu.getApplicationHeight"><a href="Menu.html#.getApplicationHeight">getApplicationHeight</a></li>
+            
+                <li class="parent  " data-name="Menu.setApplicationMenu"><a href="Menu.html#.setApplicationMenu">setApplicationMenu</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        
+        <li class="item" data-name="MenuItem">
+            <span class="title  ">
+                
+                <a href="MenuItem.html">MenuItem</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="MenuItem~ClickCallback"><a href="MenuItem.html#~ClickCallback">ClickCallback</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        
+        <li class="item" data-name="Window">
+            <span class="title  ">
+                
+                <a href="Window.html">Window</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="Window#bottom"><a href="Window.html#bottom">bottom</a></li>
+            
+                <li class="parent " data-name="Window#closed"><a href="Window.html#closed">closed</a></li>
+            
+                <li class="parent " data-name="Window#content"><a href="Window.html#content">content</a></li>
+            
+                <li class="parent " data-name="Window#height"><a href="Window.html#height">height</a></li>
+            
+                <li class="parent " data-name="Window#right"><a href="Window.html#right">right</a></li>
+            
+                <li class="parent " data-name="Window#title"><a href="Window.html#title">title</a></li>
+            
+                <li class="parent " data-name="Window#width"><a href="Window.html#width">width</a></li>
+            
+                <li class="parent " data-name="Window#win"><a href="Window.html#win">win</a></li>
+            
+                <li class="parent " data-name="Window#winBox"><a href="Window.html#winBox">winBox</a></li>
+            
+                <li class="parent " data-name="Window#x"><a href="Window.html#x">x</a></li>
+            
+                <li class="parent " data-name="Window#y"><a href="Window.html#y">y</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="Window~WindowOptions"><a href="Window.html#~WindowOptions">WindowOptions</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="Window#attachToScreen"><a href="Window.html#attachToScreen">attachToScreen</a></li>
+            
+                <li class="parent  " data-name="Window#blur"><a href="Window.html#blur">blur</a></li>
+            
+                <li class="parent  " data-name="Window#center"><a href="Window.html#center">center</a></li>
+            
+                <li class="parent  " data-name="Window#close"><a href="Window.html#close">close</a></li>
+            
+                <li class="parent  " data-name="Window#focus"><a href="Window.html#focus">focus</a></li>
+            
+                <li class="parent  " data-name="Window#isClosed"><a href="Window.html#isClosed">isClosed</a></li>
+            
+                <li class="parent  " data-name="Window#isModal"><a href="Window.html#isModal">isModal</a></li>
+            
+                <li class="parent  " data-name="Window#load"><a href="Window.html#load">load</a></li>
+            
+                <li class="parent  " data-name="Window#maximize"><a href="Window.html#maximize">maximize</a></li>
+            
+                <li class="parent  " data-name="Window#move"><a href="Window.html#move">move</a></li>
+            
+                <li class="parent  " data-name="Window#open"><a href="Window.html#open">open</a></li>
+            
+                <li class="parent  " data-name="Window#reposition"><a href="Window.html#reposition">reposition</a></li>
+            
+                <li class="parent  " data-name="Window#resize"><a href="Window.html#resize">resize</a></li>
+            
+                <li class="parent  " data-name="Window#save"><a href="Window.html#save">save</a></li>
+            
+                <li class="parent  " data-name="Window#sendToBack"><a href="Window.html#sendToBack">sendToBack</a></li>
+            
+                <li class="parent  " data-name="Window#sendToFront"><a href="Window.html#sendToFront">sendToFront</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            <span class="subtitle">Events</span>
+            
+                <li class="parent" data-name="Window#event:blur"><a href="Window.html#event:blur">blur</a></li>
+            
+                <li class="parent" data-name="Window#event:close"><a href="Window.html#event:close">close</a></li>
+            
+                <li class="parent" data-name="Window#event:focus"><a href="Window.html#event:focus">focus</a></li>
+            
+                <li class="parent" data-name="Window#event:maximize"><a href="Window.html#event:maximize">maximize</a></li>
+            
+                <li class="parent" data-name="Window#event:maximize-restore"><a href="Window.html#event:maximize-restore">maximize-restore</a></li>
+            
+                <li class="parent" data-name="Window#event:move"><a href="Window.html#event:move">move</a></li>
+            
+                <li class="parent" data-name="Window#event:move-end"><a href="Window.html#event:move-end">move-end</a></li>
+            
+                <li class="parent" data-name="Window#event:move-start"><a href="Window.html#event:move-start">move-start</a></li>
+            
+                <li class="parent" data-name="Window#event:move-x"><a href="Window.html#event:move-x">move-x</a></li>
+            
+                <li class="parent" data-name="Window#event:move-y"><a href="Window.html#event:move-y">move-y</a></li>
+            
+                <li class="parent" data-name="Window#event:open"><a href="Window.html#event:open">open</a></li>
+            
+                <li class="parent" data-name="Window#event:resize"><a href="Window.html#event:resize">resize</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-end"><a href="Window.html#event:resize-end">resize-end</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-height"><a href="Window.html#event:resize-height">resize-height</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-start"><a href="Window.html#event:resize-start">resize-start</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-width"><a href="Window.html#event:resize-width">resize-width</a></li>
+            
+            </ul>
+        </li>
+    
+        
+        <li class="item" data-name="WindowManager">
+            <span class="title  ">
+                
+                <a href="WindowManager.html">WindowManager</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="WindowManager#bounds"><a href="WindowManager.html#bounds">bounds</a></li>
+            
+                <li class="parent " data-name="WindowManager#wallpaper"><a href="WindowManager.html#wallpaper">wallpaper</a></li>
+            
+                <li class="parent " data-name="WindowManager#win"><a href="WindowManager.html#win">win</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="WindowManager~Bounds"><a href="WindowManager.html#~Bounds">Bounds</a></li>
+            
+                <li class="parent" data-name="WindowManager~SnapOptions"><a href="WindowManager.html#~SnapOptions">SnapOptions</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="WindowManager#closeAll"><a href="WindowManager.html#closeAll">closeAll</a></li>
+            
+                <li class="parent  " data-name="WindowManager#createWindow"><a href="WindowManager.html#createWindow">createWindow</a></li>
+            
+                <li class="parent  " data-name="WindowManager#getWindowById"><a href="WindowManager.html#getWindowById">getWindowById</a></li>
+            
+                <li class="parent  " data-name="WindowManager#load"><a href="WindowManager.html#load">load</a></li>
+            
+                <li class="parent  " data-name="WindowManager#save"><a href="WindowManager.html#save">save</a></li>
+            
+                <li class="parent  " data-name="WindowManager#sendToBack"><a href="WindowManager.html#sendToBack">sendToBack</a></li>
+            
+                <li class="parent  " data-name="WindowManager#sendToFront"><a href="WindowManager.html#sendToFront">sendToFront</a></li>
+            
+                <li class="parent  " data-name="WindowManager#snap"><a href="WindowManager.html#snap">snap</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+    </ul>
+</div>
+    <div class="main">
+        
+        <h1 class="page-title" data-filename="src_Menu_Menu.js.html">Source: src/Menu/Menu.js</h1>
+        
+        
+
+
+    
+    <section>
+        <header>
+            <div class="header content-size">
+                <h2>src/Menu/Menu.js</h2>
+            </div>
+        </header>
+        <article>
+            <pre id="source-code" class="prettyprint source "><code>import { config } from './config'
+import { MenuItem } from './MenuItem'
+import { accelerator } from '../accelerator'
+import { html } from '../html'
+
+/**
+ * creates a menu bar or a submenu within a menu
+ * @param {object} [options]
+ * @param {object} [options.styles] additional CSS styles for menu
+ */
+export class Menu
+{
+    constructor(options)
+    {
+        accelerator.init()
+        options = options || {}
+        this.div = document.createElement('div')
+        this.styles = options.styles
+        this.children = []
+        this.applyConfig(config.MenuStyle)
+        this.div.tabIndex = -1
+    }
+
+    /**
+     * append a MenuItem to the Menu
+     * @param {MenuItem} menuItem
+     */
+    append(menuItem)
+    {
+        if (menuItem.submenu)
+        {
+            menuItem.submenu.menu = this
+        }
+        menuItem.menu = this
+        this.div.appendChild(menuItem.div)
+        if (menuItem.type !== 'separator')
+        {
+            this.children.push(menuItem)
+        }
+    }
+
+    /**
+     * inserts a MenuItem into the Menu
+     * @param {number} pos
+     * @param {MenuItem} menuItem
+     */
+    insert(pos, menuItem)
+    {
+        if (pos >= this.div.childNodes.length)
+        {
+            this.append(menuItem)
+        }
+        else
+        {
+            if (menuItem.submenu)
+            {
+                menuItem.submenu.menu = this
+            }
+            menuItem.menu = this
+            this.div.insertBefore(menuItem.div, this.div.childNodes[pos])
+            if (menuItem.type !== 'separator')
+            {
+                this.children.splice(pos, 0, menuItem)
+            }
+        }
+    }
+
+    hide()
+    {
+        let current = this.menu.showing
+        while (current &amp;&amp; current.submenu)
+        {
+            current.div.style.backgroundColor = 'transparent'
+            current.submenu.div.remove()
+            let next = current.submenu.showing
+            if (next)
+            {
+                current.submenu.showing.div.style.backgroundColor = 'transparent'
+                current.submenu.showing = null
+            }
+            current = next
+        }
+    }
+
+    show(menuItem)
+    {
+        accelerator.unregisterMenuShortcuts()
+        if (this.menu &amp;&amp; this.menu.showing === menuItem)
+        {
+            this.hide()
+            this.menu.showing = null
+            this.div.remove()
+            this.menu.showAccelerators()
+        }
+        else
+        {
+            if (this.menu)
+            {
+                if (this.menu.showing &amp;&amp; this.menu.children.indexOf(menuItem) !== -1)
+                {
+                    this.hide()
+                }
+                this.menu.showing = menuItem
+                this.menu.hideAccelerators()
+            }
+            const div = menuItem.div
+            const parent = this.menu.div
+            if (this.menu.applicationMenu)
+            {
+                this.div.style.left = div.offsetLeft + 'px'
+                this.div.style.top = div.offsetTop + div.offsetHeight + 'px'
+            }
+            else
+            {
+                this.div.style.left = parent.offsetLeft + parent.offsetWidth - config.Overlap + 'px'
+                this.div.style.top = parent.offsetTop + div.offsetTop - config.Overlap + 'px'
+            }
+            this.attached = menuItem
+            this.showAccelerators()
+            Menu.application.appendChild(this.div)
+            let label = 0, accelerator = 0, arrow = 0, checked = 0
+            for (let child of this.children)
+            {
+                child.check.style.width = 'auto'
+                child.label.style.width = 'auto'
+                child.accelerator.style.width = 'auto'
+                child.arrow.style.width = 'auto'
+                if (child.type === 'checkbox')
+                {
+                    checked = config.MinimumColumnWidth
+                }
+                if (child.submenu)
+                {
+                    arrow = config.MinimumColumnWidth
+                }
+            }
+            for (let child of this.children)
+            {
+                const childLabel = child.label.offsetWidth * 2
+                label = childLabel > label ? childLabel : label
+                const childAccelerator = child.accelerator.offsetWidth
+                accelerator = childAccelerator > accelerator ? childAccelerator : accelerator
+                if (child.submenu)
+                {
+                    arrow = child.arrow.offsetWidth
+                }
+            }
+            for (let child of this.children)
+            {
+                child.check.style.width = checked + 'px'
+                child.label.style.width = label + 'px'
+                child.accelerator.style.width = accelerator + 'px'
+                child.arrow.style.width = arrow + 'px'
+            }
+            if (this.div.offsetLeft + this.div.offsetWidth > window.innerWidth)
+            {
+                this.div.style.left = window.innerWidth - this.div.offsetWidth + 'px'
+            }
+            if (this.div.offsetTop + this.div.offsetHeight > window.innerHeight)
+            {
+                this.div.style.top = window.innerHeight - this.div.offsetHeight + 'px'
+            }
+            Menu.application.menu.div.focus()
+        }
+    }
+
+    applyConfig(base)
+    {
+        const styles = {}
+        for (let style in base)
+        {
+            styles[style] = base[style]
+        }
+        if (this.styles)
+        {
+            for (let style in this.styles)
+            {
+                styles[style] = this.styles[style]
+            }
+        }
+        for (let style in styles)
+        {
+            this.div.style[style] = styles[style]
+        }
+    }
+
+    showAccelerators()
+    {
+        for (let child of this.children)
+        {
+            child.showShortcut()
+            if (child.type !== 'separator')
+            {
+                const index = child.text.indexOf('&amp;')
+                if (index !== -1)
+                {
+                    accelerator.registerMenuShortcut(child.text[index + 1], child)
+                }
+            }
+        }
+        if (!this.applicationMenu)
+        {
+            accelerator.registerMenuSpecial(this)
+        }
+    }
+
+    hideAccelerators()
+    {
+        for (let child of this.children)
+        {
+            child.hideShortcut()
+        }
+    }
+
+    closeAll()
+    {
+        accelerator.unregisterMenuShortcuts()
+        let application = Menu.application.menu
+        if (application.showing)
+        {
+            let menu = application
+            while (menu.showing)
+            {
+                menu = menu.showing.submenu
+            }
+            while (menu &amp;&amp; !menu.applicationMenu)
+            {
+                if (menu.showing)
+                {
+                    menu.showing.div.style.backgroundColor = 'transparent'
+                    menu.showing = null
+                }
+                menu.div.remove()
+                menu = menu.menu
+            }
+            if (menu)
+            {
+                menu.showing.div.style.background = 'transparent'
+                menu.showing = null
+                menu.hideAccelerators()
+            }
+        }
+    }
+
+    /**
+     * move selector to the next child pane
+     * @param {string} direction (left or right)
+     * @private
+     */
+    moveChild(direction)
+    {
+        let index
+        if (direction === 'left')
+        {
+            const parent = this.selector.menu.menu
+            index = parent.children.indexOf(parent.showing)
+            index--
+            index = (index &lt; 0) ? parent.children.length - 1 : index
+            parent.children[index].handleClick()
+        }
+        else
+        {
+            let parent = this.selector.menu.menu
+            let selector = parent.showing
+            while (!parent.applicationMenu)
+            {
+                selector.handleClick()
+                selector.div.style.backgroundColor = 'transparent'
+                parent = parent.menu
+                selector = parent.showing
+            }
+            index = parent.children.indexOf(selector)
+            index++
+            index = (index === parent.children.length) ? 0 : index
+            parent.children[index].handleClick()
+        }
+        this.selector = null
+    }
+
+    /**
+     * move selector right and left
+     * @param {MouseEvent} e
+     * @param {string} direction
+     * @private
+     */
+    horizontalSelector(e, direction)
+    {
+        if (direction === 'right')
+        {
+            if (this.selector.submenu)
+            {
+                this.selector.handleClick(e)
+                this.selector.submenu.selector = this.selector.submenu.children[0]
+                this.selector.submenu.selector.div.style.backgroundColor = config.SelectedBackgroundStyle
+                this.selector = null
+            }
+            else
+            {
+                this.moveChild(direction)
+            }
+        }
+        else if (direction === 'left')
+        {
+            if (!this.selector.menu.menu.applicationMenu)
+            {
+                this.selector.menu.attached.handleClick(e)
+                this.selector.menu.menu.selector = this.selector.menu.attached
+                this.selector = null
+            }
+            else
+            {
+                this.moveChild(direction)
+            }
+        }
+        e.stopPropagation()
+        e.preventDefault()
+    }
+
+    /**
+     * move the selector in the menu
+     * @param {KeyboardEvent} e
+     * @param {string} direction (left, right, up, down)
+     */
+    move(e, direction)
+    {
+        if (this.selector)
+        {
+            this.selector.div.style.backgroundColor = 'transparent'
+            let index = this.children.indexOf(this.selector)
+            if (direction === 'down')
+            {
+                index++
+                index = (index === this.children.length) ? 0 : index
+            }
+            else if (direction === 'up')
+            {
+                index--
+                index = (index &lt; 0) ? this.children.length - 1 : index
+            }
+            else
+            {
+                return this.horizontalSelector(e, direction)
+            }
+            this.selector = this.children[index]
+        }
+        else
+        {
+            if (direction === 'up')
+            {
+                this.selector = this.children[this.children.length - 1]
+            }
+            else
+            {
+                this.selector = this.children[0]
+            }
+        }
+        if (this.selector)
+        {
+            this.selector.div.style.backgroundColor = config.SelectedBackgroundStyle
+        }
+        e.preventDefault()
+        e.stopPropagation()
+    }
+
+    /**
+     * click the selector with keyboard
+     * @private
+     */
+    enter(e)
+    {
+        if (this.selector)
+        {
+            this.selector.handleClick(e)
+            e.preventDefault()
+            e.stopPropagation()
+        }
+    }
+
+    /**
+     * array containing the menu's items
+     * @property {MenuItems[]} items
+     * @readonly
+     */
+    get items()
+    {
+        return this.children
+    }
+
+    /**
+     * show application menu accelerators when alt is pressed
+     * @private
+     */
+    showApplicationAccelerators()
+    {
+        this.hideAccelerators()
+        accelerator.registerAlt(() =>
+        {
+            if (!this.showing)
+            {
+                this.showAccelerators()
+            }
+        }, () =>
+        {
+            this.hideAccelerators()
+        })
+    }
+
+    /**
+     * use this to change the default config settings across all menus
+     * @type {config}
+     */
+    static get config()
+    {
+        return config
+    }
+
+    /**
+     * gets application menu height
+     * @returns {number}
+     */
+    static getApplicationHeight()
+    {
+        return Menu.application ? Menu.application.offsetHeight : 0
+    }
+
+    /**
+     * sets active application Menu (and removes any existing application menus)
+     * @param {Menu} menu
+     * @param {HTMLElement} [parent=document.body]
+     */
+    static setApplicationMenu(menu, parent=document.body)
+    {
+        accelerator.clearMenuKeys()
+        if (Menu.application)
+        {
+            Menu.application.remove()
+        }
+        Menu.application = html({ parent, styles: config.ApplicationContainerStyle })
+        Menu.application.menu = menu
+        menu.applyConfig(config.ApplicationMenuStyle)
+        for (let child of menu.children)
+        {
+            child.applyConfig(config.ApplicationMenuRowStyle)
+            if (child.arrow)
+            {
+                child.arrow.style.display = 'none'
+            }
+            menu.div.appendChild(child.div)
+        }
+
+        Menu.application.appendChild(menu.div)
+        menu.applicationMenu = true
+        menu.div.tabIndex = -1
+
+        // don't let menu bar focus unless windows are open (this fixes a focus bug)
+        menu.div.addEventListener('focus', () =>
+        {
+            if (!menu.showing)
+            {
+                menu.div.blur()
+            }
+        })
+
+        // close all windows if menu is no longer the focus
+        menu.div.addEventListener('blur', () =>
+        {
+            if (menu.showing)
+            {
+                menu.closeAll()
+            }
+        })
+        menu.showApplicationAccelerators()
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+
+        
+
+        <footer class="content-size">
+            <div class="footer">
+                Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sun Nov 08 2026 08:15:10 GMT-0800 (Pacific Standard Time)
+            </div>
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>

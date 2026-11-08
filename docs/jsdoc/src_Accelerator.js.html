@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>simple-window-manager API Documentation</title>
+    
+    <meta name="description" content="Documentation for simple-window-manager library" />
+    
+        <meta name="keywords" content="docs, documentation, html5, javascript, jsdoc, window manager" />
+        <meta name="keyword" content="docs, documentation, html5, javascript, jsdoc, window manager" />
+    
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Libre+Franklin:400,700" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/main.css">
+
+    
+    <script>
+    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true},"applicationName":"simple-window-manager","footer":"by David Figatner (david@yopeyopey.com)","copyright":"Copyright © 2020 YOPEY YOPEY LLC.","meta":{"title":"simple-window-manager API Documentation","description":"Documentation for simple-window-manager library","keyword":"docs, documentation, html5, javascript, jsdoc, window manager"}};
+    </script>
+    
+
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName"><a href="index.html">simple-window-manager</a></h3>
+    <button id="menuToggle" class="btn btn-link btn-lg menu-toggle">
+        <span class="glyphicon glyphicon-menu-hamburger"></span>
+    </button>
+    <div class="search">
+        <input id="search" type="text" class="form-control input-md" placeholder="Search...">
+    </div>
+    <ul class="list">
+    
+        
+        <li class="item" data-name="Accelerator">
+            <span class="title  ">
+                
+                <a href="Accelerator.html">Accelerator</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="Accelerator~KeyCodes"><a href="Accelerator.html#~KeyCodes">KeyCodes</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="Accelerator#clearKeys"><a href="Accelerator.html#clearKeys">clearKeys</a></li>
+            
+                <li class="parent  " data-name="Accelerator#clearMenuKeys"><a href="Accelerator.html#clearMenuKeys">clearMenuKeys</a></li>
+            
+                <li class="parent  " data-name="Accelerator#prettifyKey"><a href="Accelerator.html#prettifyKey">prettifyKey</a></li>
+            
+                <li class="parent  " data-name="Accelerator#register"><a href="Accelerator.html#register">register</a></li>
+            
+                <li class="parent  " data-name="Accelerator#registerAlt"><a href="Accelerator.html#registerAlt">registerAlt</a></li>
+            
+                <li class="parent  " data-name="Accelerator#registerMenuShortcut"><a href="Accelerator.html#registerMenuShortcut">registerMenuShortcut</a></li>
+            
+                <li class="parent  " data-name="Accelerator#registerMenuSpecial"><a href="Accelerator.html#registerMenuSpecial">registerMenuSpecial</a></li>
+            
+                <li class="parent  " data-name="Accelerator#unregisterMenuShortcuts"><a href="Accelerator.html#unregisterMenuShortcuts">unregisterMenuShortcuts</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        
+    
+        
+        <li class="item" data-name="Menu">
+            <span class="title  ">
+                
+                <a href="Menu.html">Menu</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="Menu.config"><a href="Menu.html#.config">config</a></li>
+            
+                <li class="parent " data-name="Menu#items"><a href="Menu.html#items">items</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="Menu.getApplicationHeight"><a href="Menu.html#.getApplicationHeight">getApplicationHeight</a></li>
+            
+                <li class="parent  " data-name="Menu.setApplicationMenu"><a href="Menu.html#.setApplicationMenu">setApplicationMenu</a></li>
+            
+                <li class="parent  " data-name="Menu#append"><a href="Menu.html#append">append</a></li>
+            
+                <li class="parent  " data-name="Menu#insert"><a href="Menu.html#insert">insert</a></li>
+            
+                <li class="parent  " data-name="Menu#move"><a href="Menu.html#move">move</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        
+        <li class="item" data-name="MenuItem">
+            <span class="title  ">
+                
+                <a href="MenuItem.html">MenuItem</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="MenuItem~ClickCallback"><a href="MenuItem.html#~ClickCallback">ClickCallback</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        
+        <li class="item" data-name="Window">
+            <span class="title  ">
+                
+                <a href="Window.html">Window</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="Window#bottom"><a href="Window.html#bottom">bottom</a></li>
+            
+                <li class="parent " data-name="Window#closed"><a href="Window.html#closed">closed</a></li>
+            
+                <li class="parent " data-name="Window#content"><a href="Window.html#content">content</a></li>
+            
+                <li class="parent " data-name="Window#height"><a href="Window.html#height">height</a></li>
+            
+                <li class="parent " data-name="Window#right"><a href="Window.html#right">right</a></li>
+            
+                <li class="parent " data-name="Window#title"><a href="Window.html#title">title</a></li>
+            
+                <li class="parent " data-name="Window#width"><a href="Window.html#width">width</a></li>
+            
+                <li class="parent " data-name="Window#win"><a href="Window.html#win">win</a></li>
+            
+                <li class="parent " data-name="Window#winBox"><a href="Window.html#winBox">winBox</a></li>
+            
+                <li class="parent " data-name="Window#x"><a href="Window.html#x">x</a></li>
+            
+                <li class="parent " data-name="Window#y"><a href="Window.html#y">y</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="Window~WindowOptions"><a href="Window.html#~WindowOptions">WindowOptions</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="Window#attachToScreen"><a href="Window.html#attachToScreen">attachToScreen</a></li>
+            
+                <li class="parent  " data-name="Window#blur"><a href="Window.html#blur">blur</a></li>
+            
+                <li class="parent  " data-name="Window#center"><a href="Window.html#center">center</a></li>
+            
+                <li class="parent  " data-name="Window#close"><a href="Window.html#close">close</a></li>
+            
+                <li class="parent  " data-name="Window#focus"><a href="Window.html#focus">focus</a></li>
+            
+                <li class="parent  " data-name="Window#isClosed"><a href="Window.html#isClosed">isClosed</a></li>
+            
+                <li class="parent  " data-name="Window#isModal"><a href="Window.html#isModal">isModal</a></li>
+            
+                <li class="parent  " data-name="Window#load"><a href="Window.html#load">load</a></li>
+            
+                <li class="parent  " data-name="Window#maximize"><a href="Window.html#maximize">maximize</a></li>
+            
+                <li class="parent  " data-name="Window#move"><a href="Window.html#move">move</a></li>
+            
+                <li class="parent  " data-name="Window#open"><a href="Window.html#open">open</a></li>
+            
+                <li class="parent  " data-name="Window#reposition"><a href="Window.html#reposition">reposition</a></li>
+            
+                <li class="parent  " data-name="Window#resize"><a href="Window.html#resize">resize</a></li>
+            
+                <li class="parent  " data-name="Window#save"><a href="Window.html#save">save</a></li>
+            
+                <li class="parent  " data-name="Window#sendToBack"><a href="Window.html#sendToBack">sendToBack</a></li>
+            
+                <li class="parent  " data-name="Window#sendToFront"><a href="Window.html#sendToFront">sendToFront</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            <span class="subtitle">Events</span>
+            
+                <li class="parent" data-name="Window#event:blur"><a href="Window.html#event:blur">blur</a></li>
+            
+                <li class="parent" data-name="Window#event:close"><a href="Window.html#event:close">close</a></li>
+            
+                <li class="parent" data-name="Window#event:focus"><a href="Window.html#event:focus">focus</a></li>
+            
+                <li class="parent" data-name="Window#event:maximize"><a href="Window.html#event:maximize">maximize</a></li>
+            
+                <li class="parent" data-name="Window#event:maximize-restore"><a href="Window.html#event:maximize-restore">maximize-restore</a></li>
+            
+                <li class="parent" data-name="Window#event:move"><a href="Window.html#event:move">move</a></li>
+            
+                <li class="parent" data-name="Window#event:move-end"><a href="Window.html#event:move-end">move-end</a></li>
+            
+                <li class="parent" data-name="Window#event:move-start"><a href="Window.html#event:move-start">move-start</a></li>
+            
+                <li class="parent" data-name="Window#event:move-x"><a href="Window.html#event:move-x">move-x</a></li>
+            
+                <li class="parent" data-name="Window#event:move-y"><a href="Window.html#event:move-y">move-y</a></li>
+            
+                <li class="parent" data-name="Window#event:open"><a href="Window.html#event:open">open</a></li>
+            
+                <li class="parent" data-name="Window#event:resize"><a href="Window.html#event:resize">resize</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-end"><a href="Window.html#event:resize-end">resize-end</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-height"><a href="Window.html#event:resize-height">resize-height</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-start"><a href="Window.html#event:resize-start">resize-start</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-width"><a href="Window.html#event:resize-width">resize-width</a></li>
+            
+            </ul>
+        </li>
+    
+        
+        <li class="item" data-name="WindowManager">
+            <span class="title  ">
+                
+                <a href="WindowManager.html">WindowManager</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="WindowManager#bounds"><a href="WindowManager.html#bounds">bounds</a></li>
+            
+                <li class="parent " data-name="WindowManager#wallpaper"><a href="WindowManager.html#wallpaper">wallpaper</a></li>
+            
+                <li class="parent " data-name="WindowManager#win"><a href="WindowManager.html#win">win</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="WindowManager~Bounds"><a href="WindowManager.html#~Bounds">Bounds</a></li>
+            
+                <li class="parent" data-name="WindowManager~SnapOptions"><a href="WindowManager.html#~SnapOptions">SnapOptions</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="WindowManager#closeAll"><a href="WindowManager.html#closeAll">closeAll</a></li>
+            
+                <li class="parent  " data-name="WindowManager#createWindow"><a href="WindowManager.html#createWindow">createWindow</a></li>
+            
+                <li class="parent  " data-name="WindowManager#getWindowById"><a href="WindowManager.html#getWindowById">getWindowById</a></li>
+            
+                <li class="parent  " data-name="WindowManager#load"><a href="WindowManager.html#load">load</a></li>
+            
+                <li class="parent  " data-name="WindowManager#save"><a href="WindowManager.html#save">save</a></li>
+            
+                <li class="parent  " data-name="WindowManager#sendToBack"><a href="WindowManager.html#sendToBack">sendToBack</a></li>
+            
+                <li class="parent  " data-name="WindowManager#sendToFront"><a href="WindowManager.html#sendToFront">sendToFront</a></li>
+            
+                <li class="parent  " data-name="WindowManager#snap"><a href="WindowManager.html#snap">snap</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+    </ul>
+</div>
+    <div class="main">
+        
+        <h1 class="page-title" data-filename="src_Accelerator.js.html">Source: src/Accelerator.js</h1>
+        
+        
+
+
+    
+    <section>
+        <header>
+            <div class="header content-size">
+                <h2>src/Accelerator.js</h2>
+            </div>
+        </header>
+        <article>
+            <pre id="source-code" class="prettyprint source "><code>/**
+ * Keyboard Accelerator support used by menu (if available) and user-registered keys. Also works for user-defined keys independent of the menu system. Automatically instantiated when used with WindowManager
+ */
+export class Accelerator {
+
+    constructor()
+    {
+        this.menuKeys = {}
+        this.keys = {}
+        document.body.addEventListener('keydown', e => _keydown(e))
+        document.body.addEventListener('keyup', e => _keyup(e))
+    }
+
+    /** clears all menu keys */
+    clearMenuKeys()
+    {
+        this.menuKeys = {}
+    }
+
+    /** clear all user-registered keys */
+    clearKeys()
+    {
+        this.keys = {}
+    }
+
+    /**
+     * Register a shortcut key for use by an open menu
+     * @param {Accelerator~KeyCodes} letter
+     * @param {MenuItem} menuItem
+     * @param {boolean} applicationMenu
+     */
+    registerMenuShortcut(letter, menuItem)
+    {
+        if (letter)
+        {
+            const keyCode = (menuItem.menu.applicationMenu ? 'alt+' : '') + letter
+            this.menuKeys[this._prepareKey(keyCode)] = e =>
+            {
+                menuItem.handleClick(e)
+                e.stopPropagation()
+                e.preventDefault()
+            }
+        }
+    }
+
+    /**
+     * Register special shortcut keys for menu
+     * @param {MenuItem} menuItem
+     */
+    registerMenuSpecial(menu)
+    {
+        this.menuKeys['escape'] = () => menu.closeAll()
+        this.menuKeys['enter'] = e => menu.enter(e)
+        this.menuKeys['space'] = e => menu.enter(e)
+        this.menuKeys['arrowright'] = e => menu.move(e, 'right')
+        this.menuKeys['arrowleft'] = e => menu.move(e, 'left')
+        this.menuKeys['arrowup'] = e => menu.move(e, 'up')
+        this.menuKeys['arrowdown'] = e => menu.move(e, 'down')
+    }
+
+    /**
+     * special key registration for alt
+     * @param {function} pressed
+     * @param {function} released
+     */
+    registerAlt(pressed, released)
+    {
+        this.alt = { pressed, released }
+    }
+
+    /**
+     * Removes menu shortcuts
+     */
+    unregisterMenuShortcuts()
+    {
+        this.menuKeys = {}
+    }
+
+    /**
+     * Keycodes definition. In the form of modifier[+modifier...]+key
+     * &lt;p>For example: ctrl+shift+e&lt;/p>
+     * &lt;p>KeyCodes are case insensitive (i.e., shift+a is the same as Shift+A). And spaces are removed&lt;/p>
+     * &lt;p>You can assign more than one key to the same shortcut by using a | between the keys (e.g., 'shift+a | ctrl+a')&lt;/p>
+     * &lt;pre>
+     * Modifiers:
+     *    ctrl, alt, shift, meta, (ctrl aliases: command, control, commandorcontrol)
+     * &lt;/pre>
+     * &lt;pre>
+     * Keys:
+     *    escape, 0-9, minus, equal, backspace, tab, a-z, backetleft, bracketright, semicolon, quote,
+     *    backquote, backslash, comma, period, slash, numpadmultiply, space, capslock, f1-f24, pause,
+     *    scrolllock, printscreen, home, arrowup, arrowleft, arrowright, arrowdown, pageup, pagedown,
+     *    end, insert, delete, enter, shiftleft, shiftright, ctrlleft, ctrlright, altleft, altright, shiftleft,
+     *    shiftright, numlock, numpad...
+     * &lt;/pre>
+     * For OS-specific codes and a more detailed explanation see {@link https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code}. Also note that 'Digit' and 'Key' are removed from the code to make it easier to type.
+     *
+     * @typedef {string} Accelerator~KeyCodes
+     */
+
+    /**
+     * translate a user-provided keycode
+     * @param {Accelerator~KeyCodes} keyCode
+     * @return {Accelerator~KeyCodes} formatted and sorted keyCode
+     * @private
+     */
+    _prepareKey(keyCode)
+    {
+        const keys = []
+        let split
+        keyCode += ''
+        if (keyCode.length > 1 &amp;&amp; keyCode.indexOf('|') !== -1)
+        {
+            split = keyCode.split('|')
+        }
+        else
+        {
+            split = [keyCode]
+        }
+        for (let code of split)
+        {
+            let key = ''
+            let modifiers = []
+            code = code.toLowerCase().replace(' ', '')
+            if (code.indexOf('+') !== -1)
+            {
+                const split = code.split('+')
+                for (let i = 0; i &lt; split.length - 1; i++)
+                {
+                    let modifier = split[i]
+                    modifier = modifier.replace('commandorcontrol', 'ctrl')
+                    modifier = modifier.replace('command', 'ctrl')
+                    modifier = modifier.replace('control', 'ctrl')
+                    modifiers.push(modifier)
+                }
+                modifiers = modifiers.sort((a, b) => { return a[0] > b[0] ? 1 : a[0] &lt; b[0] ? -1 : 0 })
+                for (let part of modifiers)
+                {
+                    key += part + '+'
+                }
+                key += split[split.length - 1]
+            }
+            else
+            {
+                key = code
+            }
+            keys.push(key)
+        }
+        return keys
+    }
+
+    /**
+     * Make the KeyCode pretty for printing on the menu
+     * @param {KeyCode} keyCode
+     * @return {string}
+     */
+    prettifyKey(keyCode)
+    {
+        let key = ''
+        const codes = this._prepareKey(keyCode)
+        for (let i = 0; i &lt; codes.length; i++)
+        {
+            const keyCode = codes[i]
+            if (keyCode.indexOf('+') !== -1)
+            {
+                const split = keyCode.toLowerCase().split('+')
+                for (let i = 0; i &lt; split.length - 1; i++)
+                {
+                    let modifier = split[i]
+                    key += modifier[0].toUpperCase() + modifier.substr(1) + '+'
+                }
+                key += split[split.length - 1].toUpperCase()
+            }
+            else
+            {
+                key = keyCode.toUpperCase()
+            }
+            if (i !== codes.length - 1)
+            {
+                key += ' or '
+            }
+        }
+        return key
+    }
+
+    /**
+     * register a key as a global accelerator
+     * @param {Accelerator~KeyCodes} keyCode (e.g., Ctrl+shift+E)
+     * @param {function} callback
+     */
+    register(keyCode, callback)
+    {
+        const keys = this._prepareKey(keyCode)
+        for (let key of keys)
+        {
+            this.keys[key] = e =>
+            {
+                callback(e)
+                e.preventDefault()
+                e.stopPropagation()
+            }
+        }
+    }
+
+    _keyup(e)
+    {
+        if (this.alt &amp;&amp; (e.code === 'AltLeft' || e.code === 'AltRight'))
+        {
+            this.alt.released()
+            this.alt.isPressed = false
+        }
+    }
+
+    _keydown(e)
+    {
+        if (this.alt &amp;&amp; !this.alt.isPressed &amp;&amp; (e.code === 'AltLeft' || e.code === 'AltRight'))
+        {
+            this.alt.pressed()
+            this.alt.isPressed = true
+            e.preventDefault()
+        }
+        const modifiers = []
+        if (e.altKey)
+        {
+            modifiers.push('alt')
+        }
+        if (e.ctrlKey)
+        {
+            modifiers.push('ctrl')
+        }
+        if (e.metaKey)
+        {
+            modifiers.push('meta')
+        }
+        if (e.shiftKey)
+        {
+            modifiers.push('shift')
+        }
+        let keyCode = ''
+        for (let modifier of modifiers)
+        {
+            keyCode += modifier + '+'
+        }
+        let translate = e.code.toLowerCase()
+        translate = translate.replace('digit', '')
+        translate = translate.replace('key', '')
+        keyCode += translate
+        if (this.menuKeys[keyCode])
+        {
+            this.menuKeys[keyCode](e)
+        }
+        else if (this.keys[keyCode])
+        {
+            this.keys[keyCode](e)
+        }
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+
+        
+
+        <footer class="content-size">
+            <div class="footer">
+                Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a> on Tue Jul 28 2020 11:09:00 GMT+0800 (Taipei Standard Time)
+            </div>
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>

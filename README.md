@@ -2,6 +2,8 @@
 A javascript-only Window Manager
 
 ## version 2
+* integrated yy-menu to provide an optional application-level menu
+* integrated accelerator from yy-menu to provide keyboard accelerator experience
 * the API has changed from v1 to v2
 * rollup is used to compile the libraries, so there is no longer a default export: see sample code below
 * animations are deprecated for now since they felt slow--I'm open to putting them back in
@@ -29,7 +31,7 @@ I used [Ventus](https://github.com/rlamana/Ventus) to build internal tools and e
 
 ## installation
 
-    npm i simple-window-manager
+    yarn add simple-window-manager
 
 ## API documentation
 [https://davidfig.github.io/window-manager/jsdoc/](https://davidfig.github.io/window-manager/jsdoc/)
@@ -40,12 +42,9 @@ I used [Ventus](https://github.com/rlamana/Ventus) to build internal tools and e
     // or const WindowManager = require('simple-window-manager').WindowManager
 
     // this is the window manager with one of the default options changed
-    const wm = new WindowManager({ backgroundWindow: 'green' });
+    const wm = new WindowManager({ backgroundWindow: 'green', snap: true })
 
-    // enable window snapping to screen edges and other windows when moving
-    wm.snap()
-
-    // create a window    
+    // create a window
     const window = wm.createWindow({ width: 500, height: 500, title: 'Test Window' })
 
     // set content of window
@@ -53,6 +52,6 @@ I used [Ventus](https://github.com/rlamana/Ventus) to build internal tools and e
     window.content.innerHTML = 'This is a nifty window.'
 ```
 
-## License  
-MIT License  
+## License
+MIT License
 (c) 2020 [YOPEY YOPEY LLC](https://yopeyopey.com/) by [David Figatner](david@yopeyopey.com)

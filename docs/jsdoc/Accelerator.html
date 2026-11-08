@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>simple-window-manager API Documentation</title>
+    
+    <meta name="description" content="Documentation for simple-window-manager library" />
+    
+        <meta name="keywords" content="docs, documentation, html5, javascript, jsdoc, window manager" />
+        <meta name="keyword" content="docs, documentation, html5, javascript, jsdoc, window manager" />
+    
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <script src="scripts/jquery.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="https://fonts.googleapis.com/css?family=Libre+Franklin:400,700" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/main.css">
+
+    
+    <script>
+    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true},"applicationName":"simple-window-manager","footer":"by David Figatner (david@yopeyopey.com)","copyright":"Copyright © 2020 YOPEY YOPEY LLC.","meta":{"title":"simple-window-manager API Documentation","description":"Documentation for simple-window-manager library","keyword":"docs, documentation, html5, javascript, jsdoc, window manager"}};
+    </script>
+    
+
+    
+</head>
+<body>
+<div id="wrap" class="clearfix">
+    
+<div class="navigation">
+    <h3 class="applicationName"><a href="index.html">simple-window-manager</a></h3>
+    <button id="menuToggle" class="btn btn-link btn-lg menu-toggle">
+        <span class="glyphicon glyphicon-menu-hamburger"></span>
+    </button>
+    <div class="search">
+        <input id="search" type="text" class="form-control input-md" placeholder="Search...">
+    </div>
+    <ul class="list">
+    
+        
+        <li class="item" data-name="Accelerator">
+            <span class="title  ">
+                
+                <a href="Accelerator.html">Accelerator</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="Accelerator~KeyCodes"><a href="Accelerator.html#~KeyCodes">KeyCodes</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="Accelerator#clearKeys"><a href="Accelerator.html#clearKeys">clearKeys</a></li>
+            
+                <li class="parent  " data-name="Accelerator#clearMenuKeys"><a href="Accelerator.html#clearMenuKeys">clearMenuKeys</a></li>
+            
+                <li class="parent  " data-name="Accelerator#prettifyKey"><a href="Accelerator.html#prettifyKey">prettifyKey</a></li>
+            
+                <li class="parent  " data-name="Accelerator#register"><a href="Accelerator.html#register">register</a></li>
+            
+                <li class="parent  " data-name="Accelerator#registerAlt"><a href="Accelerator.html#registerAlt">registerAlt</a></li>
+            
+                <li class="parent  " data-name="Accelerator#registerMenuShortcut"><a href="Accelerator.html#registerMenuShortcut">registerMenuShortcut</a></li>
+            
+                <li class="parent  " data-name="Accelerator#registerMenuSpecial"><a href="Accelerator.html#registerMenuSpecial">registerMenuSpecial</a></li>
+            
+                <li class="parent  " data-name="Accelerator#unregisterMenuShortcuts"><a href="Accelerator.html#unregisterMenuShortcuts">unregisterMenuShortcuts</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        
+    
+        
+        <li class="item" data-name="Menu">
+            <span class="title  ">
+                
+                <a href="Menu.html">Menu</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="Menu#items"><a href="Menu.html#items">items</a></li>
+            
+                <li class="parent " data-name="Menu.config"><a href="Menu.html#.config">config</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="Menu#append"><a href="Menu.html#append">append</a></li>
+            
+                <li class="parent  " data-name="Menu#insert"><a href="Menu.html#insert">insert</a></li>
+            
+                <li class="parent  " data-name="Menu#move"><a href="Menu.html#move">move</a></li>
+            
+                <li class="parent  " data-name="Menu.getApplicationHeight"><a href="Menu.html#.getApplicationHeight">getApplicationHeight</a></li>
+            
+                <li class="parent  " data-name="Menu.setApplicationMenu"><a href="Menu.html#.setApplicationMenu">setApplicationMenu</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        
+        <li class="item" data-name="MenuItem">
+            <span class="title  ">
+                
+                <a href="MenuItem.html">MenuItem</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="MenuItem~ClickCallback"><a href="MenuItem.html#~ClickCallback">ClickCallback</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        
+        <li class="item" data-name="Window">
+            <span class="title  ">
+                
+                <a href="Window.html">Window</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="Window#bottom"><a href="Window.html#bottom">bottom</a></li>
+            
+                <li class="parent " data-name="Window#closed"><a href="Window.html#closed">closed</a></li>
+            
+                <li class="parent " data-name="Window#content"><a href="Window.html#content">content</a></li>
+            
+                <li class="parent " data-name="Window#height"><a href="Window.html#height">height</a></li>
+            
+                <li class="parent " data-name="Window#right"><a href="Window.html#right">right</a></li>
+            
+                <li class="parent " data-name="Window#title"><a href="Window.html#title">title</a></li>
+            
+                <li class="parent " data-name="Window#width"><a href="Window.html#width">width</a></li>
+            
+                <li class="parent " data-name="Window#win"><a href="Window.html#win">win</a></li>
+            
+                <li class="parent " data-name="Window#winBox"><a href="Window.html#winBox">winBox</a></li>
+            
+                <li class="parent " data-name="Window#x"><a href="Window.html#x">x</a></li>
+            
+                <li class="parent " data-name="Window#y"><a href="Window.html#y">y</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="Window~WindowOptions"><a href="Window.html#~WindowOptions">WindowOptions</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="Window#attachToScreen"><a href="Window.html#attachToScreen">attachToScreen</a></li>
+            
+                <li class="parent  " data-name="Window#blur"><a href="Window.html#blur">blur</a></li>
+            
+                <li class="parent  " data-name="Window#center"><a href="Window.html#center">center</a></li>
+            
+                <li class="parent  " data-name="Window#close"><a href="Window.html#close">close</a></li>
+            
+                <li class="parent  " data-name="Window#focus"><a href="Window.html#focus">focus</a></li>
+            
+                <li class="parent  " data-name="Window#isClosed"><a href="Window.html#isClosed">isClosed</a></li>
+            
+                <li class="parent  " data-name="Window#isModal"><a href="Window.html#isModal">isModal</a></li>
+            
+                <li class="parent  " data-name="Window#load"><a href="Window.html#load">load</a></li>
+            
+                <li class="parent  " data-name="Window#maximize"><a href="Window.html#maximize">maximize</a></li>
+            
+                <li class="parent  " data-name="Window#move"><a href="Window.html#move">move</a></li>
+            
+                <li class="parent  " data-name="Window#open"><a href="Window.html#open">open</a></li>
+            
+                <li class="parent  " data-name="Window#reposition"><a href="Window.html#reposition">reposition</a></li>
+            
+                <li class="parent  " data-name="Window#resize"><a href="Window.html#resize">resize</a></li>
+            
+                <li class="parent  " data-name="Window#save"><a href="Window.html#save">save</a></li>
+            
+                <li class="parent  " data-name="Window#sendToBack"><a href="Window.html#sendToBack">sendToBack</a></li>
+            
+                <li class="parent  " data-name="Window#sendToFront"><a href="Window.html#sendToFront">sendToFront</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            <span class="subtitle">Events</span>
+            
+                <li class="parent" data-name="Window#event:blur"><a href="Window.html#event:blur">blur</a></li>
+            
+                <li class="parent" data-name="Window#event:close"><a href="Window.html#event:close">close</a></li>
+            
+                <li class="parent" data-name="Window#event:focus"><a href="Window.html#event:focus">focus</a></li>
+            
+                <li class="parent" data-name="Window#event:maximize"><a href="Window.html#event:maximize">maximize</a></li>
+            
+                <li class="parent" data-name="Window#event:maximize-restore"><a href="Window.html#event:maximize-restore">maximize-restore</a></li>
+            
+                <li class="parent" data-name="Window#event:move"><a href="Window.html#event:move">move</a></li>
+            
+                <li class="parent" data-name="Window#event:move-end"><a href="Window.html#event:move-end">move-end</a></li>
+            
+                <li class="parent" data-name="Window#event:move-start"><a href="Window.html#event:move-start">move-start</a></li>
+            
+                <li class="parent" data-name="Window#event:move-x"><a href="Window.html#event:move-x">move-x</a></li>
+            
+                <li class="parent" data-name="Window#event:move-y"><a href="Window.html#event:move-y">move-y</a></li>
+            
+                <li class="parent" data-name="Window#event:open"><a href="Window.html#event:open">open</a></li>
+            
+                <li class="parent" data-name="Window#event:resize"><a href="Window.html#event:resize">resize</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-end"><a href="Window.html#event:resize-end">resize-end</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-height"><a href="Window.html#event:resize-height">resize-height</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-start"><a href="Window.html#event:resize-start">resize-start</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-width"><a href="Window.html#event:resize-width">resize-width</a></li>
+            
+            </ul>
+        </li>
+    
+        
+        <li class="item" data-name="WindowManager">
+            <span class="title  ">
+                
+                <a href="WindowManager.html">WindowManager</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="WindowManager#bounds"><a href="WindowManager.html#bounds">bounds</a></li>
+            
+                <li class="parent " data-name="WindowManager#wallpaper"><a href="WindowManager.html#wallpaper">wallpaper</a></li>
+            
+                <li class="parent " data-name="WindowManager#win"><a href="WindowManager.html#win">win</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="WindowManager~Bounds"><a href="WindowManager.html#~Bounds">Bounds</a></li>
+            
+                <li class="parent" data-name="WindowManager~SnapOptions"><a href="WindowManager.html#~SnapOptions">SnapOptions</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            <span class="subtitle">Methods</span>
+            
+                <li class="parent  " data-name="WindowManager#closeAll"><a href="WindowManager.html#closeAll">closeAll</a></li>
+            
+                <li class="parent  " data-name="WindowManager#createWindow"><a href="WindowManager.html#createWindow">createWindow</a></li>
+            
+                <li class="parent  " data-name="WindowManager#getWindowById"><a href="WindowManager.html#getWindowById">getWindowById</a></li>
+            
+                <li class="parent  " data-name="WindowManager#load"><a href="WindowManager.html#load">load</a></li>
+            
+                <li class="parent  " data-name="WindowManager#save"><a href="WindowManager.html#save">save</a></li>
+            
+                <li class="parent  " data-name="WindowManager#sendToBack"><a href="WindowManager.html#sendToBack">sendToBack</a></li>
+            
+                <li class="parent  " data-name="WindowManager#sendToFront"><a href="WindowManager.html#sendToFront">sendToFront</a></li>
+            
+                <li class="parent  " data-name="WindowManager#snap"><a href="WindowManager.html#snap">snap</a></li>
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+    </ul>
+</div>
+    <div class="main">
+        
+        <h1 class="page-title" data-filename="Accelerator.html">Class: Accelerator</h1>
+        
+        
+
+
+
+<section>
+
+<header>
+    <div class="header content-size">
+        <h2>Accelerator
+        </h2>
+        
+            <div class="class-description">Keyboard Accelerator support used by menu (if available) and user-registered keys. Also works for user-defined keys independent of the menu system. Automatically instantiated when used with WindowManager.</div>
+        
+    </div>
+</header>
+
+<article class="content-size">
+    <div class="container-overview">
+    
+
+    
+        
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="Accelerator">
+            <a class="share-icon" href="#Accelerator"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                new Accelerator
+            </span>
+            <span class="signature">()</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line4">accelerator.js:4</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl class="list-methods">
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="clearKeys">
+            <a class="share-icon" href="#clearKeys"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                clearKeys
+            </span>
+            <span class="signature">()</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line26">accelerator.js:26</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        clear all user-registered keys
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="clearMenuKeys">
+            <a class="share-icon" href="#clearMenuKeys"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                clearMenuKeys
+            </span>
+            <span class="signature">()</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line20">accelerator.js:20</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        clears all menu keys
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="prettifyKey">
+            <a class="share-icon" href="#prettifyKey"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                prettifyKey
+            </span>
+            <span class="signature">(keyCode)</span><span class="type-signature">string</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line162">accelerator.js:162</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Make the KeyCode pretty for printing on the menu
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>keyCode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">KeyCode</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Type</th>
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    
+        <tr>
+            
+            <td class="type">
+            
+                        string
+                        
+                    
+            </td>
+            <td class="description last"></td>
+        </tr>
+    
+    </tbody>
+</table>
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="register">
+            <a class="share-icon" href="#register"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                register
+            </span>
+            <span class="signature">(keyCode, callback)</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line196">accelerator.js:196</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        register a key as a global accelerator
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>keyCode</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Accelerator.html#~KeyCodes">Accelerator~KeyCodes</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                (e.g., Ctrl+shift+E)</td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="registerAlt">
+            <a class="share-icon" href="#registerAlt"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                registerAlt
+            </span>
+            <span class="signature">(pressed, released)</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line71">accelerator.js:71</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        special key registration for alt
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>pressed</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>released</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="registerMenuShortcut">
+            <a class="share-icon" href="#registerMenuShortcut"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                registerMenuShortcut
+            </span>
+            <span class="signature">(letter, menuItem, applicationMenu)</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line37">accelerator.js:37</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Register a shortcut key for use by an open menu
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>letter</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="Accelerator.html#~KeyCodes">Accelerator~KeyCodes</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>menuItem</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="MenuItem.html">MenuItem</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	
+        <tr>
+            
+                <td class="name"><code>applicationMenu</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="registerMenuSpecial">
+            <a class="share-icon" href="#registerMenuSpecial"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                registerMenuSpecial
+            </span>
+            <span class="signature">(menuItem)</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line55">accelerator.js:55</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Register special shortcut keys for menu
+    </div>
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>menuItem</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type"><a href="MenuItem.html">MenuItem</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            <td class="description last">
+                
+                </td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="unregisterMenuShortcuts">
+            <a class="share-icon" href="#unregisterMenuShortcuts"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">
+                unregisterMenuShortcuts
+            </span>
+            <span class="signature">()</span>
+            
+            
+            
+            
+        </h4>
+
+        
+        <div class="tag-source">
+            <a href="src_accelerator.js.html#line79">accelerator.js:79</a>
+        </div>
+        
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Removes menu shortcuts
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Type Definitions</h3>
+
+        <dl class="list-definitions">
+                
+<dt>
+    <div class="nameContainer">
+        <h4 class="name" id="~KeyCodes">
+            <a class="share-icon" href="#~KeyCodes"><span class="glyphicon glyphicon-link"></span></a>
+            <span class="">KeyCodes</span>
+            <span class="type-signature type">string</span>
+            
+            
+            
+            
+        </h4>
+    </div>
+    
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Keycodes definition. In the form of modifier[+modifier...]+key
+<p>For example: ctrl+shift+e</p>
+<p>KeyCodes are case insensitive (i.e., shift+a is the same as Shift+A). And spaces are removed</p>
+<p>You can assign more than one key to the same shortcut by using a | between the keys (e.g., 'shift+a | ctrl+a')</p>
+<pre>
+Modifiers:
+   ctrl, alt, shift, meta, (ctrl aliases: command, control, commandorcontrol)
+</pre>
+<pre>
+Keys:
+   escape, 0-9, minus, equal, backspace, tab, a-z, backetleft, bracketright, semicolon, quote,
+   backquote, backslash, comma, period, slash, numpadmultiply, space, capslock, f1-f24, pause,
+   scrolllock, printscreen, home, arrowup, arrowleft, arrowright, arrowdown, pageup, pagedown,
+   end, insert, delete, enter, shiftleft, shiftright, ctrlleft, ctrlright, altleft, altright, shiftleft,
+   shiftright, numlock, numpad...
+</pre>
+For OS-specific codes and a more detailed explanation see <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code">https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code</a>. Also note that 'Digit' and 'Key' are removed from the code to make it easier to type.
+    </div>
+    
+    
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+    
+    
+</dd>
+
+            </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+
+        
+
+        <footer class="content-size">
+            <div class="footer">
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sun Nov 08 2026 08:15:10 GMT-0800 (Pacific Standard Time)
+            </div>
+        </footer>
+    </div>
+</div>
+<script>prettyPrint();</script>
+<script src="scripts/main.js"></script>
+</body>
+</html>

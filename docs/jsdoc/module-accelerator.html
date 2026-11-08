@@ -22,10 +22,10 @@
     <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
     <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
     <link type="text/css" rel="stylesheet" href="styles/main.css">
-    
+
     
     <script>
-    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true},"applicationName":"simple-window-manager","footer":"by YOPEY YOPEY LLC (yopeyopey.com)","copyright":"Copyright © 2018 YOPEY YOPEY LLC.","meta":{"title":"simple-window-manager API Documentation","description":"Documentation for simple-window-manager library","keyword":"docs, documentation, html5, javascript, jsdoc, window manager"}};
+    var config = {"monospaceLinks":false,"cleverLinks":false,"default":{"outputSourceFiles":true},"applicationName":"simple-window-manager","footer":"by David Figatner (david@yopeyopey.com)","copyright":"Copyright © 2020 YOPEY YOPEY LLC.","meta":{"title":"simple-window-manager API Documentation","description":"Documentation for simple-window-manager library","keyword":"docs, documentation, html5, javascript, jsdoc, window manager"}};
     </script>
     
 
@@ -44,12 +44,21 @@
     </div>
     <ul class="list">
     
-        <li class="item" data-name="EventEmitter">
+        
+    
+        
+        <li class="item" data-name="Menu">
             <span class="title  ">
                 
-                <a href="EventEmitter.html">EventEmitter</a>
+                <a href="Menu.html">Menu</a>
             </span>
             <ul class="members itemMembers">
+            
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="Menu.config"><a href="Menu.html#.config">config</a></li>
+            
+                <li class="parent " data-name="Menu#items"><a href="Menu.html#items">items</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -62,21 +71,15 @@
             
             <span class="subtitle">Methods</span>
             
-                <li class="parent  " data-name="EventEmitter#emit"><a href="EventEmitter.html#emit">emit</a></li>
+                <li class="parent  " data-name="Menu.getApplicationHeight"><a href="Menu.html#.getApplicationHeight">getApplicationHeight</a></li>
             
-                <li class="parent  " data-name="EventEmitter#eventNames"><a href="EventEmitter.html#eventNames">eventNames</a></li>
+                <li class="parent  " data-name="Menu.setApplicationMenu"><a href="Menu.html#.setApplicationMenu">setApplicationMenu</a></li>
             
-                <li class="parent  " data-name="EventEmitter#listenerCount"><a href="EventEmitter.html#listenerCount">listenerCount</a></li>
+                <li class="parent  " data-name="Menu#append"><a href="Menu.html#append">append</a></li>
             
-                <li class="parent  " data-name="EventEmitter#listeners"><a href="EventEmitter.html#listeners">listeners</a></li>
+                <li class="parent  " data-name="Menu#insert"><a href="Menu.html#insert">insert</a></li>
             
-                <li class="parent  " data-name="EventEmitter#on"><a href="EventEmitter.html#on">on</a></li>
-            
-                <li class="parent  " data-name="EventEmitter#once"><a href="EventEmitter.html#once">once</a></li>
-            
-                <li class="parent  " data-name="EventEmitter#removeAllListeners"><a href="EventEmitter.html#removeAllListeners">removeAllListeners</a></li>
-            
-                <li class="parent  " data-name="EventEmitter#removeListener"><a href="EventEmitter.html#removeListener">removeListener</a></li>
+                <li class="parent  " data-name="Menu#move"><a href="Menu.html#move">move</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -84,6 +87,34 @@
             </ul>
         </li>
     
+        
+        <li class="item" data-name="MenuItem">
+            <span class="title  ">
+                
+                <a href="MenuItem.html">MenuItem</a>
+            </span>
+            <ul class="members itemMembers">
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="MenuItem~ClickCallback"><a href="MenuItem.html#~ClickCallback">ClickCallback</a></li>
+            
+            </ul>
+            <ul class="typedefs itemMembers">
+            
+            </ul>
+            <ul class="methods itemMembers">
+            
+            </ul>
+            <ul class="events itemMembers">
+            
+            </ul>
+        </li>
+    
+        
         <li class="item" data-name="Window">
             <span class="title  ">
                 
@@ -93,11 +124,23 @@
             
             <span class="subtitle">Members</span>
             
+                <li class="parent " data-name="Window#bottom"><a href="Window.html#bottom">bottom</a></li>
+            
+                <li class="parent " data-name="Window#closed"><a href="Window.html#closed">closed</a></li>
+            
+                <li class="parent " data-name="Window#content"><a href="Window.html#content">content</a></li>
+            
                 <li class="parent " data-name="Window#height"><a href="Window.html#height">height</a></li>
+            
+                <li class="parent " data-name="Window#right"><a href="Window.html#right">right</a></li>
             
                 <li class="parent " data-name="Window#title"><a href="Window.html#title">title</a></li>
             
                 <li class="parent " data-name="Window#width"><a href="Window.html#width">width</a></li>
+            
+                <li class="parent " data-name="Window#win"><a href="Window.html#win">win</a></li>
+            
+                <li class="parent " data-name="Window#winBox"><a href="Window.html#winBox">winBox</a></li>
             
                 <li class="parent " data-name="Window#x"><a href="Window.html#x">x</a></li>
             
@@ -118,37 +161,29 @@
             
             <span class="subtitle">Methods</span>
             
+                <li class="parent  " data-name="Window#attachToScreen"><a href="Window.html#attachToScreen">attachToScreen</a></li>
+            
                 <li class="parent  " data-name="Window#blur"><a href="Window.html#blur">blur</a></li>
+            
+                <li class="parent  " data-name="Window#center"><a href="Window.html#center">center</a></li>
             
                 <li class="parent  " data-name="Window#close"><a href="Window.html#close">close</a></li>
             
-                <li class="  " data-name="Window#emit"><a href="Window.html#emit">emit</a></li>
-            
-                <li class="  " data-name="Window#eventNames"><a href="Window.html#eventNames">eventNames</a></li>
-            
                 <li class="parent  " data-name="Window#focus"><a href="Window.html#focus">focus</a></li>
             
-                <li class="  " data-name="Window#listenerCount"><a href="Window.html#listenerCount">listenerCount</a></li>
+                <li class="parent  " data-name="Window#isClosed"><a href="Window.html#isClosed">isClosed</a></li>
             
-                <li class="  " data-name="Window#listeners"><a href="Window.html#listeners">listeners</a></li>
+                <li class="parent  " data-name="Window#isModal"><a href="Window.html#isModal">isModal</a></li>
             
                 <li class="parent  " data-name="Window#load"><a href="Window.html#load">load</a></li>
             
                 <li class="parent  " data-name="Window#maximize"><a href="Window.html#maximize">maximize</a></li>
             
-                <li class="parent  " data-name="Window#minimize"><a href="Window.html#minimize">minimize</a></li>
-            
                 <li class="parent  " data-name="Window#move"><a href="Window.html#move">move</a></li>
-            
-                <li class="  " data-name="Window#on"><a href="Window.html#on">on</a></li>
-            
-                <li class="  " data-name="Window#once"><a href="Window.html#once">once</a></li>
             
                 <li class="parent  " data-name="Window#open"><a href="Window.html#open">open</a></li>
             
-                <li class="  " data-name="Window#removeAllListeners"><a href="Window.html#removeAllListeners">removeAllListeners</a></li>
-            
-                <li class="  " data-name="Window#removeListener"><a href="Window.html#removeListener">removeListener</a></li>
+                <li class="parent  " data-name="Window#reposition"><a href="Window.html#reposition">reposition</a></li>
             
                 <li class="parent  " data-name="Window#resize"><a href="Window.html#resize">resize</a></li>
             
@@ -173,13 +208,15 @@
             
                 <li class="parent" data-name="Window#event:maximize-restore"><a href="Window.html#event:maximize-restore">maximize-restore</a></li>
             
-                <li class="parent" data-name="Window#event:minimize-restore"><a href="Window.html#event:minimize-restore">minimize-restore</a></li>
-            
                 <li class="parent" data-name="Window#event:move"><a href="Window.html#event:move">move</a></li>
             
                 <li class="parent" data-name="Window#event:move-end"><a href="Window.html#event:move-end">move-end</a></li>
             
                 <li class="parent" data-name="Window#event:move-start"><a href="Window.html#event:move-start">move-start</a></li>
+            
+                <li class="parent" data-name="Window#event:move-x"><a href="Window.html#event:move-x">move-x</a></li>
+            
+                <li class="parent" data-name="Window#event:move-y"><a href="Window.html#event:move-y">move-y</a></li>
             
                 <li class="parent" data-name="Window#event:open"><a href="Window.html#event:open">open</a></li>
             
@@ -187,11 +224,16 @@
             
                 <li class="parent" data-name="Window#event:resize-end"><a href="Window.html#event:resize-end">resize-end</a></li>
             
+                <li class="parent" data-name="Window#event:resize-height"><a href="Window.html#event:resize-height">resize-height</a></li>
+            
                 <li class="parent" data-name="Window#event:resize-start"><a href="Window.html#event:resize-start">resize-start</a></li>
+            
+                <li class="parent" data-name="Window#event:resize-width"><a href="Window.html#event:resize-width">resize-width</a></li>
             
             </ul>
         </li>
     
+        
         <li class="item" data-name="WindowManager">
             <span class="title  ">
                 
@@ -199,8 +241,22 @@
             </span>
             <ul class="members itemMembers">
             
+            <span class="subtitle">Members</span>
+            
+                <li class="parent " data-name="WindowManager#bounds"><a href="WindowManager.html#bounds">bounds</a></li>
+            
+                <li class="parent " data-name="WindowManager#wallpaper"><a href="WindowManager.html#wallpaper">wallpaper</a></li>
+            
+                <li class="parent " data-name="WindowManager#win"><a href="WindowManager.html#win">win</a></li>
+            
             </ul>
             <ul class="typedefs itemMembers">
+            
+            <span class="subtitle">Typedefs</span>
+            
+                <li class="parent" data-name="WindowManager~Bounds"><a href="WindowManager.html#~Bounds">Bounds</a></li>
+            
+                <li class="parent" data-name="WindowManager~SnapOptions"><a href="WindowManager.html#~SnapOptions">SnapOptions</a></li>
             
             </ul>
             <ul class="typedefs itemMembers">
@@ -210,31 +266,21 @@
             
             <span class="subtitle">Methods</span>
             
+                <li class="parent  " data-name="WindowManager#closeAll"><a href="WindowManager.html#closeAll">closeAll</a></li>
+            
                 <li class="parent  " data-name="WindowManager#createWindow"><a href="WindowManager.html#createWindow">createWindow</a></li>
             
-                <li class="  " data-name="WindowManager#emit"><a href="WindowManager.html#emit">emit</a></li>
-            
-                <li class="  " data-name="WindowManager#eventNames"><a href="WindowManager.html#eventNames">eventNames</a></li>
-            
-                <li class="  " data-name="WindowManager#listenerCount"><a href="WindowManager.html#listenerCount">listenerCount</a></li>
-            
-                <li class="  " data-name="WindowManager#listeners"><a href="WindowManager.html#listeners">listeners</a></li>
+                <li class="parent  " data-name="WindowManager#getWindowById"><a href="WindowManager.html#getWindowById">getWindowById</a></li>
             
                 <li class="parent  " data-name="WindowManager#load"><a href="WindowManager.html#load">load</a></li>
-            
-                <li class="  " data-name="WindowManager#on"><a href="WindowManager.html#on">on</a></li>
-            
-                <li class="  " data-name="WindowManager#once"><a href="WindowManager.html#once">once</a></li>
-            
-                <li class="  " data-name="WindowManager#removeAllListeners"><a href="WindowManager.html#removeAllListeners">removeAllListeners</a></li>
-            
-                <li class="  " data-name="WindowManager#removeListener"><a href="WindowManager.html#removeListener">removeListener</a></li>
             
                 <li class="parent  " data-name="WindowManager#save"><a href="WindowManager.html#save">save</a></li>
             
                 <li class="parent  " data-name="WindowManager#sendToBack"><a href="WindowManager.html#sendToBack">sendToBack</a></li>
             
                 <li class="parent  " data-name="WindowManager#sendToFront"><a href="WindowManager.html#sendToFront">sendToFront</a></li>
+            
+                <li class="parent  " data-name="WindowManager#snap"><a href="WindowManager.html#snap">snap</a></li>
             
             </ul>
             <ul class="events itemMembers">
@@ -245,78 +291,83 @@
     </ul>
 </div>
     <div class="main">
-        <h1 class="page-title" data-filename="external-EventEmitter.html">External: EventEmitter</h1>
+        
+        <h1 class="page-title" data-filename="module-accelerator.html">Module: accelerator</h1>
+        
         
 
 
 
 <section>
-    
+
 <header>
     <div class="header content-size">
-        <h2>EventEmitter
+        <h2>accelerator
         </h2>
         
     </div>
-</header>  
+</header>
 
 <article class="content-size">
     <div class="container-overview">
     
-    
+
     
         
+            <div class="description">Keyboard Accelerator support used by menu (if available) and user-registered keys
+Also works for user-defined keys independent of the menu system</div>
         
+
         
 <dl class="details">
     
-        
+
     
+
     
+
     
+
     
+
     
+
     
+
     
+
     
-    
-    
-    
-    
-    
-    
-    
-    
+
     
 </dl>
 
-        
+
         
     
     </div>
+
     
+
     
+
     
+
     
+
     
+
     
+
     
+
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     
 
     
 </article>
 
-</section>  
+</section>
 
 
 
@@ -326,7 +377,7 @@
 
         <footer class="content-size">
             <div class="footer">
-                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Jan 08 2018 13:57:21 GMT+0800 (DST)
+                Documentation generated by <a target="_blank" href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.5</a> on Tue Jul 28 2020 11:04:41 GMT+0800 (Taipei Standard Time)
             </div>
         </footer>
     </div>

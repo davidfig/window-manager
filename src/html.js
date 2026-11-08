@@ -1,31 +1,32 @@
 /**
  * shortcut to create an html element
  * @param {object} options
- * @param {type} [options.string=div]
+ * @param {type} [options.type=div]
  * @param {string} [options.className]
  * @param {object} [options.styles]
  * @param {HTMLElement} [options.parent]
  * @param {string} [options.html]
  * @returns {HTMLElement}
+ * @ignore
  */
-export function html(options={})
+export function html(options = {})
 {
-    const object = document.createElement(options.type || 'div')
-    if (options.parent)
-    {
-        options.parent.appendChild(object)
-    }
+    const element = document.createElement(options.type || 'div')
     if (options.styles)
     {
-        Object.assign(object.style, options.styles)
+        Object.assign(element.style, options.styles)
     }
     if (options.className)
     {
-        object.className = options.className
+        element.className = options.className
     }
     if (options.html)
     {
-        object.innerHTML = options.html
+        element.innerHTML = options.html
     }
-    return object
+    if (options.parent)
+    {
+        options.parent.appendChild(element)
+    }
+    return element
 }
